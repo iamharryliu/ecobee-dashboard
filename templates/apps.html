@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Apps</h1>
+{% for app in apps %}
+	<p>
+		{{app.api_key}}</br>
+		{{app.authorization_code}}</br>
+		{{app.access_token}}</br>
+		{{app.refresh_token}}</br>
+	</p>
+{% endfor %}
+{% endblock content %}
