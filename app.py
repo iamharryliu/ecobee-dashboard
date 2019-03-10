@@ -7,10 +7,11 @@ db = SQLAlchemy(app)
 
 class Ecobee(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	api_key = db.Column(db.String(80), nullable=False)
-	authorization_code = db.Column(db.String(120), nullable=False)
-	access_token = db.Column(db.String(80), nullable=False)
-	refresh_token = db.Column(db.String(120), nullable=False)
+	name = db.Column(db.String(20))
+	api_key = db.Column(db.String(32), nullable=False)
+	authorization_code = db.Column(db.String(32), nullable=False)
+	access_token = db.Column(db.String(32), nullable=False)
+	refresh_token = db.Column(db.String(32), nullable=False)
 
 @app.route('/')
 def main():

@@ -1,4 +1,4 @@
-#!/Users/harryliu/current-projects/ecobee/flask_env/bin/python
+#!/home/harry/current-projects/ecobee/flask_env/bin/python
 
 import sys
 import getopt
