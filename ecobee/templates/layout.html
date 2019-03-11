@@ -11,10 +11,13 @@
     <title>Angular-Flask App</title>
   </head>
   <body class='container pt-3 pb-3 text-light' style="background: #1b1d1e">
+    <img class="img-fluid mx-auto d-block" src='{{  url_for("static", filename="ecobee_logo.png")}}' style='width: 80px'>
 
     {% block content %}
     
     {% endblock content %}
+
+    <img class="img-fluid mx-auto d-block" src='{{  url_for("static", filename="ecobee_logo.png")}}' style='width: 80px'>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

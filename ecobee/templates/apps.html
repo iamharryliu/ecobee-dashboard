@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Ecobee Apps</h1>
+<div class='row'>
+	{% for app in apps %}
+	<a class='col-xl-6 mt-3 mb-3' href="{{ url_for('main.thermostats', app_name=app.name)  }}">
+		<div class='card bg-dark'>
+			<div class='card-header'>
+				<h1>{{app.name}}</h1>
+			</div>
+			<div class='card-body'>
+				<p>
+					API Key: <span class='float-right'>{{app.api_key}}</span></br>
+					Authorization Code: <span class='float-right'>{{app.authorization_code}}</span></br>
+					Access Token: <span class='float-right'>{{app.access_token}}</span></br>
+					Refresh Token: <span class='float-right'>{{app.refresh_token}}</span></br>
+				</p>
+			</div>
+		</div>
+	</a>
+
+	{% endfor %}
+</div>
+{% endblock content %}
