@@ -4,9 +4,12 @@ logging
 
 '''
 
-import requests, json
+import requests, json, logging
 
 from ecobee import db
+
+
+logging.basicConfig(filename='log.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
 
 ecobee_url = 'https://api.ecobee.com/'
 
@@ -161,6 +164,7 @@ class Ecobee_API():
 						} 
 					] 
 				}
+		print('resumed')	
 		log_msg_action = "resume program"
 		return self.make_request(body, log_msg_action)
 
@@ -179,9 +183,9 @@ class Ecobee_API():
 		log_msg_action = "set HVAC mode"
 		return self.make_request(body, log_msg_action)
 		
-	def hold_temp(self, identifier, temperature, hold_type="holdHours", holdHours=2):
+	def set_temperature_hold(self, identifier, temperature, hold_type="holdHours", holdHours=2):
 		print(f'temperature set to {temperature}')
-		temperature = self.degreees_to_farenheit(temperature)
+		temperature = degreees_to_farenheit(temperature)
 		body = {"selection": 
 			{
 				"selectionType": "thermostats",
@@ -202,7 +206,7 @@ class Ecobee_API():
 		log_msg_action = "set hold temperature"
 		return self.make_request(body, log_msg_action)
 
-	def hold_climate(self, identifier, climate, hold_type="nextTransition"):
+	def set_climate_hold(self, identifier, climate, hold_type="nextTransition"):
 		body = {
 			"selection": {
 				"selectionType": "thermostats",
@@ -250,9 +254,6 @@ class Ecobee_API():
 			thermostats.append(thermostat)
 
 		return thermostats
-	
-	# def __repr__(self):
-	# 	return json.dumps(self.thermostats[0], indent=2)
 
 class Thermostat():
 	def __init__(self, thermostat):	
@@ -261,6 +262,7 @@ class Thermostat():
 	def set_thermostat(self, thermostat):
 		self.identifier = thermostat['identifier']
 		self.name = thermostat['name']
+		self.hvac_mode = thermostat['settings']['hvacMode']
 		self.temperature = self.get_temperature(thermostat)
 		self.climates = self.get_climates(thermostat)
 		self.remote_sensors = self.get_remote_sensors(thermostat)
@@ -341,14 +343,13 @@ class CurrentClimateData():
 			else:
 				self.mode = holdClimateRef
 				for climate in thermostat['program']['climates']:
-					if mode == climate['climateRef']:
+					if self.mode == climate['climateRef']:
 						temperature =  climate['heatTemp']
 						self.temperature = farenheit_to_degrees(temperature)
 			self.enddate = thermostat['events'][0]['endDate']
 			self.endtime = thermostat['events'][0]['endTime']
 		else:
 			self.mode = thermostat['program']['currentClimateRef']
-			self.current_climate_mode = thermostat['program']['currentClimateRef']
 			for climate in thermostat['program']['climates']:
 				if self.mode == climate['climateRef']:
 					temperature = climate['heatTemp']

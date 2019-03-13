@@ -1,4 +1,186 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h1>Thermostat</h1>
+<form action='{{ url_for("main.set_temperature_hold", app_name=app_name, thermostat_identifier=thermostat.identifier) }}' method="post" id='set_temperature_hold'></form>
+<form action='{{ url_for("main.set_climate_hold", app_name=app_name, thermostat_identifier=thermostat.identifier) }}' method="post" id='set_climate_hold'></form>
+<form action='{{ url_for("main.set_hvac_mode", app_name=app_name, thermostat_identifier=thermostat.identifier) }}' method="post" id='set_hvac_mode'></form>
+<form action='{{ url_for("main.send_message", app_name=app_name, thermostat_identifier=thermostat.identifier) }}' method="post" id='send_message'></form>
+<div class='row'>
+	<div class='col-6 mb-4'>
+		<div class='card bg-dark'>
+			<div class='card-header'>
+				<h1 class='text-center'>{{thermostat.name}}</h1>
+			</div>
+			<div class='card-body'>
+				<img class="img-fluid mx-auto d-block" src='{{  url_for("static", filename="ecobee_logo.png")}}' style='height: 40px'>
+				<h1 class='card-title text-center'>{{ '%0.1f' | format(thermostat.temperature|float)}}C</h1>
+				<h5 class='text-center'>
+					HVAC Mode: {{ thermostat.current_climate_data.mode }}
+				</h5>
+				<form action='#' method="post">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<label class="input-group-text" for="temperature">
+								Hold
+							</label>
+						</div>
+						<select 
+							class="custom-select" 
+							id="temperature" 
+							name='temperature' 
+							onchange="this.form.submit()"
+							form='set_temperature_hold' 
+							style='text-align-last: center'>
+							{% for option in temperature_options %}
+							<option value={{option}} {% if thermostat.current_climate_data.temperature == option %}selected{% endif %}>{{option}}</option>
+							{% endfor %}
+						</select>
+						<div class='input-group-append'>
+							<span class="input-group-text" id="basic-addon2">C</span>
+						</div>
+					</div>
+				</form>
+				<p class='text-center'>
+				{% if thermostat.events %}
+					Hold until {{thermostat.events[0].endTime}}
+				{% else %}
+					Normal Programming
+				{% endif %}
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class='col-6 mb-4'>
+		<div class='card bg-dark'>
+			<div class='card-body'>
+				<h4 class='card-title text-center'>Thermostat Setting</h4>
+				<div class='btn-group w-100 mb-3'>
+					<button 
+						value='heat'
+						class="btn btn-outline-light
+						{% if thermostat.hvac_mode == 'heat' %}
+							active
+						{% endif %}" 
+						name='hvac_mode' 
+						style="width: 50%;" 
+						form='set_hvac_mode'>
+							Heat
+					</button>
+					<button
+						value ='off'
+						class="btn btn-outline-light
+						{% if thermostat.hvac_mode =='off' %}
+							active
+						{% endif %}"
+						name='hvac_mode' 
+						style="width: 50%;"
+						form='set_hvac_mode'>
+							Off
+					</button>
+				</div>
+				<div class='btn-group w-100 mb-3'>
+					<button 
+					class="btn btn-outline-light
+					{% if thermostat.current_climate_data.mode == 'hold' %}
+						active
+					{% else %}
+						disabled
+					{% endif %}"
+					style='width: 25%'>
+						{% if thermostat.current_climate_data.endtime != 'transition' %}
+							Hold
+						{% else %}
+							Reg
+						{% endif %}
+					</button>
+					{% for climate in thermostat.climates %}
+					<button 
+					class="btn btn-outline-light
+						{%if thermostat.current_climate_data.mode == climate %}
+							active
+						{%endif%}" 
+					value={{climate}} 
+					name='climate' 
+					style="width: 25%;" 
+					form='set_climate_hold'>
+						{{climate}}
+					</button>
+					{% endfor %}
+				</div>
+				<form action="{{url_for('main.resume', app_name=app_name, thermostat_identifier=thermostat.identifier)}}" method="post">
+					<button type='submit' class='btn btn-outline-light btn-block'>Resume Program</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class='col-3 mb-3'>
+		<div class="card bg-dark" style='height: 220px'>
+			<h5 class="card-header">{{thermostat.sensor.name}}
+			</h5>
+			<div class="card-body">
+				<div class="card-text">
+					Type: {{ thermostat.sensor.type }}<br>
+					Active: <span class="badge badge-{%if thermostat.sensor.temperature%}success{%else%}danger{% endif %}">Status</span><br>
+					Temperature: 
+					{% if thermostat.sensor.temperature %}
+						<span class="badge badge-{%if thermostat.sensor.temperature%}success{%else%}danger{% endif %}">{{ '%0.1f' | format(thermostat.sensor.temperature|float) }}</span>
+					{% else %}
+						<span class="badge badge-{{thermostat.sensor.sensor_badge}}">{{thermostat.sensor.temperature}}</span>
+					{% endif %}<br>
+					Occupancy: 
+					<span class="badge badge-{%if thermostat.sensor.occupancy=='true'%}success{%else%}danger{% endif %}">
+						Status
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% for sensor in thermostat.remote_sensors %}
+	<div class='col-3 mb-4'>
+		<div class="card bg-dark" style='height: 220px'>
+			<h5 class="card-header">{{sensor.name}}
+			</h5>
+			<div class="card-body">
+				<div class="card-text">
+					Type: {{ sensor.type }}<br>
+					Active: <span class="badge badge-{%if sensor.temperature%}success{%else%}danger{% endif %}">Status</span><br>
+					Temperature: 
+					{% if sensor.temperature %}
+						<span class="badge badge-{%if sensor.temperature%}success{%else%}danger{% endif %}">{{ '%0.1f' | format(sensor.temperature|float) }}</span>
+					{% else %}
+						<span class="badge badge-{{sensor.sensor_badge}}">{{sensor.temperature}}</span>
+					{% endif %}<br>
+					Occupancy: 
+					<span class="badge badge-{%if sensor.occupancy=='true'%}success{%else%}danger{% endif %}">
+						Status
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+	<div class='col-6'>
+	<div class='card bg-dark'>
+		<div class='card-header'>
+			<h1>{{thermostat.name}}<span class='float-right'>{{thermostat.temperature}}</span></h1>
+		</div>
+		<div class='card-body'>
+			<p>
+				Identifier: {{thermostat.identifier}}<br/>
+				Name: {{thermostat.name}}<br/>
+				Current Climate Data: {{thermostat.current_climate_data}}<br/>
+				Climates: {{thermostat.climates}}<br/>
+				Sensor: {{thermostat.sensor}}<br/>	
+				Sensors: {{thermostat.remote_sensors}}<br/>			
+			</p>
+		</div>
+	</div>
+	</div>
+	<div class='col-6'>
+		<div class="form-group">
+			<h3><label for="message">Thermostat Messaging</label></h3>
+			<textarea class="form-control" name='message' id="message" rows="6" form='send_message'></textarea>
+		</div>
+		<button type='submit' class='btn btn-outline-light btn-block mb-3' form='send_message'>Send Message</button>
+	</div>
+</div>
 {% endblock content %}

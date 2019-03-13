@@ -1,4 +1,12 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h1>Main</h1>
+<div class="jumbotron text-dark mt-3 mb-3">
+  <h1 class="display-4">Ecobee App</h1>
+  <p class="lead">Lorem ipsum.</p>
+  <hr class="my-4" style="height:1px;">
+  <p>Lorem ipsum.</p>
+  <p class="lead">
+    <a class="btn btn-primary btn-lg" href="{{url_for('main.apps')}}" role="button">Registered Apps</a>
+  </p>
+</div>
 {% endblock content %}
