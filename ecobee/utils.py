@@ -1,15 +1,14 @@
-'''
-
-logging
-
-'''
-
 import requests, json, logging
 
 from ecobee import db
 
-
-logging.basicConfig(filename='log.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
+file_handler = logging.FileHandler('eobee_api.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+# logging.basicConfig(filename='log.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
 
 ecobee_url = 'https://api.ecobee.com/'
 
@@ -25,6 +24,7 @@ class Ecobee_API():
 			self.refresh_token = config.refresh_token
 
 	def get_json(self):
+		logger.info(f'Attempting to get json data for {self.api_key}')
 		url = f'{ecobee_url}1/thermostat'
 		header = {'Content-Type': 'application/json;charset=UTF-8',\
                   'Authorization': 'Bearer ' + self.access_token}
@@ -49,17 +49,18 @@ class Ecobee_API():
 		except:
 			pass
 		if request.status_code == requests.codes.ok:
-			logging.info('Request for thermostat successful')
+			logger.info(f'JSON request for {self.api_key} successful')
 			thermostats = request.json()['thermostatList']
 			return thermostats
 		else:
-			logging.info('Request for thermostats unsuccessful')
+			logger.warn(f'JSON request for {self.api_key} unsuccessful.')
 			if self.refresh_tokens():
 				return self.get_json()
 			else:
 				return
 
 	def refresh_tokens(self):
+		logger.info(f'Attempting to refresh tokens for {self.api_key}')
 		url = f'{ecobee_url}token'
 		params = {
 			'grant_type': 'refresh_token',
@@ -68,17 +69,18 @@ class Ecobee_API():
 		}
 		request = requests.post(url, params=params)
 		if request.status_code == requests.codes.ok:
-			logging.info('Request to refresh token successful')
+			logger.info(f'Refresh token request for {self.api_key} successful')
 			self.access_token = request.json()['access_token']
 			self.refresh_token = request.json()['refresh_token']
 			self.write_to_db()
 			return True
 		else:
-			logging.info('Request to refresh tokens unsuccessful')
+			logger.warn(f'Refresh token request for {self.api_key} unsuccessful')
 			self.request_pin()
 
 
 	def request_pin(self):
+		logger.info(f'Attempting to request pin for {self.api_key}')
 		url = f'{ecobee_url}authorize'
 		params = {
 			'response_type': 'ecobeePin',
@@ -88,9 +90,9 @@ class Ecobee_API():
 		try:
 			request = requests.get(url, params=params)
 		except RequestException:
-			logging.info(f'Request for pin for {self.api_key} unsuccessful')
+			logger.warn(f'Pin request for {self.api_key} unsuccessful')
 			return
-		logging.info(f'Request for pin for {self.api_key} successful')
+		logger.info(f'Pin request for {self.api_key} successful')
 		self.authorization_code = request.json()['code']
 		self.pin = request.json()['ecobeePin']
 
@@ -104,21 +106,21 @@ class Ecobee_API():
 			'format': 'json'
 		}
 		try:
-			logging.warn(f'Thermostat Action request successful:\n\t{log_msg_action}')
+			logger.info(f'Thermostat Action request for {self.api_key} successful:\n\t{log_msg_action}')
 			request = requests.post(url, headers=header, params=params, json=body)
 		except RequestException:
-			logging.warn(f'Thermostat Action request unsuccessful:\n\t{log_msg_action}')
+			logger.warn(f'Thermostat Action request for {self.api_key} unsuccessful:\n\t{log_msg_action}')
 			return None
 		if request.status_code == requests.codes.ok:
 			return True
 		else:
-			logging.info('Attempting to refresh tokens and try again.')
 			if self.refresh_tokens():
 				return self.make_request(body, log_msg_action)
 			else:
 				return None
 
 	def write_to_db(self):
+		logger.info(f'Writing {self.api_key} data to db')
 		self.config.api_key = self.api_key
 		self.config.authorization_code = self.authorization_code
 		self.config.access_token = self.access_token
@@ -126,6 +128,7 @@ class Ecobee_API():
 		db.session.commit()
 		
 	def request_tokens(self):
+		logger.info(f'Attempting to request tokens for {self.api_key}')
 		url = f'{ecobee_url}token'
 		params = {'grant_type': 'ecobeePin', 'code': self.authorization_code,
 		'client_id': self.api_key}
@@ -134,20 +137,14 @@ class Ecobee_API():
 		except RequestException:
 			return
 			if request.status_code == requests.codes.ok:
+				logger.info(f'Tokens request for {self.api_key} successful')
 				self.access_token = request.json()['access_token']
 				self.refresh_token = request.json()['refresh_token']
 				self.write_to_db()
 				self.pin = None
 			else:
+				logger.info(f'Tokens request for {self.api_key} unsuccessful')
 				return
-
-	def get_temperature(self):
-		temperature = self.thermostats[0]['runtime']['actualTemperature']
-		temperature = (temperature - 320) * 5 / 90
-		temperature = round(temperature,2)
-		return temperature
-
-	# Thermostat Actions
 
 	def resume(self, identifier, resume_all=False):
 		body = {"selection": 
@@ -239,7 +236,7 @@ class Ecobee_API():
 			]
 		}
 
-		log_msg_action = f"Send Message:\n {message}"
+		log_msg_action = f"Send Message: {message}"
 		return self.make_request(body, log_msg_action)
 
 	def create_vacation(self, identifier, vacation):
