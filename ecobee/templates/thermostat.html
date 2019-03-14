@@ -4,46 +4,45 @@
 <form action='{{ url_for("main.set_climate_hold", app_name=app_name, thermostat_identifier=thermostat.identifier) }}' method="post" id='set_climate_hold'></form>
 <form action='{{ url_for("main.set_hvac_mode", app_name=app_name, thermostat_identifier=thermostat.identifier) }}' method="post" id='set_hvac_mode'></form>
 <form action='{{ url_for("main.send_message", app_name=app_name, thermostat_identifier=thermostat.identifier) }}' method="post" id='send_message'></form>
+<form action="{{url_for('main.resume', app_name=app_name, thermostat_identifier=thermostat.identifier)}}" method="post" id='resume'></form>
 <div class='row'>
 	<div class='col-6 mb-4'>
 		<div class='card bg-dark'>
 			<div class='card-header'>
-				<h1 class='text-center'>{{thermostat.name}}</h1>
+				<h1 class='text-center'>{{ thermostat.name }}</h1>
 			</div>
 			<div class='card-body'>
 				<img class="img-fluid mx-auto d-block" src='{{  url_for("static", filename="ecobee_logo.png")}}' style='height: 40px'>
 				<h1 class='card-title text-center'>{{ '%0.1f' | format(thermostat.temperature|float)}}C</h1>
 				<h5 class='text-center'>
-					HVAC Mode: {{ thermostat.current_climate_data.mode }}
+					HVAC Mode: {{ thermostat.hvac_mode | title }}
 				</h5>
-				<form action='#' method="post">
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<label class="input-group-text" for="temperature">
-								Hold
-							</label>
-						</div>
-						<select 
-							class="custom-select" 
-							id="temperature" 
-							name='temperature' 
-							onchange="this.form.submit()"
-							form='set_temperature_hold' 
-							style='text-align-last: center'>
-							{% for option in temperature_options %}
-							<option value={{option}} {% if thermostat.current_climate_data.temperature == option %}selected{% endif %}>{{option}}</option>
-							{% endfor %}
-						</select>
-						<div class='input-group-append'>
-							<span class="input-group-text" id="basic-addon2">C</span>
-						</div>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<label class="input-group-text" for="temperature">
+							{{ thermostat.current_climate_data.mode | title }}
+						</label>
 					</div>
-				</form>
+					<select 
+						class="custom-select" 
+						id="temperature" 
+						name='temperature' 
+						onchange="this.form.submit()"
+						form='set_temperature_hold' 
+						style='text-align-last: center'>
+						{% for option in temperature_options %}
+						<option value={{option}} {% if thermostat.current_climate_data.temperature == option %}selected{% endif %}>{{option}}</option>
+						{% endfor %}
+					</select>
+					<div class='input-group-append'>
+						<span class="input-group-text" id="basic-addon2">C</span>
+					</div>
+				</div>
 				<p class='text-center'>
-				{% if thermostat.events %}
-					Hold until {{thermostat.events[0].endTime}}
+				{% if thermostat.current_climate_data.events %}
+					Program set to hold. Next transition at {{ thermostat.current_climate_data.end_date}} {{thermostat.current_climate_data.end_time }}
 				{% else %}
-					Normal Programming
+					Normal programming until next transition.
 				{% endif %}
 				</p>
 			</div>
@@ -102,13 +101,11 @@
 					name='climate' 
 					style="width: 25%;" 
 					form='set_climate_hold'>
-						{{climate}}
+						{{ climate | title }}
 					</button>
 					{% endfor %}
 				</div>
-				<form action="{{url_for('main.resume', app_name=app_name, thermostat_identifier=thermostat.identifier)}}" method="post">
-					<button type='submit' class='btn btn-outline-light btn-block'>Resume Program</button>
-				</form>
+					<button type='submit' class='btn btn-outline-light btn-block' form='resume'>Resume Program</button>
 			</div>
 		</div>
 	</div>

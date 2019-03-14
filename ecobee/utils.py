@@ -49,11 +49,11 @@ class Ecobee_API():
 		except:
 			pass
 		if request.status_code == requests.codes.ok:
-			print('REQUEST FOR THERMOSTATS: SUCCESS')
+			logging.info('Request for thermostat successful')
 			thermostats = request.json()['thermostatList']
 			return thermostats
 		else:
-			print('REQUEST FOR THERMOSTATS: FAIL')
+			logging.info('Request for thermostats unsuccessful')
 			if self.refresh_tokens():
 				return self.get_json()
 			else:
@@ -68,13 +68,13 @@ class Ecobee_API():
 		}
 		request = requests.post(url, params=params)
 		if request.status_code == requests.codes.ok:
-			print('REQUEST TO REFRESH TOKENS: SUCCESS')
+			logging.info('Request to refresh token successful')
 			self.access_token = request.json()['access_token']
 			self.refresh_token = request.json()['refresh_token']
 			self.write_to_db()
 			return True
 		else:
-			print('REQUEST TO REFRESH TOKENS: FAIL')
+			logging.info('Request to refresh tokens unsuccessful')
 			self.request_pin()
 
 
@@ -88,14 +88,11 @@ class Ecobee_API():
 		try:
 			request = requests.get(url, params=params)
 		except RequestException:
-			print('REQUEST FOR PIN: FAIL')
+			logging.info(f'Request for pin for {self.api_key} unsuccessful')
 			return
-		print('REQUEST FOR PIN: SUCCESS')
+		logging.info(f'Request for pin for {self.api_key} successful')
 		self.authorization_code = request.json()['code']
 		self.pin = request.json()['ecobeePin']
-		print(f'\tAPI KEY: {self.api_key}')
-		print(f'\tAUTHORIZATION CODE: {self.authorization_code}')
-		print(f'\tPIN: {self.pin}')
 
 	def make_request(self, body, log_msg_action):
 		url = f'{ecobee_url}1/thermostat'
@@ -107,12 +104,15 @@ class Ecobee_API():
 			'format': 'json'
 		}
 		try:
+			logging.warn(f'Thermostat Action request successful:\n\t{log_msg_action}')
 			request = requests.post(url, headers=header, params=params, json=body)
 		except RequestException:
+			logging.warn(f'Thermostat Action request unsuccessful:\n\t{log_msg_action}')
 			return None
 		if request.status_code == requests.codes.ok:
 			return True
 		else:
+			logging.info('Attempting to refresh tokens and try again.')
 			if self.refresh_tokens():
 				return self.make_request(body, log_msg_action)
 			else:
@@ -164,8 +164,7 @@ class Ecobee_API():
 						} 
 					] 
 				}
-		print('resumed')	
-		log_msg_action = "resume program"
+		log_msg_action = f'Thermostat: {identifier} program resumed'
 		return self.make_request(body, log_msg_action)
 
 	def set_hvac_mode(self, identifier, hvac_mode):
@@ -180,11 +179,10 @@ class Ecobee_API():
 				}
 			}
 		}
-		log_msg_action = "set HVAC mode"
+		log_msg_action = f'Thermostat: {identifier} HVAC mode set to {hvac_mode}'
 		return self.make_request(body, log_msg_action)
 		
 	def set_temperature_hold(self, identifier, temperature, hold_type="holdHours", holdHours=2):
-		print(f'temperature set to {temperature}')
 		temperature = degreees_to_farenheit(temperature)
 		body = {"selection": 
 			{
@@ -203,7 +201,7 @@ class Ecobee_API():
 				}
 			]
 		}
-		log_msg_action = "set hold temperature"
+		log_msg_action = f"Themrostat: {identifier} set to hold {temperature}"
 		return self.make_request(body, log_msg_action)
 
 	def set_climate_hold(self, identifier, climate, hold_type="nextTransition"):
@@ -222,7 +220,7 @@ class Ecobee_API():
 				}
 			]
 		}
-		log_msg_action = "set climate hold"
+		log_msg_action = f"Thermostat: {identifier} set to hold {climate} climate"
 		return self.make_request(body, log_msg_action)
 
 	def send_message(self, identifier, message="Hello world!"):
@@ -241,8 +239,32 @@ class Ecobee_API():
 			]
 		}
 
-		log_msg_action = "send message"
+		log_msg_action = f"Send Message:\n {message}"
 		return self.make_request(body, log_msg_action)
+
+	def create_vacation(self, identifier, vacation):
+		body = {
+			"selection": {
+				"selectionType": "thermostats",
+				"selectionMatch": identifier
+			},
+			"functions": [
+				{
+				"type":"createVacation",
+					"params":{
+						"name": vacation.name,
+						"coolHoldTemp": vacation.temperature,
+						"heatHoldTemp": vacation.temperature,
+						"startDate": vacation.start_date,
+						"startTime": vacation.start_time,
+						"endDate": vacation.end_date,
+						"endTime": vacation.end_time
+					}
+				}
+			]
+		}
+		log_msg_action = f"Thermostat: {idenfifier} add vacation ({name} / {vacation.temperature} / {vacation.start_time} {vacation.end_time} to {vacation.end_date} {vacation.end_time})"
+		return self.make_request(body, log_msg_action)                     
 
 	def get_thermostats(self):
 		thermostats = []
@@ -335,6 +357,7 @@ class ThermostatSensor():
 class CurrentClimateData():
 	def __init__(self, thermostat):
 		if thermostat['events']:
+			self.events = True
 			holdClimateRef = thermostat['events'][0]['holdClimateRef']
 			if holdClimateRef == "":
 				self.mode = 'hold'
@@ -346,16 +369,17 @@ class CurrentClimateData():
 					if self.mode == climate['climateRef']:
 						temperature =  climate['heatTemp']
 						self.temperature = farenheit_to_degrees(temperature)
-			self.enddate = thermostat['events'][0]['endDate']
-			self.endtime = thermostat['events'][0]['endTime']
+			self.end_date = thermostat['events'][0]['endDate']
+			self.end_time = thermostat['events'][0]['endTime']
 		else:
+			self.events = False
 			self.mode = thermostat['program']['currentClimateRef']
 			for climate in thermostat['program']['climates']:
 				if self.mode == climate['climateRef']:
 					temperature = climate['heatTemp']
 					self.temperature = farenheit_to_degrees(temperature)
-			self.enddate = 'transition'
-			self.endtime = 'transition'
+			self.end_date = 'transition'
+			self.end_time = 'transition'
 
 
 def farenheit_to_degrees(temperature):
