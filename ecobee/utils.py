@@ -47,17 +47,17 @@ class Ecobee_API():
 		try:
 			request = requests.get(url, headers=header, params=params)
 		except:
-			pass
-		if request.status_code == requests.codes.ok:
-			logger.info(f'JSON request for {self.api_key} successful')
-			thermostats = request.json()['thermostatList']
-			return thermostats
-		else:
 			logger.warn(f'JSON request for {self.api_key} unsuccessful.')
-			if self.refresh_tokens():
-				return self.get_json()
+		else:
+			if request.status_code == requests.codes.ok:
+				logger.info(f'JSON request for {self.api_key} successful')
+				thermostats = request.json()['thermostatList']
+				return thermostats
 			else:
-				return
+				if self.refresh_tokens():
+					return self.get_json()
+				else:
+					return []
 
 	def refresh_tokens(self):
 		logger.info(f'Attempting to refresh tokens for {self.api_key}')
@@ -91,10 +91,10 @@ class Ecobee_API():
 			request = requests.get(url, params=params)
 		except RequestException:
 			logger.warn(f'Pin request for {self.api_key} unsuccessful')
-			return
-		logger.info(f'Pin request for {self.api_key} successful')
-		self.authorization_code = request.json()['code']
-		self.pin = request.json()['ecobeePin']
+		else:
+			logger.info(f'Pin request for {self.api_key} successful')
+			self.authorization_code = request.json()['code']
+			self.pin = request.json()['ecobeePin']
 
 	def make_request(self, body, log_msg_action):
 		url = f'{ecobee_url}1/thermostat'
@@ -110,14 +110,15 @@ class Ecobee_API():
 			request = requests.post(url, headers=header, params=params, json=body)
 		except RequestException:
 			logger.warn(f'Thermostat Action request for {self.api_key} unsuccessful:\n\t{log_msg_action}')
-			return None
-		if request.status_code == requests.codes.ok:
-			return True
+			return False
 		else:
-			if self.refresh_tokens():
-				return self.make_request(body, log_msg_action)
+			if request.status_code == requests.codes.ok:
+				return True
 			else:
-				return None
+				if self.refresh_tokens():
+					return self.make_request(body, log_msg_action)
+				else:
+					return False
 
 	def write_to_db(self):
 		logger.info(f'Writing {self.api_key} data to db')
@@ -136,6 +137,7 @@ class Ecobee_API():
 			request = requests.post(url, params=params)
 		except RequestException:
 			return
+		else:
 			if request.status_code == requests.codes.ok:
 				logger.info(f'Tokens request for {self.api_key} successful')
 				self.access_token = request.json()['access_token']
