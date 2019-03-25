@@ -35,16 +35,16 @@
 						{% endfor %}
 					</select>
 					<div class='input-group-append'>
-						<span class="input-group-text" id="basic-addon2">C</span>
+						<span class="input-group-text" id="basic-addon2">C
+						until
+						{% if thermostat.current_climate_data.events %}
+							{{ thermostat.current_climate_data.end_date}} {{thermostat.current_climate_data.end_time }}
+						{% else %}
+							next transition.
+						{% endif %}
+						</span>
 					</div>
 				</div>
-				<p class='text-center'>
-				{% if thermostat.current_climate_data.events %}
-					Program set to hold. Next transition at {{ thermostat.current_climate_data.end_date}} {{thermostat.current_climate_data.end_time }}
-				{% else %}
-					Normal programming until next transition.
-				{% endif %}
-				</p>
 			</div>
 		</div>
 	</div>
