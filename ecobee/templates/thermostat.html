@@ -6,7 +6,7 @@
 <form action='{{ url_for("main.send_message", app_name=app_name, thermostat_identifier=thermostat.identifier) }}' method="post" id='send_message'></form>
 <form action="{{url_for('main.resume', app_name=app_name, thermostat_identifier=thermostat.identifier)}}" method="post" id='resume'></form>
 <div class='row'>
-	<div class='col-6 mb-4'>
+	<div class='col-lg-6 mb-4'>
 		<div class='card bg-dark'>
 			<div class='card-header'>
 				<h1 class='text-center'>{{ thermostat.name }}</h1>
@@ -48,10 +48,12 @@
 			</div>
 		</div>
 	</div>
-	<div class='col-6 mb-4'>
+	<div class='col-md-6 mb-4'>
 		<div class='card bg-dark'>
+			<div class='card-header'>
+				<h1 class='text-center'>Thermostat Setting</h1>
+			</div>
 			<div class='card-body'>
-				<h4 class='card-title text-center'>Thermostat Setting</h4>
 				<div class='btn-group w-100 mb-3'>
 					<button 
 						value='heat'
@@ -109,7 +111,7 @@
 			</div>
 		</div>
 	</div>
-	<div class='col-3 mb-3'>
+	<div class='col-md-6 col-lg-3 mb-3'>
 		<div class="card bg-dark" style='height: 220px'>
 			<h5 class="card-header">{{thermostat.sensor.name}}
 			</h5>
@@ -132,7 +134,7 @@
 		</div>
 	</div>
 	{% for sensor in thermostat.remote_sensors %}
-	<div class='col-3 mb-4'>
+	<div class='col-md-6 col-lg-3 mb-4'>
 		<div class="card bg-dark" style='height: 220px'>
 			<h5 class="card-header">{{sensor.name}}
 			</h5>
@@ -155,7 +157,15 @@
 		</div>
 	</div>
 	{% endfor %}
-	<div class='col-6'>
+
+	<div class='col-md-6'>
+		<div class="form-group">
+			<h3><label for="message">Thermostat Messaging</label></h3>
+			<textarea class="form-control" name='message' id="message" rows="6" form='send_message'></textarea>
+		</div>
+		<button type='submit' class='btn btn-outline-light btn-block mb-3' form='send_message'>Send Message</button>
+	</div>
+	<div class='col-12'>
 	<div class='card bg-dark'>
 		<div class='card-header'>
 			<h1>{{thermostat.name}}<span class='float-right'>{{thermostat.temperature}}</span></h1>
@@ -171,13 +181,6 @@
 			</p>
 		</div>
 	</div>
-	</div>
-	<div class='col-6'>
-		<div class="form-group">
-			<h3><label for="message">Thermostat Messaging</label></h3>
-			<textarea class="form-control" name='message' id="message" rows="6" form='send_message'></textarea>
-		</div>
-		<button type='submit' class='btn btn-outline-light btn-block mb-3' form='send_message'>Send Message</button>
 	</div>
 </div>
 {% endblock content %}
