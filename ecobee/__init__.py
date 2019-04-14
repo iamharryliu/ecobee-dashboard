@@ -7,6 +7,7 @@ def create_app():
 	
 	app = Flask(__name__)
 
+	app.config['SECRET_KEY'] = 'thatsthesecret'
 	app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@127.0.0.1/ecobee_db'
 
 	db.init_app(app)

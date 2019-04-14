@@ -1,21 +1,22 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from ecobee import db
-from ecobee.utils import Ecobee_API
+from ecobee.main.utils import Ecobee_API
+from ecobee.main.models import ecobee_api_configs
+from ecobee.main.forms import EcobeeAppForm
+
 
 main = Blueprint('main', __name__)
 
 temperature_options = [n*0.5+18 for n in range(17)]
 
-class ecobee_api_configs(db.Model):
-	name = db.Column(db.String(20), unique=True)
-	api_key = db.Column(db.String(32), primary_key=True)
-	authorization_code = db.Column(db.String(32), nullable=False)
-	access_token = db.Column(db.String(32), nullable=False)
-	refresh_token = db.Column(db.String(32), nullable=False)
-
 @main.route('/')
 def home():
 	return render_template('main.html')
+
+@main.route('/apps/add')
+def add_app():
+	form = EcobeeAppForm()
+	return render_template('add_app.html', form=form)
 
 @main.route('/apps/')
 def apps():
