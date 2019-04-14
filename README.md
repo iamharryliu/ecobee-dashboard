@@ -7,7 +7,7 @@ Web app to interact with ecobee API.
 * How to use UPDATE and DELETE requests.
 
 ## Getting Started
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ### Prerequisites
 * Python3.6
@@ -35,6 +35,10 @@ source env/bin/activate
 Install the Pyhon dependencies.
 ```
 pip install -r requirements.txt
+```
+To get mysqlclient to work you will need to install the Python and MySQL development headers and libraries like so.
+```
+sudo apt-get install python-dev default-libmysqlclient-dev
 ```
 Run the application.
 ```
