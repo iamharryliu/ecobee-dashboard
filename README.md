@@ -39,7 +39,7 @@ pip install -r requirements.txt
 Run the application.
 ```
 python run.py
-
+```
 ## Running Tests
 N/a
 
