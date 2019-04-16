@@ -5,7 +5,7 @@ from ecobee.main.models import ecobee_api_configs
 from ecobee.main.forms import EcobeeAppForm
 
 
-main = Blueprint('main', __name__)
+main = Blueprint('main', __name__, template_folder='templates')
 
 temperature_options = [n*0.5+18 for n in range(17)]
 
@@ -13,10 +13,28 @@ temperature_options = [n*0.5+18 for n in range(17)]
 def home():
 	return render_template('main.html')
 
-@main.route('/apps/add')
+@main.route('/apps/add', methods=['GET','POST'])
 def add_app():
 	form = EcobeeAppForm()
+	if form.validate_on_submit():
+		name = request.form['name']
+		api_key = request.form['api_key']
+		authorization_code = request.form['authorization_code']
+		access_token = request.form['access_token']
+		refresh_token = request.form['refresh_token']
+		app = ecobee_api_configs(name=name, api_key=api_key, authorization_code=authorization_code,
+			access_token=access_token, refresh_token=refresh_token)
+		db.session.add(app)
+		db.session.commit()
+		return redirect(url_for('main.home'))
 	return render_template('add_app.html', form=form)
+
+@main.route('/apps/<string:name>/delete', methods=['POST'])
+def delete_app(name):
+	app = ecobee_api_configs.query.filter_by(name=name).first()
+	db.session.delete(app)
+	db.session.commit()
+	return redirect(url_for('main.apps'))
 
 @main.route('/apps/')
 def apps():
