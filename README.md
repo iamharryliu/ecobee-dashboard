@@ -36,7 +36,7 @@ Install the Pyhon dependencies.
 ```
 pip install -r requirements.txt
 ```
-To get mysqlclient to work you will need to install the Python and MySQL development headers and libraries like so for Debian distributions (go to [here](https://pypi.org/project/mysqlclient/) for help with mysqlclient).
+To get mysqlclient to work you will need to install the Python and MySQL development headers and libraries like so for Debian distributions ([link](https://pypi.org/project/mysqlclient/) for help with mysqlclient).
 ```
 sudo apt-get install python-dev default-libmysqlclient-dev
 ```
