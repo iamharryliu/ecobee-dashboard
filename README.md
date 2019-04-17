@@ -10,7 +10,7 @@ Web app to interact with ecobee API.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ### Prerequisites
-* Python3.6
+* Python3
 * mySQL
 
 ### Installing
@@ -26,7 +26,7 @@ cd ecobee
 ```
 Create a virtual environment for the app.
 ```
-virtualenv -p python3.6 env
+virtualenv -p python3 env
 ```
 Activate your virtual environment.
 ```
@@ -36,7 +36,7 @@ Install the Pyhon dependencies.
 ```
 pip install -r requirements.txt
 ```
-To get mysqlclient to work you will need to install the Python and MySQL development headers and libraries like so.
+To get mysqlclient to work you will need to install the Python and MySQL development headers and libraries like so for Debian distributions (go to [here](https://pypi.org/project/mysqlclient/) for help with mysqlclient).
 ```
 sudo apt-get install python-dev default-libmysqlclient-dev
 ```
@@ -49,7 +49,7 @@ N/a
 
 ## Built With
 * Flask - micro framework
-* mySQL - SQL database
+* mySQL - database
 
 ## Authors
 * **Harry Liu**

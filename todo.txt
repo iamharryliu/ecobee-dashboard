@@ -1,1 +1,1 @@
-register app page
+organize html templates into components
