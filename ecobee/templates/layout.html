@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	{% include 'bs4.html' %}
+	{% include 'layout-components/bootstrap4.html' %}
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 	<title>Ecobee</title>
 </head>
 <body class='container pt-3 pb-3 text-light' style="background: #1b1d1e">
-	{% include 'navbar.html' %}
+	{% include 'layout-components/navbar.html' %}
 	<div class='mt-5 pt-3 pb-3'>
 	{% block content %} {% endblock content %}
 	</div>

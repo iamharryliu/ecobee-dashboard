@@ -27,7 +27,7 @@ def add_app():
 		db.session.add(app)
 		db.session.commit()
 		return redirect(url_for('main.home'))
-	return render_template('add_app.html', form=form)
+	return render_template('apps-components/add_app.html', form=form)
 
 @main.route('/apps/<string:name>/delete', methods=['POST'])
 def delete_app(name):

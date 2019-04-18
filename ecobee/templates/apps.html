@@ -3,17 +3,7 @@
 <h1>Apps</h1>
 <div class='row'>
 	{% for app in apps %}
-	<a class='col-xl-4 mt-3 mb-3 app' href="{{ url_for('main.thermostats', app_name=app.name)  }}">
-		<div class='card bg-dark'>
-			<div class='card-body'>
-				<h2 class='d-inline'>{{app.name}}</h2>
-				<form class='float-right' method='POST' action="{{url_for('main.delete_app', name=app.name)}}">
-					<input type="submit" name="" class='btn btn-danger' value='Delete'/>
-				</form>
-			</div>
-		</div>
-	</a>
-
+	{% include 'apps-components/app.html' %}
 	{% endfor %}
 </div>
 {% endblock content %}
