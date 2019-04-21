@@ -51,6 +51,10 @@ N/a
 * Flask - micro framework
 * mySQL - database
 
+## Screenshots
+![Screenshot](home-page.png)
+![Screenshot](thermostat-page.png)
+
 ## Authors
 * **Harry Liu**
 
