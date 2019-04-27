@@ -40,6 +40,20 @@ To get mysqlclient to work you will need to install the Python and MySQL develop
 ```
 sudo apt-get install python-dev default-libmysqlclient-dev
 ```
+Create mySQL database and tables.
+```
+CREATE DATABASE ecobee_db;
+USE ecobee_db;
+CREATE TABLE ecobee_api_configs(
+  name VARCHAR(20) NOT NULL,
+  api_key VARCHAR(32) NOT NULL,
+  authorization_code VARCHAR(32) NOT NULL,
+  access_token VARCHAR(32) NOT NULL,
+  refresh_token VARCHAR(32) NOT NULL,
+  PRIMARY KEY (api_key),
+  UNIQUE (name, api_key)
+);
+```
 Run the application.
 ```
 python run.py
