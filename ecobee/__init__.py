@@ -9,6 +9,7 @@ def create_app():
 
 	app.config['SECRET_KEY'] = 'thatsthesecret'
 	app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:root@localhost/ecobee_db'
+	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 	db.init_app(app)
 
