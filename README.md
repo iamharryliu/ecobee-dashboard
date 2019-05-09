@@ -1,16 +1,17 @@
 # ecobee
-Web app to interact with ecobee API.
+Dashboard to interact with ecobee API.
 
 ## What I Learned
-* How to create web APIs
-* How to use and implement mySQL in an API project
-* How to use UPDATE and DELETE requests.
+* How to interact with IOT devices through web API
+* Impletment MySQL database to Flask project.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ### Prerequisites
-* Python3
+* Python3.6+
+* pip
+* virtualenv
 * mySQL
 
 ### Installing
@@ -40,7 +41,7 @@ To get mysqlclient to work you will need to install the Python and MySQL develop
 ```
 sudo apt-get install python-dev default-libmysqlclient-dev
 ```
-Create mySQL database and tables.
+Create mySQL database and tables. You will also want to make changes to 'SQLALCHEMY_DATABASE_URI' in your Flask configurations to be able to access your MySQL sever.
 ```
 CREATE DATABASE ecobee_db;
 USE ecobee_db;
@@ -62,7 +63,7 @@ python run.py
 N/a
 
 ## Built With
-* Flask - micro framework
+* Flask - framework
 * mySQL - database
 
 ## Screenshots
