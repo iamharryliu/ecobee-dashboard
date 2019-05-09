@@ -66,8 +66,8 @@ N/a
 * mySQL - database
 
 ## Screenshots
-![Screenshot](home-page.png)
-![Screenshot](thermostat-page.png)
+![Screenshot](ecobee/static/home-page.png)
+![Screenshot](ecobee/static/thermostat-page.png)
 
 ## Authors
 * **Harry Liu**
