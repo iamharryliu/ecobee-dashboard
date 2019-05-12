@@ -10,9 +10,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 * Python3.6+
-* pip
-* virtualenv
-* mySQL
+* pip3
+* SQL
 
 ### Installing
 A step by step series of examples that tell you how to get a development environment running.
@@ -27,20 +26,19 @@ cd ecobee
 ```
 Create a virtual environment for the app.
 ```
-virtualenv -p python3 env
+python3 -m venv venv
 ```
 Activate your virtual environment.
 ```
-source env/bin/activate
+source venv/bin/activate
 ```
-Install the Pyhon dependencies.
+Install the Pyhon dependencies for MySQL or Postgres.
 ```
-pip install -r requirements.txt
+pip install -r requirements-mysql.txt
+pip install -r requirements-postgres.txt
 ```
-To get mysqlclient to work you will need to install the Python and MySQL development headers and libraries like so for Debian distributions ([link](https://pypi.org/project/mysqlclient/) for help with mysqlclient).
-```
-sudo apt-get install python-dev default-libmysqlclient-dev
-```
+To get mysqlclient to work properly, go to the following ([link](https://pypi.org/project/mysqlclient/).
+
 Create mySQL database and tables. You will also want to make changes to 'SQLALCHEMY_DATABASE_URI' in your Flask configurations to be able to access your MySQL sever.
 ```
 CREATE DATABASE ecobee_db;

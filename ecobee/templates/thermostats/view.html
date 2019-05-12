@@ -1,10 +1,10 @@
 {% extends 'layout.html' %}
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 <h1>Thermostats</h1>
 <div class='row'>
 	{% for thermostat in thermostats %}
-	<a class='col-xl-6 mt-3 mb-3 app' href="{{url_for('main.thermostat', app_name=app.name, thermostat_identifier=thermostat.identifier)}}">
+	<a class='col-12 mt-3 mb-3 app'
+		href="{{url_for('main.thermostat', app_name=app.name, thermostat_identifier=thermostat.identifier)}}">
 		<div class='card bg-dark'>
 			<div class='card-body'>
 				<h2>{{thermostat.name}}<span class='float-right'>{{thermostat.temperature}}</span></h2>

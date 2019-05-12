@@ -1,1 +1,1 @@
-organize html templates into components
+fix thermostat page container size

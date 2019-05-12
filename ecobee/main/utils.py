@@ -1,4 +1,5 @@
 import requests, json, logging
+from flask import flash
 
 from ecobee import db
 
@@ -13,8 +14,7 @@ logger.addHandler(file_handler)
 ecobee_url = 'https://api.ecobee.com/'
 
 class Ecobee_API():
-	def __init__(self, config=None):
-		
+	def __init__(self, config=None, name=None, api_key=None, authorization_code=None, access_token=None, refresh_token=None):
 		if config:
 			self.config = config
 			self.name = config.name
@@ -22,6 +22,41 @@ class Ecobee_API():
 			self.authorization_code = config.authorization_code
 			self.access_token = config.access_token
 			self.refresh_token = config.refresh_token
+		else:
+			self.name = name
+			self.api_key = api_key
+			self.authorization_code = authorization_code
+			self.access_token = access_token
+			self.refresh_token = refresh_token
+		
+	def isAuthentic(self, refreshed=False):
+		url = f'{ecobee_url}1/thermostat'
+		header = {'Content-Type': 'application/json;charset=UTF-8',\
+                  'Authorization': 'Bearer ' + self.access_token}
+		params = {
+					'json': (
+						'''{\
+							"selection":{\
+								"selectionType":"registered"
+						}\
+					}'''
+				)
+		}
+		try:
+			request = requests.get(url, headers=header, params=params)
+		except:
+			pass
+			# logger.warn(f'Request for {self.api_key} unsuccessful.')
+		else:
+			if request.status_code == requests.codes.ok:
+				# logger.info(f'Request for {self.api_key} successful')
+				return True
+			else:
+				if self.refresh_tokens():
+					return self.isAuthentic(refreshed=True)
+				else:
+					return False
+	
 
 	def get_json(self):
 		logger.info(f'Attempting to get json data for {self.api_key}')
@@ -92,9 +127,16 @@ class Ecobee_API():
 		except RequestException:
 			logger.warn(f'Pin request for {self.api_key} unsuccessful')
 		else:
-			logger.info(f'Pin request for {self.api_key} successful')
-			self.authorization_code = request.json()['code']
-			self.pin = request.json()['ecobeePin']
+			if request.status_code == requests.codes.ok:
+				logger.info(f'Pin request for {self.api_key} successful')
+				self.authorization_code = request.json()['code']
+				self.pin = request.json()['ecobeePin']
+			else:
+				return False
+
+	def isAppValid(self):
+		return self.make_request()
+
 
 	def make_request(self, body, log_msg_action):
 		url = f'{ecobee_url}1/thermostat'
