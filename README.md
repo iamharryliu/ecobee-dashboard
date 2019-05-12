@@ -37,7 +37,7 @@ Install the Pyhon dependencies for MySQL or Postgres.
 pip install -r requirements-mysql.txt
 pip install -r requirements-postgres.txt
 ```
-To get mysqlclient to work properly, go to the following ([link](https://pypi.org/project/mysqlclient/).
+To get mysqlclient to work properly go to [this link](https://pypi.org/project/mysqlclient/) for help.
 
 Run the application.
 ```
