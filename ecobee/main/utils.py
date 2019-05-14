@@ -23,7 +23,6 @@ class Ecobee_API():
 			self.access_token = config.access_token
 			self.refresh_token = config.refresh_token
 		else:
-			self.config = None
 			self.name = name
 			self.api_key = api_key
 			self.authorization_code = authorization_code
@@ -147,7 +146,7 @@ class Ecobee_API():
 				# logger.info(f'Request for {self.api_key} successful')
 				return True
 			else:
-				if self.config and self.refresh_tokens():
+				if self.refresh_tokens():
 					return self.isAuthentic(refreshed=True)
 				else:
 					return False
