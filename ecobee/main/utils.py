@@ -146,7 +146,7 @@ class Ecobee_API():
 				# logger.info(f'Request for {self.api_key} successful')
 				return True
 			else:
-				if self.refresh_tokens():
+				if self.config and self.refresh_tokens():
 					return self.isAuthentic(refreshed=True)
 				else:
 					return False
