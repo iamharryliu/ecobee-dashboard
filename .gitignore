@@ -1,7 +1,8 @@
 venv
+site.db
 .DS_Store
 .vscode
-
+todo.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
