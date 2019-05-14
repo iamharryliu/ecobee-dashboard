@@ -23,6 +23,7 @@ class Ecobee_API():
 			self.access_token = config.access_token
 			self.refresh_token = config.refresh_token
 		else:
+			self.config = None
 			self.name = name
 			self.api_key = api_key
 			self.authorization_code = authorization_code
