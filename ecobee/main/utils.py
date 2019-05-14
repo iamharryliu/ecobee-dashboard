@@ -28,7 +28,101 @@ class Ecobee_API():
 			self.authorization_code = authorization_code
 			self.access_token = access_token
 			self.refresh_token = refresh_token
-		
+
+	def request_pin(self):
+		logger.info(f'Attempting to request pin for {self.api_key}')
+		url = f'{ecobee_url}authorize'
+		params = {
+			'response_type': 'ecobeePin',
+			'client_id': self.api_key, 
+			'scope': 'smartWrite'
+		}
+		try:
+			request = requests.get(url, params=params)
+		except RequestException:
+			logger.warn(f'Pin request for {self.api_key} unsuccessful')
+		else:
+			if request.status_code == requests.codes.ok:
+				logger.info(f'Pin request for {self.api_key} successful')
+				self.authorization_code = request.json()['code']
+				self.pin = request.json()['ecobeePin']
+			else:
+				return False
+
+	def request_tokens(self):
+		logger.info(f'Attempting to request tokens for {self.api_key}')
+		url = f'{ecobee_url}token'
+		params = {'grant_type': 'ecobeePin', 'code': self.authorization_code,
+		'client_id': self.api_key}
+		try:
+			request = requests.post(url, params=params)
+		except RequestException:
+			return
+		else:
+			if request.status_code == requests.codes.ok:
+				logger.info(f'Tokens request for {self.api_key} successful')
+				self.access_token = request.json()['access_token']
+				self.refresh_token = request.json()['refresh_token']
+				self.write_to_db()
+				self.pin = None
+			else:
+				logger.info(f'Tokens request for {self.api_key} unsuccessful')
+				return
+
+	def make_request(self, body, log_msg_action):
+			url = f'{ecobee_url}1/thermostat'
+			header = {
+				'Content-Type': 'application/json;charset=UTF-8',
+				'Authorization': 'Bearer ' + self.access_token
+			}
+			params = {
+				'format': 'json'
+			}
+			try:
+				logger.info(f'Thermostat Action request for {self.api_key} successful:\n\t{log_msg_action}')
+				request = requests.post(url, headers=header, params=params, json=body)
+			except RequestException:
+				logger.warn(f'Thermostat Action request for {self.api_key} unsuccessful:\n\t{log_msg_action}')
+				return False
+			else:
+				if request.status_code == requests.codes.ok:
+					return True
+				else:
+					if self.refresh_tokens():
+						return self.make_request(body, log_msg_action)
+					else:
+						return False
+
+
+	def refresh_tokens(self):
+		logger.info(f'Attempting to refresh tokens for {self.api_key}')
+		url = f'{ecobee_url}token'
+		params = {
+			'grant_type': 'refresh_token',
+			'refresh_token': self.refresh_token,
+			'client_id': self.api_key
+		}
+		request = requests.post(url, params=params)
+		if request.status_code == requests.codes.ok:
+			logger.info(f'Refresh token request for {self.api_key} successful')
+			self.access_token = request.json()['access_token']
+			self.refresh_token = request.json()['refresh_token']
+			self.write_to_db()
+			return True
+		else:
+			logger.warn(f'Refresh token request for {self.api_key} unsuccessful')
+			self.request_pin()
+
+
+
+	def write_to_db(self):
+		logger.info(f'Writing {self.api_key} data to db')
+		self.config.api_key = self.api_key
+		self.config.authorization_code = self.authorization_code
+		self.config.access_token = self.access_token
+		self.config.refresh_token = self.refresh_token
+		db.session.commit()
+
 	def isAuthentic(self, refreshed=False):
 		url = f'{ecobee_url}1/thermostat'
 		header = {'Content-Type': 'application/json;charset=UTF-8',\
@@ -57,7 +151,6 @@ class Ecobee_API():
 				else:
 					return False
 	
-
 	def get_json(self):
 		logger.info(f'Attempting to get json data for {self.api_key}')
 		url = f'{ecobee_url}1/thermostat'
@@ -93,102 +186,6 @@ class Ecobee_API():
 					return self.get_json()
 				else:
 					return []
-
-	def refresh_tokens(self):
-		logger.info(f'Attempting to refresh tokens for {self.api_key}')
-		url = f'{ecobee_url}token'
-		params = {
-			'grant_type': 'refresh_token',
-			'refresh_token': self.refresh_token,
-			'client_id': self.api_key
-		}
-		request = requests.post(url, params=params)
-		if request.status_code == requests.codes.ok:
-			logger.info(f'Refresh token request for {self.api_key} successful')
-			self.access_token = request.json()['access_token']
-			self.refresh_token = request.json()['refresh_token']
-			self.write_to_db()
-			return True
-		else:
-			logger.warn(f'Refresh token request for {self.api_key} unsuccessful')
-			self.request_pin()
-
-
-	def request_pin(self):
-		logger.info(f'Attempting to request pin for {self.api_key}')
-		url = f'{ecobee_url}authorize'
-		params = {
-			'response_type': 'ecobeePin',
-			'client_id': self.api_key, 
-			'scope': 'smartWrite'
-		}
-		try:
-			request = requests.get(url, params=params)
-		except RequestException:
-			logger.warn(f'Pin request for {self.api_key} unsuccessful')
-		else:
-			if request.status_code == requests.codes.ok:
-				logger.info(f'Pin request for {self.api_key} successful')
-				self.authorization_code = request.json()['code']
-				self.pin = request.json()['ecobeePin']
-			else:
-				return False
-
-	def isAppValid(self):
-		return self.make_request()
-
-
-	def make_request(self, body, log_msg_action):
-		url = f'{ecobee_url}1/thermostat'
-		header = {
-			'Content-Type': 'application/json;charset=UTF-8',
-			'Authorization': 'Bearer ' + self.access_token
-		}
-		params = {
-			'format': 'json'
-		}
-		try:
-			logger.info(f'Thermostat Action request for {self.api_key} successful:\n\t{log_msg_action}')
-			request = requests.post(url, headers=header, params=params, json=body)
-		except RequestException:
-			logger.warn(f'Thermostat Action request for {self.api_key} unsuccessful:\n\t{log_msg_action}')
-			return False
-		else:
-			if request.status_code == requests.codes.ok:
-				return True
-			else:
-				if self.refresh_tokens():
-					return self.make_request(body, log_msg_action)
-				else:
-					return False
-
-	def write_to_db(self):
-		logger.info(f'Writing {self.api_key} data to db')
-		self.config.api_key = self.api_key
-		self.config.authorization_code = self.authorization_code
-		self.config.access_token = self.access_token
-		self.config.refresh_token = self.refresh_token
-		db.session.commit()
-		
-	def request_tokens(self):
-		logger.info(f'Attempting to request tokens for {self.api_key}')
-		url = f'{ecobee_url}token'
-		params = {'grant_type': 'ecobeePin', 'code': self.authorization_code,
-		'client_id': self.api_key}
-		try:
-			request = requests.post(url, params=params)
-		except RequestException:
-			return
-		else:
-			if request.status_code == requests.codes.ok:
-				logger.info(f'Tokens request for {self.api_key} successful')
-				self.access_token = request.json()['access_token']
-				self.refresh_token = request.json()['refresh_token']
-				self.write_to_db()
-				self.pin = None
-			else:
-				logger.info(f'Tokens request for {self.api_key} unsuccessful')
-				return
 
 	def resume(self, identifier, resume_all=False):
 		body = {"selection": 
