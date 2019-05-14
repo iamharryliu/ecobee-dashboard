@@ -4,18 +4,21 @@
 		</h5>
 		<div class="card-body">
 			<div class="card-text">
-				Type: {{ thermostat.sensor.type }}<br>
-				Active: <span class="badge badge-{%if thermostat.sensor.temperature%}success{%else%}danger{% endif %}">Status</span><br>
-				Temperature: 
 				{% if thermostat.sensor.temperature %}
-					<span class="badge badge-{%if thermostat.sensor.temperature%}success{%else%}danger{% endif %}">{{ '%0.1f' | format(thermostat.sensor.temperature|float) }}</span>
-				{% else %}
-					<span class="badge badge-{{thermostat.sensor.sensor_badge}}">{{thermostat.sensor.temperature}}</span>
-				{% endif %}<br>
-				Occupancy: 
-				<span class="badge badge-{%if thermostat.sensor.occupancy=='true'%}success{%else%}danger{% endif %}">
+				Type: {{ thermostat.sensor.type }}<br>
+				Active:
+				<span class="badge badge-success">Status</span><br>
+				Temperature:
+				<span
+					class="badge badge-success">{{ '%0.1f' | format(thermostat.sensor.temperature|float) }}</span><br />
+				Occupancy:
+				<span class="badge badge-success">
 					Status
 				</span>
+				{% else %}
+				Active:
+				<span class="badge badge-danger">Status</span><br>
+				{% endif %}
 			</div>
 		</div>
 	</div>

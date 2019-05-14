@@ -11,13 +11,14 @@
 	method="post" id='send_message'></form>
 <form action="{{url_for('main.resume', app_name=app_name, thermostat_identifier=thermostat.identifier)}}" method="post"
 	id='resume'></form>
-
 <div class='row'>
 
-	{% include 'thermostats/thermostat/components/thermostat_temperature.html' %}
-
-	{% include 'thermostats/thermostat/components/thermostat_setting.html' %}
-
+	<div class='col-lg-6 mb-4'>
+		{% include 'thermostats/thermostat/components/temperature.html' %}
+	</div>
+	<div class='col-md-6 mb-4'>
+		{% include 'thermostats/thermostat/components/settings.html' %}
+	</div>
 	{% include 'thermostats/thermostat/components/thermostat_sensor.html' %}
 
 	{% for sensor in thermostat.remote_sensors %}

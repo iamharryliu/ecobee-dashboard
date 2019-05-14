@@ -1,17 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from ecobee.config import Config
 
 db = SQLAlchemy()
 
-def create_app():
+
+def create_app(config_class=Config):
 	
 	app = Flask(__name__)
-
-	app.config['SECRET_KEY'] = 'thatsthesecret'
-	app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:password@localhost/ecobee'
-	app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://localhost/ecobee"
-	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+	app.url_map.strict_slashes = False
+	app.config.from_object(Config)
 	db.init_app(app)
 
 	with app.app_context():

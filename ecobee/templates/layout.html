@@ -5,21 +5,20 @@
 	{% include 'layout-components/bootstrap4.html' %}
 
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
 
 	<link rel="shortcut icon" href="{{ url_for('static', filename='ecobee_logo.png') }}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
 	<title>Ecobee</title>
 
 </head>
 
-<body class='text-light' style="background: #1b1d1e">
-	<main class='container pt-3 pb-3 '>
-		{% include 'layout-components/navbar.html' %}
-
-		<div class='mt-5 pt-3 pb-3'>
-			{% include 'layout-components/flash.html' %}
-			{% block content %} {% endblock content %}
-		</div>
+<body class='text-light'>
+	{% include 'layout-components/navbar.html' %}
+	<main class='container pt-3 pb-3'>
+		{% include 'layout-components/flash.html' %}
+		{% block content %} {% endblock content %}
 	</main>
 </body>
 
