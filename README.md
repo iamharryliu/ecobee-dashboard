@@ -34,7 +34,7 @@ source venv/bin/activate
 ```
 Install Pyhon dependencies.
 ```
-pip install -r requirements
+pip install -r requirements.txt
 ```
 
 Run the application.
