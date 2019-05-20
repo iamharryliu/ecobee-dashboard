@@ -1,9 +1,9 @@
 # ecobee
-Dashboard to interact with ecobee API.
+Dashboard to interact with Ecobee API. You can register your thermostats on the dashboard to control thermostat settings and access/monitor thermostat information such as room temperatures or room occupancy.
 
 ## What I Learned
 * How to interact with IOT devices through web API
-* Impletment MySQL database to Flask project.
+* How to build RESTful APIs.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
@@ -32,12 +32,10 @@ Activate your virtual environment.
 ```
 source venv/bin/activate
 ```
-Install the Pyhon dependencies for MySQL or Postgres.
+Install Pyhon dependencies.
 ```
-pip install -r requirements-mysql.txt
-pip install -r requirements-postgres.txt
+pip install -r requirements
 ```
-To get mysqlclient to work properly go to [this link](https://pypi.org/project/mysqlclient/) for help.
 
 Run the application.
 ```
