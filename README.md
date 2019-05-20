@@ -1,4 +1,4 @@
-# ecobee
+# ecobee-dashboard
 Dashboard to interact with Ecobee API. You can register your thermostats on the dashboard to control thermostat settings and access/monitor thermostat information such as room temperatures or room occupancy.
 
 ## What I Learned
@@ -22,7 +22,7 @@ git clone https://github.com/itzliu/ecobee.git
 ```
 Change directory into the project directory folder.
 ```
-cd ecobee
+cd ecobee-dashboard
 ```
 Create a virtual environment for the app.
 ```
