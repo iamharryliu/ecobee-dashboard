@@ -1,4 +1,4 @@
-# ecobee-dashboard
+# Ecobee Dashboard
 Dashboard to interact with Ecobee API. You can register your thermostats on the dashboard to control thermostat settings and access/monitor thermostat information such as room temperatures or room occupancy.
 
 ## What I Learned
