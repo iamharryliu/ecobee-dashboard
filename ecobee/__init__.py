@@ -6,17 +6,19 @@ db = SQLAlchemy()
 
 
 def create_app(config_class=Config):
-	
-	app = Flask(__name__)
-	app.url_map.strict_slashes = False
-	app.config.from_object(Config)
-	db.init_app(app)
 
-	with app.app_context():
-		db.create_all()
+    app = Flask(__name__)
+    app.url_map.strict_slashes = False
+    app.config.from_object(Config)
+    db.init_app(app)
 
-	from ecobee.main.routes import main
+    with app.app_context():
+        db.create_all()
 
-	app.register_blueprint(main)
+    from ecobee.main.routes import main
+    from ecobee.apps.routes import apps_blueprint
 
-	return app
+    app.register_blueprint(main)
+    app.register_blueprint(apps_blueprint)
+
+    return app

@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h1>Thermostats</h1>
+<div class='row'>
+    {% for thermostat in thermostats %}
+        {% include 'thermostats/components/thermostat.html' %}
+    {% endfor %}
+</div>
+{% endblock content %}
