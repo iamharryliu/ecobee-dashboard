@@ -3,7 +3,7 @@ site.db
 .DS_Store
 .vscode
 todo.txt
-logs/*
+ecobee/logs/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
