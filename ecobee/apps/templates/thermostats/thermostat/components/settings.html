@@ -32,10 +32,10 @@
 			</button>
 			{% for climate in thermostat.climates %}
 			<button class="btn btn-outline-light
-					{%if thermostat.current_climate_data.mode == climate %}
+					{%if thermostat.current_climate_data.mode == climate.ref %}
 						active
-					{%endif%}" value={{climate}} name='climate' style="width: 25%;" form='set_climate_hold'>
-				{{ climate | title }}
+					{%endif%}" value={{climate.ref}} name='climate' style="width: 25%;" form='set_climate_hold'>
+				{{ climate.ref | title }}
 			</button>
 			{% endfor %}
 		</div>

@@ -1,5 +1,4 @@
 from ecobee import create_app, db
-from ecobee.main.models import apis
 
 
 def main():

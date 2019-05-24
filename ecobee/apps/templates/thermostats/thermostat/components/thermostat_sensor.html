@@ -9,6 +9,8 @@
 			<span class="badge badge-success">Status</span><br>
 			Temperature:
 			<span class="badge badge-success">{{ '%0.1f' | format(thermostat.sensor.temperature|float) }}</span><br />
+			Humidity:
+			<span class="badge badge-success">{{thermostat.sensor.humidity}}%</span><br />
 			Occupancy:
 			<span class="badge badge-success">
 				Status

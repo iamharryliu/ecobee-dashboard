@@ -10,7 +10,7 @@
 				Temperature:
 				<span class="badge badge-success">{{ '%0.1f' | format(sensor.temperature|float) }}</span><br>
 				Occupancy:
-				<span class="badge badge-success">
+				<span class="badge {% if sensor.occupancy == True %}badge-success{% else %}badge-danger{% endif %}">
 					Status
 				</span>
 				{% else %}

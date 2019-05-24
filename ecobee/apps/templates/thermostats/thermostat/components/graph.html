@@ -1,5 +1,3 @@
-{% extends 'layout.html' %}
-{% block content %}
 <h3>{{ title['text'] }}</h3>
 
 <div id={{ chartID|safe }} class="chart" style="height: 500px;"></div>
@@ -20,8 +18,9 @@
       title: title,
       xAxis: xAxis,
       yAxis: yAxis,
-      series: series
+      series: series,
+      connectNulls: true
     });
   });
 </script>
-{% endblock content %}
+<script src="https://code.highcharts.com/modules/broken-axis.js"></script>
