@@ -13,6 +13,9 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 # logging.basicConfig(filename='log.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
 
+
+temperature_options = [n * 0.5 + 18 for n in range(17)]
+
 ecobee_url = 'https://api.ecobee.com/'
 
 
