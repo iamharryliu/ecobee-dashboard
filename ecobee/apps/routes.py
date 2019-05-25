@@ -20,7 +20,7 @@ def get_graph_data(app):
         for line in reader:
             categories.append(line[0][-6:])
             data.append(float(line[1]))
-    thermostat_data = {"name": thermostat.name, "data": data[-10:]}
+    thermostat_data = {"name": thermostat.name, "data": data[-24:]}
     series.append(thermostat_data)
     with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}') as f:
         categories = []
@@ -29,14 +29,14 @@ def get_graph_data(app):
         for line in reader:
             categories.append(line[0][-6:])
             data.append(float(line[2]))
-    thermostat_data = {"name": 'Set Temperature', "data": data[-10:]}
+    thermostat_data = {"name": 'Set Temperature', "data": data[-24:]}
     series.append(thermostat_data)
     for sensor in thermostat.remote_sensors:
         try:
             with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{sensor.id[0:2] + sensor.id[-3:]}', 'r') as f:
                 reader = csv.reader(f)
                 data = list(float(line[1]) if line[1] != '' else '' for line in reader)
-            sensor_data = {"name": sensor.name, "data": data[-10:]}
+            sensor_data = {"name": sensor.name, "data": data[-24:]}
             series.append(sensor_data)
         except Exception as e:
             print(e)

@@ -4,6 +4,7 @@ site.db
 .vscode
 todo.txt
 ecobee/logs/*
+!ecobee/logs/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
