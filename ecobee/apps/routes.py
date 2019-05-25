@@ -1,11 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from ecobee import db
 from ecobee.models import apis
-from ecobee.apps.utils import Ecobee_API
+from ecobee.apps.utils import Ecobee_API, temperature_options
 from ecobee.apps.forms import EcobeeAppForm
 import csv
-
-temperature_options = [n * 0.5 + 18 for n in range(17)]
 
 apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='templates')
 
