@@ -117,7 +117,7 @@ def thermostat(app_name, thermostat_identifier):
     ][0]
     categories, series = get_graph_data(app)
     chartID = 'chart_ID'
-    chart_type = 'line'
+    chart_type = 'spline'
     chart = {"renderTo": chartID, "type": chart_type}
     title = {"text": 'Thermostat'}
     xAxis = {"categories": categories}
