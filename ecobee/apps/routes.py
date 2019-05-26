@@ -11,8 +11,8 @@ apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='template
 def get_graph_data(app):
     thermostat = app.get_thermostats()[0]
     series = []
+    categories = []
     with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}') as f:
-        categories = []
         data = []
         reader = csv.reader(f)
         for line in reader:
@@ -21,11 +21,9 @@ def get_graph_data(app):
     thermostat_data = {"name": thermostat.name, "data": data[-24:]}
     series.append(thermostat_data)
     with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}') as f:
-        categories = []
         data = []
         reader = csv.reader(f)
         for line in reader:
-            categories.append(line[0][-6:])
             data.append(float(line[2]))
     thermostat_data = {"name": 'Set Temperature', "data": data[-24:]}
     series.append(thermostat_data)
@@ -38,7 +36,7 @@ def get_graph_data(app):
             series.append(sensor_data)
         except Exception as e:
             print(e)
-    return categories[-48:], series
+    return categories[-24:], series
 
 # Apps
 
