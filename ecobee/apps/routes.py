@@ -9,34 +9,35 @@ apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='template
 
 
 def get_graph_data(app):
+    temperatures_slice = slice(-24, None)
     thermostat = app.get_thermostats()[0]
     series = []
     categories = []
     with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}') as f:
-        data = []
+        temperatures = []
         reader = csv.reader(f)
         for line in reader:
             categories.append(line[0][-6:])
-            data.append(float(line[1]))
-    thermostat_data = {"name": thermostat.name, "data": data[-24:]}
+            temperatures.append(float(line[1]))
+    thermostat_data = {"name": thermostat.name, "data": temperatures[temperatures_slice]}
     series.append(thermostat_data)
     with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}') as f:
-        data = []
+        temperatures = []
         reader = csv.reader(f)
         for line in reader:
-            data.append(float(line[2]))
-    thermostat_data = {"name": 'Set Temperature', "data": data[-24:]}
+            temperatures.append(float(line[2]))
+    thermostat_data = {"name": 'Set Temperature', "data": temperatures[temperatures_slice]}
     series.append(thermostat_data)
     for sensor in thermostat.remote_sensors:
         try:
             with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{sensor.id[0:2] + sensor.id[-3:]}', 'r') as f:
                 reader = csv.reader(f)
-                data = list(float(line[1]) if line[1] != '' else '' for line in reader)
-            sensor_data = {"name": sensor.name, "data": data[-24:]}
+                temperatures = list(float(line[1]) if line[1] != '' else '' for line in reader)
+            sensor_data = {"name": sensor.name, "data": temperatures[temperatures_slice]}
             series.append(sensor_data)
         except Exception as e:
             print(e)
-    return categories[-24:], series
+    return categories[temperatures_slice], series
 
 # Apps
 
