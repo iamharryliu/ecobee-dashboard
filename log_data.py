@@ -1,19 +1,16 @@
 # from ecobee.apps.utils import Ecobee_API
 # import sqlite3
-
 # conn = sqlite3.connect('site.db')
-
 # c = conn.cursor()
-
-
 # apis = c.execute("SELECT * FROM 'apis'")
 
-import os
 from ecobee import create_app
 from ecobee.models import apis
 from ecobee.apps.utils import Ecobee_API
+import os
 import csv
-import datetime
+from datetime import datetime
+from pytz import timezone
 
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -26,7 +23,8 @@ def push_app_context():
 
 
 def get_timestamp():
-    timestamp = datetime.datetime.now()
+    tz = timezone('EST')
+    timestamp = datetime.now(tz)
     timestamp = timestamp.strftime('%m-%d-%y %H:%M')
     return timestamp
 
