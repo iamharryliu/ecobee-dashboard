@@ -368,6 +368,14 @@ class Thermostat():
             categories = []
             print(e)
 
+        # Get chart series(set temperatures).
+        try:
+            set_temperatures = self.sensor.get_set_temperatures(api_log_filepath, data_slice)
+            series_set_data = {"name": 'Set Temperature', "data": set_temperatures}
+            series.append(series_set_data)
+        except Exception as e:
+            print(e)
+
         # Get chart series(thermostat sensor temperatures).
         try:
             thermostat_temperatures = self.sensor.get_chart_temperatures(api_log_filepath, data_slice)
@@ -379,8 +387,7 @@ class Thermostat():
         # Get chart series(thermostat remote sensor temperatures).
         for sensor in self.remote_sensors:
             try:
-                filename = f'{api_log_filepath}{sensor.id[0:2] + sensor.id[-3:]}'
-                sensor_temperatures = sensor.get_chart_temperatures(filename, data_slice)
+                sensor_temperatures = sensor.get_chart_temperatures(api_log_filepath, data_slice)
                 series_sensor_temperatures = {"name": sensor.name, "data": sensor_temperatures}
                 series.append(series_sensor_temperatures)
             except Exception as e:
@@ -394,6 +401,14 @@ class Thermostat():
         chart_data['yAxis'] = {"title": {"text": 'Temperature'}}
         chart_data['series'] = series
         return chart_data
+
+    def get_set_temperatures(self, filename, data_slice):
+        temperatures = []
+        with open(filename) as f:
+            reader = csv.reader(f)
+            temperatures = list(float(line[1]) if line[1] != '' else '' for line in reader)
+        temperatures = temperatures[data_slice]
+        return temperatures
 
 
 class RemoteSensor():
@@ -412,11 +427,13 @@ class RemoteSensor():
             self.active = False
             self.temperature = None
 
-    def get_chart_temperatures(self, filename, data_slice):
+    def get_chart_temperatures(self, api_log_filepath, data_slice):
         temperatures = []
+        filename = f'{api_log_filepath}{self.id[0:2] + self.id[-3:]}'
         with open(filename) as f:
             reader = csv.reader(f)
-            temperatures = list(float(line[1]) if line[1] != '' else '' for line in reader)
+            for line in reader:
+                temperatures.append(float(line[1]))
         temperatures = temperatures[data_slice]
         return temperatures
 
@@ -445,6 +462,16 @@ class ThermostatSensor():
             reader = csv.reader(f)
             for line in reader:
                 temperatures.append(float(line[1]))
+        temperatures = temperatures[data_slice]
+        return temperatures
+
+    def get_set_temperatures(self, api_log_filepath, data_slice):
+        temperatures = []
+        filename = f'{api_log_filepath}{self.id[0:2] + self.id[-1:]}'
+        with open(filename) as f:
+            reader = csv.reader(f)
+            for line in reader:
+                temperatures.append(float(line[2]))
         temperatures = temperatures[data_slice]
         return temperatures
 
