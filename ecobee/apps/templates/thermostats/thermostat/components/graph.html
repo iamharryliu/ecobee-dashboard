@@ -1,7 +1,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
+<h3>Charts</h3>
 {% for chart_dict in charts %}
-<h3>{{ chart_dict['title']['text'] }}</h3>
 <div id={{ chart_dict['chart_id']|safe }} class="chart" style="height: 500px;"></div>
 <script>
     var chart_id = {{ chart_dict['chart_id']|safe }}
