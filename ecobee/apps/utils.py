@@ -353,9 +353,9 @@ class Thermostat():
 
     def get_thermostat_temperature_chart_data(self, api_key):
 
-        chart_id = 'chartid'
+        chart_id = 'temperature_chart'
         chart_type = 'spline'
-        title = 'Thermostat'
+        title = 'Thermostat Temperatures'
         data_slice = slice(-24, None)
         series = []
 
@@ -390,7 +390,7 @@ class Thermostat():
         chart_data['chart_id'] = chart_id
         chart_data['chart'] = {"renderTo": chart_id, "type": chart_type, }
         chart_data['title'] = {"text": title}
-        chart_data['xAxis'] = {"categories": categories}
+        chart_data['xAxis'] = {"title": {"text": 'Time'}, "categories": categories}
         chart_data['yAxis'] = {"title": {"text": 'Temperature'}}
         chart_data['series'] = series
         return chart_data
