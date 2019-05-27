@@ -8,37 +8,6 @@ import csv
 apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='templates')
 
 
-def get_graph_data(app):
-    temperatures_slice = slice(-24, None)
-    thermostat = app.get_thermostats()[0]
-    series = []
-    categories = []
-    with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}') as f:
-        temperatures = []
-        reader = csv.reader(f)
-        for line in reader:
-            categories.append(line[0][-6:])
-            temperatures.append(float(line[1]))
-    thermostat_data = {"name": thermostat.name, "data": temperatures[temperatures_slice]}
-    series.append(thermostat_data)
-    with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}') as f:
-        temperatures = []
-        reader = csv.reader(f)
-        for line in reader:
-            temperatures.append(float(line[2]))
-    thermostat_data = {"name": 'Set Temperature', "data": temperatures[temperatures_slice]}
-    series.append(thermostat_data)
-    for sensor in thermostat.remote_sensors:
-        try:
-            with open(f'ecobee/logs/{app.api_key}-{thermostat.identifier}-{sensor.id[0:2] + sensor.id[-3:]}', 'r') as f:
-                reader = csv.reader(f)
-                temperatures = list(float(line[1]) if line[1] != '' else '' for line in reader)
-            sensor_data = {"name": sensor.name, "data": temperatures[temperatures_slice]}
-            series.append(sensor_data)
-        except Exception as e:
-            print(e)
-    return categories[temperatures_slice], series
-
 # Apps
 
 
@@ -104,33 +73,25 @@ def thermostats(app_name):
     methods=["GET", "POST"],
 )
 def thermostat(app_name, thermostat_identifier):
+
+    # Get app.
     app_config = apis.query.filter_by(name=app_name).first()
     app = Ecobee_API(config=app_config)
-    thermostats = app.get_thermostats()
-    thermostat = [
-        thermostat
-        for thermostat in thermostats
-        if thermostat.identifier == thermostat_identifier
-    ][0]
-    categories, series = get_graph_data(app)
-    chartID = 'chart_ID'
-    chart_type = 'spline'
-    chart = {"renderTo": chartID, "type": chart_type}
-    title = {"text": 'Thermostat'}
-    xAxis = {"categories": categories}
-    yAxis = {"title": {"text": 'Temperature'}}
+
+    # Get thermostat.
+    thermostat = app.get_thermostat(thermostat_identifier)
+
+    charts = []
+    temperatures_chart_data = thermostat.get_thermostat_temperature_chart_data(app.api_key)
+    charts.append(temperatures_chart_data)
+
     return render_template(
         "thermostats/thermostat/view.html",
         app_name=app_name,
         app=app,
         thermostat=thermostat,
         temperature_options=temperature_options,
-        chartID=chartID,
-        chart=chart,
-        series=series,
-        title=title,
-        xAxis=xAxis,
-        yAxis=yAxis
+        charts=charts
     )
 
 
