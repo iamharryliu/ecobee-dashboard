@@ -1,12 +1,9 @@
 # Ecobee Dashboard
 Dashboard to interact with Ecobee API. You can register your thermostats on the dashboard to control thermostat settings and access/monitor thermostat information such as room temperatures or room occupancy.
 
-## What I Learned
-* How to interact with Ecobee IOT device through JSON REST API.
-* How to build RESTful APIs.
-* Logging and reading CSV files.
-* How to make charts using Highchart.js.
-* Design a dashboard using HTML, CSS, and JQuery.
+## Screenshots
+![Screenshot](ecobee/static/images/README/home-view.png)
+![Screenshot](ecobee/static/images/README/thermostat-view.png)
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
@@ -48,8 +45,12 @@ python run.py
 * Flask - framework
 * SQL - database
 
-## Screenshots
-![Screenshot](ecobee/static/ecobee-demo.png)
+## What I Learned
+* How to interact with Ecobee IOT device through JSON REST API.
+* How to build RESTful APIs.
+* Logging and reading CSV files.
+* How to make charts using Highchart.js.
+* Design a dashboard using HTML, CSS, and JQuery.
 
 ## Authors
 * Harry Liu
