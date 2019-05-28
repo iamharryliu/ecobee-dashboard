@@ -12,6 +12,7 @@ from datetime import datetime
 
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+log_path = f'{DIR_PATH}/logs/'
 
 
 def push_app_context():
@@ -40,7 +41,7 @@ def log():
             occupancy = thermostat.sensor.occupancy
             humidity = thermostat.sensor.humidity
             fields = [timestamp, temperature, set_temperature, occupancy, humidity]
-            with open(f'{DIR_PATH}/ecobee/logs/{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}', 'a') as f:
+            with open(f'{log_path}{app.api_key}-{thermostat.identifier}-{thermostat.sensor.id[0:2] + thermostat.sensor.id[-1:]}', 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow(fields)
 
@@ -48,7 +49,7 @@ def log():
                 temperature = sensor.temperature
                 occupancy = sensor.occupancy
                 fields = [timestamp, temperature, set_temperature, occupancy]
-                with open(f'{DIR_PATH}/ecobee/logs/{app.api_key}-{thermostat.identifier}-{sensor.id[0:2] + sensor.id[-3:]}', 'a') as f:
+                with open(f'{log_path}{app.api_key}-{thermostat.identifier}-{sensor.id[0:2] + sensor.id[-3:]}', 'a') as f:
                     writer = csv.writer(f)
                     writer.writerow(fields)
 

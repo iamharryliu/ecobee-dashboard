@@ -360,7 +360,7 @@ class Thermostat():
         data_slice = slice(-24, None)
         series = []
 
-        api_log_filepath = f'ecobee/logs/{api_key}-{self.identifier}-'
+        api_log_filepath = f'logs/{api_key}-{self.identifier}-'
 
         # Get chart categories(thermostat names).
         try:
