@@ -2,9 +2,8 @@ venv
 site.db
 .DS_Store
 .vscode
-todo.txt
-ecobee/logs/*
-!ecobee/logs/.gitkeep
+logs/*
+!logs/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
