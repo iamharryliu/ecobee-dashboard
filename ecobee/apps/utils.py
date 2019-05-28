@@ -3,16 +3,17 @@ import json
 import logging
 import csv
 from flask import flash, request
-
 from ecobee import db
+from pathlib import Path
+home_directory = str(Path.home())
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+# logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
-file_handler = logging.FileHandler('ecobee_api.log')
+file_handler = logging.FileHandler(f'{home_directory}/logs/ecobee_dash.log')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
-# logging.basicConfig(filename='log.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
+# logging.basicConfig(filename='ecobee_dash.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
 
 
 temperature_options = [n * 0.5 + 18 for n in range(17)]
