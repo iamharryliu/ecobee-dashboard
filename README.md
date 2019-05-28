@@ -20,6 +20,10 @@ Clone the repository onto your machine.
 ```
 git clone https://github.com/itzliu/ecobee.git
 ```
+Create folder for logs in home directory.
+```
+mkdir ~/logs
+```
 Change directory into the project directory folder.
 ```
 cd ecobee-dashboard
@@ -32,7 +36,7 @@ Activate your virtual environment.
 ```
 source venv/bin/activate
 ```
-Install Pyhon dependencies.
+Install Python dependencies.
 ```
 pip install -r requirements.txt
 ```
@@ -44,6 +48,7 @@ python run.py
 ## Built With
 * Flask - framework
 * SQL - database
+* Bootstrap - templating
 
 ## What I Learned
 * How to interact with Ecobee IOT device through JSON REST API.
