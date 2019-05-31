@@ -357,7 +357,7 @@ class Thermostat():
         chart_id = 'temperature_chart'
         chart_type = 'spline'
         title = 'Thermostat Temperatures'
-        data_slice = slice(-24, None)
+        data_slice = slice(-96, None)
         series = []
 
         api_log_filepath = f'logs/{api_key}-{self.identifier}-'
