@@ -1,5 +1,4 @@
 from ecobee import create_app
-from log_data import log
 
 app = create_app()
 
