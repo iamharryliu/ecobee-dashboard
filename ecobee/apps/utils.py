@@ -342,16 +342,6 @@ class Thermostat():
         temperature = farenheit_to_degrees(temperature)
         return temperature
 
-    def get_chart_categories(self, api_log_filepath, data_slice):
-        categories = []
-        filename = f'{api_log_filepath}{self.sensor.id[0:2] + self.sensor.id[-1:]}'
-        with open(filename) as f:
-            reader = csv.reader(f)
-            for line in reader:
-                categories.append(line[0][-6:])
-        categories = categories[data_slice]
-        return categories
-
     def get_thermostat_temperature_chart_data(self, api_key):
 
         chart_id = 'temperature_chart'
@@ -362,7 +352,7 @@ class Thermostat():
 
         api_log_filepath = f'logs/{api_key}-{self.identifier}-'
 
-        # Get chart categories(thermostat names).
+        # Get chart categories(thermostat times).
         try:
             categories = self.get_chart_categories(api_log_filepath, data_slice)
         except Exception as e:
@@ -403,13 +393,15 @@ class Thermostat():
         chart_data['series'] = series
         return chart_data
 
-    def get_set_temperatures(self, filename, data_slice):
-        temperatures = []
+    def get_chart_categories(self, api_log_filepath, data_slice):
+        categories = []
+        filename = f'{api_log_filepath}{self.sensor.id[0:2] + self.sensor.id[-1:]}'
         with open(filename) as f:
             reader = csv.reader(f)
-            temperatures = list(float(line[1]) if line[1] != '' else '' for line in reader)
-        temperatures = temperatures[data_slice]
-        return temperatures
+            for line in reader:
+                categories.append(line[0][-6:])
+        categories = categories[data_slice]
+        return categories
 
 
 class RemoteSensor():
