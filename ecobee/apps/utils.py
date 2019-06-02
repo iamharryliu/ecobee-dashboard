@@ -4,6 +4,11 @@ import logging
 import csv
 from flask import flash, request
 from ecobee import db
+import datetime
+import time
+
+import dateutil.parser
+
 from pathlib import Path
 home_directory = str(Path.home())
 
@@ -355,7 +360,7 @@ class Thermostat():
 
         api_log_filepath = f'{log_dir}/{api_key}-{self.identifier}'
 
-        # Get chart categories(thermostat times).
+        # Get chart categories(log times).
         try:
             categories = self.get_chart_categories(api_log_filepath, data_slice)
         except Exception as e:
@@ -410,7 +415,9 @@ class Thermostat():
         with open(filename) as f:
             reader = csv.reader(f)
             for line in reader:
-                categories.append(line[0])
+                log_datetime = dateutil.parser.parse(line[0])
+                log_time = log_datetime.strftime("%H:%M")
+                categories.append(log_time)
         categories = categories[data_slice]
         return categories
 
