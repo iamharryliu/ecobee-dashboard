@@ -37,7 +37,7 @@ def add_app():
             )
             db.session.add(app)
             db.session.commit()
-            return redirect(url_for("apps_blueprint.home"))
+            return redirect(url_for("main.home"))
         else:
             flash('App is not valid.', 'danger')
             return redirect(url_for('apps_blueprint.add_app'))
