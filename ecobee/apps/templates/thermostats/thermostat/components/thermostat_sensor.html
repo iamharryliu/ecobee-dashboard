@@ -1,23 +1,19 @@
 <div class="card bg-dark" style='height: 230px'>
-	<h5 class="card-header">Thermostat
-	</h5>
+	<h5 class="card-header">Thermostat {% if thermostat.sensor.active %}(active){% endif %}</h5>
 	<div class="card-body">
 		<div class="card-text">
-			{% if thermostat.sensor.temperature %}
-			Type: {{ thermostat.sensor.type }}<br>
-			Active:
-			<span class="badge badge-success">Status</span><br>
-			Temperature:
-			<span class="badge badge-success">{{ '%0.1f' | format(thermostat.sensor.temperature|float) }}</span><br />
-			Humidity:
-			<span class="badge badge-success">{{thermostat.sensor.humidity}}%</span><br />
-			Occupancy:
-			<span class="badge badge-success">
-				Status
-			</span>
+			{% if thermostat.sensor.connected %}
+				Type: {{ thermostat.sensor.type }}<br>
+				Temperature:
+				<span class="badge badge-success">{{ '%0.1f' | format(thermostat.sensor.temperature|float) }}</span><br />
+				Humidity:
+				<span class="badge badge-success">{{thermostat.sensor.humidity}}%</span><br />
+				Occupancy:
+				<span class="badge badge-success">
+					Status
+				</span>
 			{% else %}
-			Active:
-			<span class="badge badge-danger">Status</span><br>
+			CONNECTION LOST
 			{% endif %}
 		</div>
 	</div>

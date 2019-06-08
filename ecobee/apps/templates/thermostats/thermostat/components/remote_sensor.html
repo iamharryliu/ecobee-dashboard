@@ -1,22 +1,18 @@
-<div class='col-md-6 col-lg-3 mb-3'>
-	<div class="card bg-dark" style='height: 230px'>
-		<h5 class="card-header">{{sensor.name}}
-		</h5>
-		<div class="card-body">
-			<div class="card-text">
-				Type: remote sensor<br>
-				{% if sensor.temperature %}
-				Active: <span class="badge badge-success">Status</span><br>
-				Temperature:
-				<span class="badge badge-success">{{ '%0.1f' | format(sensor.temperature|float) }}</span><br>
-				Occupancy:
-				<span class="badge {% if sensor.occupancy == True %}badge-success{% else %}badge-danger{% endif %}">
-					Status
-				</span>
-				{% else %}
-				Active: <span class="badge badge-danger">Status</span><br>
-				{% endif %}
-			</div>
+<div class="card bg-dark" style='height: 230px'>
+	<h5 class="card-header">{{sensor.name}} {% if sensor.active %}(active){% endif %}</h5>
+	<div class="card-body">
+		<div class="card-text">
+			{% if sensor.connected %}
+			Type: remote sensor<br>
+			Temperature:
+			<span class="badge badge-success">{{ '%0.1f' | format(sensor.temperature|float) }}</span><br>
+			Occupancy:
+			<span class="badge {% if sensor.occupancy == True %}badge-success{% else %}badge-danger{% endif %}">
+				Status
+			</span>
+			{% else %}
+			CONNECTION LOST
+			{% endif %}
 		</div>
 	</div>
 </div>
