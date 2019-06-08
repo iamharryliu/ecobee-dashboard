@@ -13,11 +13,11 @@ from pathlib import Path
 home_directory = str(Path.home())
 
 logger = logging.getLogger(__name__)
-# logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
 file_handler = logging.FileHandler(f'{home_directory}/logs/ecobee_dash.log')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
+# logger.setLevel(logging.DEBUG)
 # logging.basicConfig(filename='ecobee_dash.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
 
 
@@ -360,14 +360,14 @@ class Thermostat():
 
         api_log_filepath = f'{log_dir}/{api_key}-{self.identifier}'
 
-        # Get chart categories(log times).
+        # Get log times (chartx-axis categories).
         try:
             categories = self.get_chart_categories(api_log_filepath, data_slice)
         except Exception as e:
             categories = []
             print(e)
 
-        # Get chart series(actual temperatures).
+        # Get acutal temperatures (chart series).
         try:
             set_temperatures = self.get_actual_temperatures(api_log_filepath, data_slice)
             series_set_data = {"name": 'Actual Temperature', "data": set_temperatures}
@@ -375,7 +375,7 @@ class Thermostat():
         except Exception as e:
             print(e)
 
-        # Get chart series(set temperatures).
+        # Get set temperatures (chart series).
         try:
             set_temperatures = self.get_set_temperatures(api_log_filepath, data_slice)
             series_set_data = {"name": 'Set Temperature', "data": set_temperatures}
@@ -383,7 +383,7 @@ class Thermostat():
         except Exception as e:
             print(e)
 
-        # Get chart series(thermostat sensor temperatures).
+        # Get thermostat sensor temperatures (chart series).
         try:
             thermostat_temperatures = self.sensor.get_chart_temperatures(api_log_filepath, data_slice)
             series_thermostat_data = {"name": 'Thermostat', "data": thermostat_temperatures}
@@ -391,7 +391,7 @@ class Thermostat():
         except Exception as e:
             print(e)
 
-        # Get chart series(thermostat remote sensor temperatures).
+        # Get thermostat remote sensor temperatures (chart series).
         for sensor in self.remote_sensors:
             try:
                 sensor_temperatures = sensor.get_chart_temperatures(api_log_filepath, data_slice)
@@ -445,17 +445,19 @@ class Thermostat():
 class RemoteSensor():
     def __init__(self, sensor):
         self.id = sensor['id']
+        self.active = sensor['inUse']
+        print(self.active)
         self.name = sensor['name']
         self.type = sensor['type']
         self.code = sensor['code']
         self.occupancy = True if sensor['capability'][1]['value'] == 'true' else False
         temperature = sensor['capability'][0]['value']
         if temperature != 'unknown':
-            self.active = True
+            self.connected = True
             temperature = float(temperature)
             self.temperature = farenheit_to_degrees(temperature)
         else:
-            self.active = False
+            self.connected = False
             self.temperature = None
 
     def get_chart_temperatures(self, api_log_filepath, data_slice):
@@ -472,6 +474,7 @@ class RemoteSensor():
 class ThermostatSensor():
     def __init__(self, sensor):
         self.id = sensor['id']
+        self.active = sensor['inUse']
         self.name = sensor['name']
         self.type = sensor['type']
         self.humidity = sensor['capability'][1]['value']
@@ -479,11 +482,11 @@ class ThermostatSensor():
         self.active = True
         temperature = sensor['capability'][0]['value']
         if temperature != 'unknown':
-            self.active = True
+            self.connected = True
             temperature = float(temperature)
             self.temperature = farenheit_to_degrees(temperature)
         else:
-            self.active = False
+            self.connected = False
             self.temperature = None
 
     def get_chart_temperatures(self, api_log_filepath, data_slice):
