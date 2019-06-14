@@ -1,23 +1,19 @@
-<script src="https://code.highcharts.com/highcharts.js"></script>
+<!-- View -->
+
+<div id="occupancy_chart" style='height: 400px;'></div>
+
+<!-- Scripts and Stylesheets -->
+
 <script src="https://code.highcharts.com/modules/xrange.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 
-<div id="container" style='height:400px;'></div>
 <style type="text/css">
-    @import 'https://code.highcharts.com/css/highcharts.css';
+
+@import 'https://code.highcharts.com/css/highcharts.css';
 
 .highcharts-xrange-series .highcharts-point {
     stroke-width: 1px;
     stroke: gray;
-}
-.highcharts-partfill-overlay {
-    fill: #010101;
-    fill-opacity: 0.3;
-}
-.highcharts-data-label text {
-    fill: white;
-    text-shadow: 1px 1px black, -1px 1px black, -1px -1px black, 1px -1px black;
 }
 </style>
 
@@ -26,7 +22,7 @@
     var occupancy_chart = {{ occupancy_chart|tojson|safe }}
 
     $(document).ready(function() {
-        Highcharts.chart('container', {
+        Highcharts.chart('occupancy_chart', {
             chart: occupancy_chart['chart'],
             title: occupancy_chart['title'],
             xAxis: occupancy_chart['xAxis'],
