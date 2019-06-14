@@ -4,7 +4,7 @@ import logging
 import csv
 from flask import flash, request
 from ecobee import db
-import datetime
+from datetime import datetime, timedelta
 import time
 
 import dateutil.parser
@@ -29,6 +29,14 @@ from pathlib import Path
 home_dir = str(Path.home())
 log_dir = f'{home_dir}/logs/ecobee_data/temp_and_humidity'
 
+occupancy_log_dir = f'{home_dir}/logs/ecobee_data/occupancy'
+
+dt_to_milliseconds = lambda dt: dt.timestamp() * 1000
+
+today = datetime.now()
+one_day = timedelta(days=1)
+yesterday = today - one_day
+yesterday = dt_to_milliseconds(yesterday)
 
 class Ecobee_API():
     def __init__(self, config=None, name=None, api_key=None, authorization_code=None, access_token=None, refresh_token=None):
@@ -350,11 +358,100 @@ class Thermostat():
         temperature = farenheit_to_degrees(temperature)
         return temperature
 
+    def get_occupancy_chart_data(self, api_key):
+
+        categories = None
+        series = None
+
+        categories = self.get_occupancy_chart_categories()
+        series = self.get_occupancy_chart_series(api_key)
+
+        chart_data = dict()
+        chart_data['chart_id'] = 'occupancy_chart'
+        chart_data['chart'] = {"type": 'xrange', 'styledMode': True}
+        chart_data['title'] = {"text": 'Occupancy Chart'}
+        chart_data['xAxis'] = {'type': 'datetime', 'min': yesterday}
+        chart_data['yAxis'] = {"title": {"text": ''}, 'categories':categories, 'reversed':True}
+        chart_data['series'] = series
+
+
+        return chart_data
+
+    def get_occupancy_chart_categories(self):
+        categories = []
+        categories.append('Thermostat')
+        for sensor in self.remote_sensors:
+            categories.append(sensor.name)
+        return categories
+
+    def get_occupancy_chart_series(self, api_key):
+        series = []
+        filename = f'{occupancy_log_dir}/{api_key}-{self.identifier}-ei0'
+        series.append(self.get_thermostat_occupancy_set(api_key))
+        sensor_sets = self.get_sensor_occupancy_sets(api_key)
+        series += sensor_sets
+        return series
+
+    def get_thermostat_occupancy_set(self, api_key):
+        filename = f'{occupancy_log_dir}/{api_key}-{self.identifier}-{self.sensor.file_id}'
+        thermostat_set = dict()
+        thermostat_set['name'] = 'Thermostat'
+        # tehrmostart_set['pointPadding'] = 0
+        thermostat_set['groupPadding'] = 0.5
+        thermostat_set['pointWidth'] = 20
+        thermostat_set['data_labels'] = {'enabled': False}
+        set_data = []
+        with open(filename) as f:
+            reader = csv.reader(f)
+            for line in reader:
+                start = dateutil.parser.parse(line[0])
+                start = dt_to_milliseconds(start)
+                if line[1] == '':
+                    end = datetime.now()
+                    end = dt_to_milliseconds(end)
+                else:
+                    end = dateutil.parser.parse(line[1])
+                    end = dt_to_milliseconds(end)
+                data = {'x':start, 'x2':end, 'y':0}
+                set_data.append(data)
+        thermostat_set['data'] = set_data
+        return thermostat_set
+
+    def get_sensor_occupancy_sets(self, api_key):
+        sets = []
+        for index, sensor in enumerate(self.remote_sensors):
+            try:
+                filename = f'{occupancy_log_dir}/{api_key}-{self.identifier}-{sensor.file_id}'
+                sensor_set = dict()
+                sensor_set['name'] = sensor.name
+                # tehrmostart_set['pointPadding'] = 0
+                sensor_set['groupPadding'] = 0.5
+                sensor_set['pointWidth'] = 20
+                sensor_set['data_labels'] = {'enabled': False}
+                set_data = []
+                with open(filename) as f:
+                    reader = csv.reader(f)
+                    for line in reader:
+                        start = dateutil.parser.parse(line[0])
+                        start = dt_to_milliseconds(start)
+                        if line[1] == '':
+                            end = datetime.now()
+                            end = dt_to_milliseconds(end)
+                        else:
+                            end = dateutil.parser.parse(line[1])
+                            end = dt_to_milliseconds(end)
+                        data = {'x':start, 'x2':end, 'y':index+1}
+                        set_data.append(data)
+                sensor_set['data'] = set_data
+                sets.append(sensor_set)
+            except Exception as e:
+                pass
+        return sets
+
+
+
     def get_thermostat_temperature_chart_data(self, api_key):
 
-        chart_id = 'temperature_chart'
-        chart_type = 'spline'
-        title = 'Thermostat Temperatures'
         data_slice = slice(-96, None)
         series = []
 
@@ -365,7 +462,7 @@ class Thermostat():
             categories = self.get_chart_categories(api_log_filepath, data_slice)
         except Exception as e:
             categories = []
-            print(e)
+            pass
 
         # Get acutal temperatures (chart series).
         try:
@@ -373,7 +470,7 @@ class Thermostat():
             series_set_data = {"name": 'Actual Temperature', "data": set_temperatures}
             series.append(series_set_data)
         except Exception as e:
-            print(e)
+            pass
 
         # Get set temperatures (chart series).
         try:
@@ -381,7 +478,7 @@ class Thermostat():
             series_set_data = {"name": 'Set Temperature', "data": set_temperatures}
             series.append(series_set_data)
         except Exception as e:
-            print(e)
+            pass
 
         # Get thermostat sensor temperatures (chart series).
         try:
@@ -389,7 +486,7 @@ class Thermostat():
             series_thermostat_data = {"name": 'Thermostat', "data": thermostat_temperatures}
             series.append(series_thermostat_data)
         except Exception as e:
-            print(e)
+            pass
 
         # Get thermostat remote sensor temperatures (chart series).
         for sensor in self.remote_sensors:
@@ -398,15 +495,16 @@ class Thermostat():
                 series_sensor_temperatures = {"name": sensor.name, "data": sensor_temperatures}
                 series.append(series_sensor_temperatures)
             except Exception as e:
-                print(e)
+                pass
 
         chart_data = dict()
-        chart_data['chart_id'] = chart_id
-        chart_data['chart'] = {"renderTo": chart_id, "type": chart_type, }
-        chart_data['title'] = {"text": title}
-        chart_data['xAxis'] = {"title": {"text": 'Time'}, "categories": categories}
+        chart_data['chart_id'] = 'temperature_chart'
+        chart_data['chart'] = {"renderTo": 'temperature_chart', "type": 'spline'}
+        chart_data['title'] = {"text": 'Thermostat Temperatures'}
+        chart_data['xAxis'] = {"title": {"text": 'Time'}, 'type':'datetime', "categories": categories, 'labels':{'format':'{value:%H:%M}'}}
         chart_data['yAxis'] = {"title": {"text": 'Temperature'}}
         chart_data['series'] = series
+
         return chart_data
 
     def get_chart_categories(self, api_log_filepath, data_slice):
@@ -415,9 +513,9 @@ class Thermostat():
         with open(filename) as f:
             reader = csv.reader(f)
             for line in reader:
-                log_datetime = dateutil.parser.parse(line[0])
-                log_time = log_datetime.strftime("%H:%M")
-                categories.append(log_time)
+                dt = dateutil.parser.parse(line[0])
+                ms = dt_to_milliseconds(dt)
+                categories.append(ms)
         categories = categories[data_slice]
         return categories
 
@@ -446,7 +544,6 @@ class RemoteSensor():
     def __init__(self, sensor):
         self.id = sensor['id']
         self.active = sensor['inUse']
-        print(self.active)
         self.name = sensor['name']
         self.type = sensor['type']
         self.code = sensor['code']
@@ -459,10 +556,11 @@ class RemoteSensor():
         else:
             self.connected = False
             self.temperature = None
+        self.file_id = self.id[0:2] + self.id[-3:]
 
     def get_chart_temperatures(self, api_log_filepath, data_slice):
         temperatures = []
-        filename = f'{api_log_filepath}-{self.id[0:2] + self.id[-3:]}'
+        filename = f'{api_log_filepath}-{self.file_id}'
         with open(filename) as f:
             reader = csv.reader(f)
             for line in reader:
@@ -488,10 +586,11 @@ class ThermostatSensor():
         else:
             self.connected = False
             self.temperature = None
+        self.file_id = self.id[0:2] + self.id[-1:]
 
     def get_chart_temperatures(self, api_log_filepath, data_slice):
         temperatures = []
-        filename = f'{api_log_filepath}-{self.id[0:2] + self.id[-1:]}'
+        filename = f'{api_log_filepath}-{self.file_id}'
         with open(filename) as f:
             reader = csv.reader(f)
             for line in reader:

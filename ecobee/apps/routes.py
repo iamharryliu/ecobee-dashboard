@@ -80,10 +80,8 @@ def thermostat(app_name, thermostat_identifier):
 
     # Get thermostat.
     thermostat = app.get_thermostat(thermostat_identifier)
-
-    charts = []
-    temperatures_chart_data = thermostat.get_thermostat_temperature_chart_data(app.api_key)
-    charts.append(temperatures_chart_data)
+    temperatures_chart = thermostat.get_thermostat_temperature_chart_data(app.api_key)
+    occupancy_chart = thermostat.get_occupancy_chart_data(app.api_key)
 
     return render_template(
         "thermostats/thermostat/view.html",
@@ -91,7 +89,8 @@ def thermostat(app_name, thermostat_identifier):
         app=app,
         thermostat=thermostat,
         temperature_options=temperature_options,
-        charts=charts
+        temperature_chart=temperatures_chart,
+        occupancy_chart=occupancy_chart
     )
 
 
