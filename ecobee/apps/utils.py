@@ -501,7 +501,7 @@ class Thermostat():
         chart_data['chart_id'] = 'temperature_chart'
         chart_data['chart'] = {"renderTo": 'temperature_chart', "type": 'spline', 'zoomType': 'x'}
         chart_data['title'] = {"text": 'Thermostat Temperatures'}
-        chart_data['xAxis'] = {"title": {"text": 'Time'}, 'type':'datetime', 'min': yesterday, "categories": categories}, 'labels':{'format':'{value:%h:%M}'}
+        chart_data['xAxis'] = {"title": {"text": 'Time'}, 'type':'datetime', 'min': yesterday, "categories": categories, 'labels':{'format':'{value:%h:%M}'}}
         chart_data['yAxis'] = {"title": {"text": 'Temperature'}}
         chart_data['series'] = series
 
