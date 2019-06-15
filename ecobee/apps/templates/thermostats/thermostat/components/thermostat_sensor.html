@@ -3,15 +3,16 @@
 	<div class="card-body">
 		<div class="card-text">
 			{% if thermostat.sensor.connected %}
-				Type: {{ thermostat.sensor.type }}<br>
-				Temperature:
-				<span class="badge badge-success">{{ '%0.1f' | format(thermostat.sensor.temperature|float) }}</span><br />
-				Humidity:
-				<span class="badge badge-success">{{thermostat.sensor.humidity}}%</span><br />
-				Occupancy:
-				<span class="badge badge-success">
-					Status
-				</span>
+			Type: {{ thermostat.sensor.type }}<br>
+			Temperature:
+			<span class="badge badge-success">{{ '%0.1f' | format(thermostat.sensor.temperature|float) }}</span><br />
+			Humidity:
+			<span class="badge badge-success">{{thermostat.sensor.humidity}}%</span><br />
+			Occupancy:
+			<span
+				class="badge {% if thermostat.sensor.occupancy == True %}badge-success{% else %}badge-danger{% endif %}">
+				Status
+			</span>
 			{% else %}
 			CONNECTION LOST
 			{% endif %}
