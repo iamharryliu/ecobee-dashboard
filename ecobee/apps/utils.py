@@ -126,7 +126,7 @@ class Ecobee_API():
         }
         try:
             request = requests.get(url, params=params)
-        except RequestException:
+        except:
             logger.warn(f'Pin request for {self.api_key} unsuccessful')
         else:
             if request.status_code == requests.codes.ok:
@@ -144,7 +144,7 @@ class Ecobee_API():
                   'client_id': self.api_key}
         try:
             request = requests.post(url, params=params)
-        except RequestException:
+        except:
             return
         else:
             if request.status_code == requests.codes.ok:
@@ -166,7 +166,7 @@ class Ecobee_API():
         try:
             logger.info(f'Thermostat Action request for {self.api_key} successful:\n\t{log_msg_action}')
             response = requests.post(url, headers=header, params=params, json=body)
-        except RequestException:
+        except:
             logger.warn(f'Thermostat Action request for {self.api_key} unsuccessful:\n\t{log_msg_action}')
             return False
         else:
@@ -460,7 +460,7 @@ class Thermostat():
         # Get log times (chartx-axis categories).
         try:
             categories = self.get_chart_categories(api_log_filepath, data_slice)
-        except Exception as e:
+        except:
             categories = []
             pass
 
@@ -469,7 +469,7 @@ class Thermostat():
             set_temperatures = self.get_actual_temperatures(api_log_filepath, data_slice)
             series_set_data = {"name": 'Actual Temperature', "data": set_temperatures}
             series.append(series_set_data)
-        except Exception as e:
+        except:
             pass
 
         # Get set temperatures (chart series).
@@ -477,7 +477,7 @@ class Thermostat():
             set_temperatures = self.get_set_temperatures(api_log_filepath, data_slice)
             series_set_data = {"name": 'Set Temperature', "data": set_temperatures}
             series.append(series_set_data)
-        except Exception as e:
+        except:
             pass
 
         # Get thermostat sensor temperatures (chart series).
@@ -494,7 +494,7 @@ class Thermostat():
                 sensor_temperatures = sensor.get_chart_temperatures(api_log_filepath, data_slice)
                 series_sensor_temperatures = {"name": sensor.name, "data": sensor_temperatures}
                 series.append(series_sensor_temperatures)
-            except Exception as e:
+            except:
                 pass
 
         chart_data = dict()
