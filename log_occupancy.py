@@ -53,7 +53,7 @@ def handle_thermostat(thermostat):
 
 
 def log_sensor_occupancy(sensor):
-    ''' Log sensor occupancy. '''
+    """ Log sensor occupancy. """
     sensor_filename = get_sensor_id_as_valid_filename(sensor)
     filepath = f"{log_path}-{sensor_filename}"
     file_exists = os.path.isfile(filepath)
@@ -79,13 +79,16 @@ def log_sensor_occupancy(sensor):
                 reader = csv.reader(f)
                 for line in reader:
                     occupancy_data.append(line)
-            recently_occupied = True if occupancy_data[-1][1] == "" else False
-            if recently_occupied:
-                occupancy_data[-1][1] = timestamp
-            with open(filepath, "w") as f:
-                writer = csv.writer(f)
-                for line in occupancy_data:
-                    writer.writerow(line)
+            if len(occupancy_data) > 0:
+                recently_occupied = True if occupancy_data[-1][1] == "" else False
+                if recently_occupied:
+                    occupancy_data[-1][1] = timestamp
+                with open(filepath, "w") as f:
+                    writer = csv.writer(f)
+                    for line in occupancy_data:
+                        writer.writerow(line)
+        else:
+            open(filepath, "a").close()
 
 
 def get_sensor_id_as_valid_filename(sensor):
