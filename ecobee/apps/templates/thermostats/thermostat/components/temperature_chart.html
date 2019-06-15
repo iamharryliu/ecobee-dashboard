@@ -1,23 +1,28 @@
-<!-- View -->
-
-<div id='temperature_chart' style="height: 500px;"></div>
-
 <!-- Scripts and Stylesheets -->
 
-<script src="http://code.highcharts.com/highcharts.js">
+<script src="http://code.highcharts.com/highcharts.js"></script>
+
+<!-- Chart Timezone -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js"></script>
+<script>
     Highcharts.setOptions({
-        global:{
-            useUTC: false
+        time: {
+            timezone: 'America/New_York'
         }
-    })
+    });
 </script>
+
+<!-- Figure out what these do.. -->
 <!-- <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
 <!-- <script src="https://code.highcharts.com/modules/broken-axis.js"></script> -->
 
 <script type="text/javascript">
-    var temperature_chart = {{ temperature_chart|tojson|safe }}
 
-    $(document).ready(function() {
+    var temperature_chart = {{ temperature_chart| tojson | safe }}
+
+    $(document).ready(function () {
         Highcharts.chart('temperature_chart', {
             chart: temperature_chart['chart'],
             title: temperature_chart['title'],
@@ -37,3 +42,6 @@
 
 </script>
 
+<!-- View -->
+
+<div id='temperature_chart' style="height: 500px;"></div>
