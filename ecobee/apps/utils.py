@@ -253,6 +253,7 @@ class Ecobee_API():
         params = {"text": message[0:500]}
         body = self.get_request_body(identifier, params=params, _type=_type)
         log_msg_action = f"Send Message: {message}"
+        flash('Message sent to thermostat.', 'success')
         return self.make_request(body, log_msg_action)
 
     def create_vacation(self, identifier, vacation):
