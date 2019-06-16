@@ -35,6 +35,9 @@ dt_to_milliseconds = lambda dt: dt.timestamp() * 1000
 
 today = datetime.now()
 one_day = timedelta(days=1)
+half_a_day = timedelta(hours=12)
+half_a_day_ago = today - half_a_day
+half_a_day_ago = dt_to_milliseconds(half_a_day_ago)
 yesterday = today - one_day
 yesterday = dt_to_milliseconds(yesterday)
 
@@ -370,7 +373,7 @@ class Thermostat():
         chart_data['chart_id'] = 'occupancy_chart'
         chart_data['chart'] = {"type": 'xrange', 'styledMode': True, 'zoomType': 'x'}
         chart_data['title'] = {"text": 'Occupancy Chart'}
-        chart_data['xAxis'] = {'type': 'datetime', 'min': yesterday, 'tickInterval': 1000* 60* 60, 'minorTicks':True, 'minorTickInterval': 1000*60*10}
+        chart_data['xAxis'] = {'type': 'datetime', 'min': half_a_day_ago, 'tickInterval': 1000* 60* 60, 'minorTicks':True, 'minorTickInterval': 1000*60*10}
         chart_data['yAxis'] = {"title": {"text": ''}, 'categories':categories, 'reversed':True}
         chart_data['series'] = series
 
