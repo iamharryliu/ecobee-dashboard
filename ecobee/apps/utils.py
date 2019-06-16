@@ -373,7 +373,7 @@ class Thermostat():
         chart_data['chart_id'] = 'occupancy_chart'
         chart_data['chart'] = {"type": 'xrange', 'styledMode': True, 'zoomType': 'x'}
         chart_data['title'] = {"text": 'Occupancy Chart'}
-        chart_data['xAxis'] = {'type': 'datetime', 'min': half_a_day_ago, 'tickInterval': 1000* 60* 60, 'minorTicks':True, 'minorTickInterval': 1000*60*10}
+        chart_data['xAxis'] = {'type': 'datetime', 'min': half_a_day_ago, 'tickInterval': 1000* 60* 60, 'minorTicks':True, 'minorTickInterval': 1000*60*30, 'dateTimeLabelFormats':{'hour':'%l:%M %P'}}
         chart_data['yAxis'] = {"title": {"text": ''}, 'categories':categories, 'reversed':True}
         chart_data['series'] = series
 
