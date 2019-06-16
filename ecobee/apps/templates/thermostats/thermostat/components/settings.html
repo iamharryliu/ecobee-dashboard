@@ -1,3 +1,12 @@
+<form
+	action='{{ url_for("apps_blueprint.set_hvac_mode", app_name=app_name, thermostat_identifier=thermostat.identifier) }}'
+	method="post" id='set_hvac_mode'></form>
+<form
+	action='{{ url_for("apps_blueprint.set_climate_hold", app_name=app_name, thermostat_identifier=thermostat.identifier) }}'
+	method="post" id='set_climate_hold'></form>
+<form action="{{url_for('apps_blueprint.resume', app_name=app_name, thermostat_identifier=thermostat.identifier)}}"
+	method="post" id='resume'></form>
+
 <div class='card bg-dark'>
 	<div class='card-header'>
 		<h1 class='text-center'>Thermostat Setting</h1>

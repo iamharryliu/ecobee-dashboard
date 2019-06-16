@@ -1,3 +1,7 @@
+<form
+	action='{{ url_for("apps_blueprint.send_message", app_name=app_name, thermostat_identifier=thermostat.identifier) }}'
+	method="post" id='send_message'></form>
+
 <div class="form-group">
 	<h3><label for="message">Thermostat Messaging</label></h3>
 	<textarea class="form-control" name='message' id="message" rows="6" form='send_message'></textarea>
