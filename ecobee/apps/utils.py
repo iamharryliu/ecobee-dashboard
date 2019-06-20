@@ -21,7 +21,7 @@ logger.addHandler(file_handler)
 # logging.basicConfig(filename='ecobee_dash.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
 
 
-temperature_options = [n * 0.5 + 18 for n in range(17)]
+temperature_options = [n * 0.5 + 18 for n in range(17)] # 18 to 26 degrees celsius
 
 ecobee_url = 'https://api.ecobee.com/'
 
@@ -277,7 +277,6 @@ class Ecobee_API():
             "endTime": vacation.end_time
         }
         body = self.get_request_body(identifier, params=params, type=_type)
-
         log_msg_action = f"Thermostat: {idenfifier} add vacation ({name} / {vacation.temperature} / {vacation.start_time} {vacation.end_time} to {vacation.end_date} {vacation.end_time})"
         return self.make_request(body, log_msg_action)
 
@@ -378,16 +377,18 @@ class Thermostat():
 
         categories = self.get_occupancy_chart_categories()
         series = self.get_occupancy_chart_series(api_key)
+
         half_a_day_ago = get_half_a_day_ago_dt()
+        tickInterval = 1000 * 3600 # 1h in ms
+        minorTickInterval = 1000 * 1800 # 30m in ms
 
         chart_data = dict()
         chart_data['chart_id'] = 'occupancy_chart'
         chart_data['chart'] = {"type": 'xrange', 'styledMode': True, 'zoomType': 'x'}
         chart_data['title'] = {"text": 'Occupancy Chart'}
-        chart_data['xAxis'] = {'type': 'datetime', 'min': half_a_day_ago, 'tickInterval': 1000* 60* 60, 'minorTicks':True, 'minorTickInterval': 1000*60*30, 'dateTimeLabelFormats':{'hour':'%l:%M %P'}}
+        chart_data['xAxis'] = {'type': 'datetime', 'min': half_a_day_ago, 'tickInterval': tickInterval, 'minorTicks':True, 'minorTickInterval': minorTickInterval, 'dateTimeLabelFormats':{'hour':'%l:%M %P'}}
         chart_data['yAxis'] = {"title": {"text": ''}, 'categories':categories, 'reversed':True}
         chart_data['series'] = series
-
 
         return chart_data
 
