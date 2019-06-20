@@ -378,12 +378,13 @@ class Thermostat():
 
         categories = self.get_occupancy_chart_categories()
         series = self.get_occupancy_chart_series(api_key)
+        half_a_day_ago = get_half_a_day_ago_dt()
 
         chart_data = dict()
         chart_data['chart_id'] = 'occupancy_chart'
         chart_data['chart'] = {"type": 'xrange', 'styledMode': True, 'zoomType': 'x'}
         chart_data['title'] = {"text": 'Occupancy Chart'}
-        chart_data['xAxis'] = {'type': 'datetime', 'min': half_a_day_ago(), 'tickInterval': 1000* 60* 60, 'minorTicks':True, 'minorTickInterval': 1000*60*30, 'dateTimeLabelFormats':{'hour':'%l:%M %P'}}
+        chart_data['xAxis'] = {'type': 'datetime', 'min': half_a_day_ago, 'tickInterval': 1000* 60* 60, 'minorTicks':True, 'minorTickInterval': 1000*60*30, 'dateTimeLabelFormats':{'hour':'%l:%M %P'}}
         chart_data['yAxis'] = {"title": {"text": ''}, 'categories':categories, 'reversed':True}
         chart_data['series'] = series
 
