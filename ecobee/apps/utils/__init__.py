@@ -4,46 +4,26 @@ from ecobee import db
 import requests
 import json
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import dateutil.parser
 import csv
 
 import logging
 from pathlib import Path
+
 logger = logging.getLogger(__name__)
-home_directory = str(Path.home())
-file_handler = logging.FileHandler(f'{home_directory}/logs/ecobee_dash.log')
+home_dir = str(Path.home())
+file_handler = logging.FileHandler(f'{home_dir}/logs/ecobee_dash.log')
 formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
-from pathlib import Path
-home_dir = str(Path.home())
-log_dir = f'{home_dir}/logs/ecobee_data/temp_and_humidity'
+temp_log_dir = f'{home_dir}/logs/ecobee_data/temp_and_humidity'
 occupancy_log_dir = f'{home_dir}/logs/ecobee_data/occupancy'
 
 TEMPERATURE_OPTIONS = [n * 0.5 + 18 for n in range(17)] # 18 to 26 degrees celsius
 ECOBEE_URL = 'https://api.ecobee.com/'
-dt_to_milliseconds = lambda dt: dt.timestamp() * 1000
-
-# Time.
-
-def get_today_dt():
-    today = datetime.now()
-    return today
-
-def get_half_a_day_ago_dt():
-    today = get_today_dt()
-    half_a_day = timedelta(hours=12)
-    half_a_day_ago = today - half_a_day
-    half_a_day_ago = dt_to_milliseconds(half_a_day_ago)
-    return half_a_day_ago
-
-def get_yesterday_dt():
-    today = get_today_dt()
-    yesterday = today - one_day
-    yesterday = dt_to_milliseconds(yesterday)
-    return yesterday
+from ecobee.apps.utils.time_utils import get_half_a_day_ago_dt, dt_to_milliseconds
 
 # API
 
@@ -236,7 +216,7 @@ class Ecobee_API():
 
     def set_temperature_hold(self, identifier, temperature, hold_type="holdHours", holdHours=2):
         _type = "setHold"
-        temperature = degreees_to_farenheit(temperature)
+        temperature = degrees_to_farenheitX10(temperature)
         params = {
             "holdType": hold_type,
             "coolHoldTemp": int(temperature),
@@ -259,7 +239,6 @@ class Ecobee_API():
         params = {"text": message[0:500]}
         body = self.get_request_body(identifier, params=params, _type=_type)
         log_msg_action = f"Send Message: {message}"
-        flash('Message sent to thermostat.', 'success')
         return self.make_request(body, log_msg_action)
 
     def create_vacation(self, identifier, vacation):
@@ -358,13 +337,13 @@ class Thermostat():
 
     def get_actual_temperature(self, thermostat):
         temperature = thermostat['runtime']['actualTemperature']
-        temperature = farenheit_to_degrees(temperature)
+        temperature = farenheitX10_to_degrees(temperature)
         return temperature
 
     def get_temperature(self, thermostat):
         temperature = thermostat['remoteSensors'][-1]['capability'][0]['value']
         temperature = float(temperature)
-        temperature = farenheit_to_degrees(temperature)
+        temperature = farenheitX10_to_degrees(temperature)
         return temperature
 
     def get_occupancy_chart_data(self, api_key):
@@ -467,7 +446,7 @@ class Thermostat():
         data_slice = slice(-96, None)
         series = []
 
-        api_log_filepath = f'{log_dir}/{api_key}-{self.identifier}'
+        api_log_filepath = f'{temp_log_dir}/{api_key}-{self.identifier}'
 
         # Get log times (chartx-axis categories).
         try:
@@ -564,7 +543,7 @@ class RemoteSensor():
         if temperature != 'unknown':
             self.connected = True
             temperature = float(temperature)
-            self.temperature = farenheit_to_degrees(temperature)
+            self.temperature = farenheitX10_to_degrees(temperature)
         else:
             self.connected = False
             self.temperature = None
@@ -594,7 +573,7 @@ class ThermostatSensor():
         if temperature != 'unknown':
             self.connected = True
             temperature = float(temperature)
-            self.temperature = farenheit_to_degrees(temperature)
+            self.temperature = farenheitX10_to_degrees(temperature)
         else:
             self.connected = False
             self.temperature = None
@@ -619,13 +598,13 @@ class CurrentClimateData():
             if holdClimateRef == "":
                 self.mode = 'hold'
                 temperature = thermostat['events'][0]['heatHoldTemp']
-                self.temperature = farenheit_to_degrees(temperature)
+                self.temperature = farenheitX10_to_degrees(temperature)
             else:
                 self.mode = holdClimateRef
                 for climate in thermostat['program']['climates']:
                     if self.mode == climate['climateRef']:
                         temperature = climate['heatTemp']
-                        self.temperature = farenheit_to_degrees(temperature)
+                        self.temperature = farenheitX10_to_degrees(temperature)
             self.end_date = thermostat['events'][0]['endDate']
             self.end_time = thermostat['events'][0]['endTime']
         else:
@@ -634,7 +613,7 @@ class CurrentClimateData():
             for climate in thermostat['program']['climates']:
                 if self.mode == climate['climateRef']:
                     temperature = climate['heatTemp']
-                    self.temperature = farenheit_to_degrees(temperature)
+                    self.temperature = farenheitX10_to_degrees(temperature)
             self.end_date = 'transition'
             self.end_time = 'transition'
 
@@ -644,17 +623,17 @@ class ClimateObj():
         self.ref = climate['climateRef']
         self.name = climate['name']
         temperature = climate['heatTemp']
-        temperature = farenheit_to_degrees(temperature)
+        temperature = farenheitX10_to_degrees(temperature)
         self.temperature = temperature
 
 
-def farenheit_to_degrees(temperature):
-    temperature = (temperature - 320) * 5 / 90
+def farenheitX10_to_degrees(temperature):
+    temperature = (temperature/10 - 32) * 5 / 9
     temperature = round(temperature, 2)
     return temperature
 
 
-def degreees_to_farenheit(temperature):
-    temperature = temperature * 90 / 5 + 320
+def degrees_to_farenheitX10(temperature):
+    temperature = (temperature * 9 / 5 + 32) * 10
     temperature = round(temperature, 2)
     return temperature

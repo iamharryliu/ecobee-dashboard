@@ -3,7 +3,6 @@ from ecobee import db
 from ecobee.models import apis
 from ecobee.apps.utils import Ecobee_API, TEMPERATURE_OPTIONS
 from ecobee.apps.forms import EcobeeAppForm
-import csv
 
 apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='templates')
 
@@ -141,6 +140,7 @@ def send_message(app_name, thermostat_identifier):
     app = Ecobee_API(config=app_config)
     message = request.form["message"]
     app.send_message(identifier=thermostat_identifier, message=message)
+    flash('Message sent to thermostat.', 'success')
     return redirect(
         url_for(
             "apps_blueprint.thermostat",
