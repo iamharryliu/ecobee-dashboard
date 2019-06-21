@@ -1,37 +1,32 @@
-import requests
-import json
-import logging
-import csv
 from flask import flash, request
 from ecobee import db
+
+import requests
+import json
+
 from datetime import datetime, timedelta
-import time
-
 import dateutil.parser
+import csv
 
+import logging
 from pathlib import Path
-home_directory = str(Path.home())
-
 logger = logging.getLogger(__name__)
-formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
+home_directory = str(Path.home())
 file_handler = logging.FileHandler(f'{home_directory}/logs/ecobee_dash.log')
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
-# logger.setLevel(logging.DEBUG)
-# logging.basicConfig(filename='ecobee_dash.log', level=logging.DEBUG, format='%(asctime)s:%(levelname)s:%(message)s')
-
-
-temperature_options = [n * 0.5 + 18 for n in range(17)] # 18 to 26 degrees celsius
-
-ecobee_url = 'https://api.ecobee.com/'
 
 from pathlib import Path
 home_dir = str(Path.home())
 log_dir = f'{home_dir}/logs/ecobee_data/temp_and_humidity'
-
 occupancy_log_dir = f'{home_dir}/logs/ecobee_data/occupancy'
 
+TEMPERATURE_OPTIONS = [n * 0.5 + 18 for n in range(17)] # 18 to 26 degrees celsius
+ECOBEE_URL = 'https://api.ecobee.com/'
 dt_to_milliseconds = lambda dt: dt.timestamp() * 1000
+
+# Time.
 
 def get_today_dt():
     today = datetime.now()
@@ -49,6 +44,8 @@ def get_yesterday_dt():
     yesterday = today - one_day
     yesterday = dt_to_milliseconds(yesterday)
     return yesterday
+
+# API
 
 class Ecobee_API():
     def __init__(self, config=None, name=None, api_key=None, authorization_code=None, access_token=None, refresh_token=None):
@@ -71,7 +68,7 @@ class Ecobee_API():
         return json.dumps(self.json, indent=2)
 
     def isAuthentic(self):
-        url = f'{ecobee_url}1/thermostat'
+        url = f'{ECOBEE_URL}1/thermostat'
         header = self.get_request_header()
         params = {
             'json': (
@@ -96,7 +93,7 @@ class Ecobee_API():
 
     def activate(self):
         logger.info(f'Attempting to get json data for {self.api_key}')
-        url = f'{ecobee_url}1/thermostat'
+        url = f'{ECOBEE_URL}1/thermostat'
         header = self.get_request_header()
         params = {
             'json': (
@@ -130,7 +127,7 @@ class Ecobee_API():
 
     def request_pin(self):
         logger.info(f'Attempting to request pin for {self.api_key}')
-        url = f'{ecobee_url}authorize'
+        url = f'{ECOBEE_URL}authorize'
         params = {
             'response_type': 'ecobeePin',
             'client_id': self.api_key,
@@ -150,7 +147,7 @@ class Ecobee_API():
 
     def request_tokens(self):
         logger.info(f'Attempting to request tokens for {self.api_key}')
-        url = f'{ecobee_url}token'
+        url = f'{ECOBEE_URL}token'
         params = {'grant_type': 'ecobeePin',
                   'code': self.authorization_code,
                   'client_id': self.api_key}
@@ -170,7 +167,7 @@ class Ecobee_API():
                 return
 
     def make_request(self, body, log_msg_action):
-        url = f'{ecobee_url}1/thermostat'
+        url = f'{ECOBEE_URL}1/thermostat'
         header = self.get_request_header()
         params = {
             'format': 'json'
@@ -199,7 +196,7 @@ class Ecobee_API():
 
     def refresh_tokens(self):
         logger.info(f'Attempting to refresh tokens for {self.api_key}')
-        url = f'{ecobee_url}token'
+        url = f'{ECOBEE_URL}token'
         params = {
             'grant_type': 'refresh_token',
             'refresh_token': self.refresh_token,

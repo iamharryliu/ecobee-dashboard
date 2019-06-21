@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from ecobee import db
 from ecobee.models import apis
-from ecobee.apps.utils import Ecobee_API, temperature_options
+from ecobee.apps.utils import Ecobee_API, TEMPERATURE_OPTIONS
 from ecobee.apps.forms import EcobeeAppForm
 import csv
 
@@ -88,7 +88,7 @@ def thermostat(app_name, thermostat_identifier):
         app_name=app_name,
         app=app,
         thermostat=thermostat,
-        temperature_options=temperature_options,
+        temperature_options=TEMPERATURE_OPTIONS,
         temperature_chart=temperatures_chart,
         occupancy_chart=occupancy_chart
     )
