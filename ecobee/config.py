@@ -13,3 +13,17 @@ class Config:
     # SQLALCHEMY_DATABASE_URI = "postgresql://localhost/ecobee"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
+
+
+import logging
+from pathlib import Path
+
+logger = logging.getLogger(__name__)
+home_dir = str(Path.home())
+file_handler = logging.FileHandler(f'{home_dir}/logs/ecobee_dash.log')
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+
+temp_log_dir = f'{home_dir}/logs/ecobee_data/temp_and_humidity'
+occupancy_log_dir = f'{home_dir}/logs/ecobee_data/occupancy'
