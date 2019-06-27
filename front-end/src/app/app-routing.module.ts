@@ -9,6 +9,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { RegisterAppComponent } from './components/register-app/register-app.component';
 import { AppFormComponent } from './components/register-app/components/app-form/app-form.component';
 import { ThermostatsComponent } from './components/thermostats/thermostats.component'
+import { ThermostatComponent } from './components/thermostat/thermostat.component';
+
 
 const routes: Routes = [
 
@@ -22,6 +24,7 @@ const routes: Routes = [
     {path: 'register_app', component: RegisterAppComponent},
     {path: 'apps', component: AppsComponent},
     {path: 'thermostats', component: ThermostatsComponent},
+    {path: 'thermostat', component: ThermostatComponent},
 
 
 ];
@@ -38,4 +41,5 @@ export const RoutingComponents = [MainComponent,
                                 RegisterComponent,
                                 RegisterAppComponent,
                                 AppFormComponent,
-                                ThermostatsComponent]
+                                ThermostatsComponent,
+                                ThermostatComponent]

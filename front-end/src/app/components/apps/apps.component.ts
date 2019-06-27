@@ -13,14 +13,12 @@ export class AppsComponent implements OnInit {
   constructor(private _APIService: APIService) { }
 
   ngOnInit() {
-    this.apis=this._APIService.getAPIS();
+    this._APIService.getAPIS()
+    .subscribe(data => this.apis = data);
   }
 
   deleteAPI(name){
     console.log('delete')
   }
-
-
-
 
 }

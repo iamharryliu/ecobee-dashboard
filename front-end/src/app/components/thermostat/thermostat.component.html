@@ -1,0 +1,26 @@
+<div *ngIf=all_data_fetched>
+    <p>thermostat {{thermostat.name}} works!</p>
+    <div class='row'>
+        <div class='col-lg-6 mb-4'>
+            temperature
+        </div>
+        <div class='col-lg-6 mb-4'>
+            settings
+        </div>
+        <div class='col-md-6 col-lg-3 mb-4'>
+            thermostat sensor: {{thermostat.sensor.name}}
+        </div>
+        <div class='col-md-6 col-lg-3 mb-3' *ngFor='let sensor of thermostat.remote_sensors'>
+            remote sensor: {{sensor.name}}
+        </div>
+        <div class='col-lg-12 mb-3'>
+            <h1>Charts</h1>
+            temp chart
+            <br />
+            occupancy chart
+        </div>
+        <div class='col-lg-12'>
+            Message
+        </div>
+    </div>
+</div>
