@@ -16,6 +16,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = "postgresql://localhost/ecobee"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
+    # CORS_HEADERS = 'Content-Type'
 
 
 logger = logging.getLogger(__name__)

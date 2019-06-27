@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from flask_cors import cross_origin
 from ecobee.config import TEMPERATURE_OPTIONS
 from ecobee.apps.forms import EcobeeAppForm
 from ecobee.apps.utils import addApp, getApp, getAppConfig, getAPIs, deleteAPI, getThermostats, getThermostat
@@ -15,6 +16,47 @@ apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='template
 def apps():
     apps = getAPIs()
     return render_template("apps/view.html", apps=apps)
+
+
+@apps_blueprint.route("/fetchApps")
+@cross_origin()
+def fetchApps():
+    apis = getAPIs()
+    set = []
+    for api in apis:
+        set.append({'name': api.name})
+    return jsonify(set)
+
+
+@apps_blueprint.route("/fetchThermostats")
+@cross_origin()
+def fetchThermostats():
+    app_name = 'home'
+    app = getApp(app_name)
+    thermostats = getThermostats(app)
+    set = []
+    for thermostat in thermostats:
+        set.append({'name': thermostat.name})
+    return jsonify(set)
+
+
+@apps_blueprint.route("/fetchThermostat")
+@cross_origin()
+def fetchThermostat():
+    app_name = 'home'
+    app = getApp(app_name)
+    thermostats = getThermostats(app)
+    thermostat_identifier = '311075659937'
+    thermostat = getThermostat(thermostats, thermostat_identifier)
+    set = {
+        'name': thermostat.name,
+        'actual_temperature': thermostat.actual_temperature,
+        'hvac_mode': thermostat.hvac_mode,
+        'current_climate_data': thermostat.current_climate_data.data,
+        'remote_sensors': thermostat.getRemoteSensorData(),
+        'sensor': thermostat.getSensorData()
+    }
+    return jsonify(set)
 
 
 @apps_blueprint.route("/apps/add", methods=["GET", "POST"])

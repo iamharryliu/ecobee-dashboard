@@ -245,6 +245,32 @@ class Thermostat():
         temperatures = temperatures[data_slice]
         return temperatures
 
+    def getRemoteSensorData(self):
+        sensors = []
+        for sensor in self.remote_sensors:
+            sensor = {
+                'name': sensor.name,
+                'active': sensor.active,
+                'connected': sensor.connected,
+                'type': sensor.type,
+                'temperature': sensor.temperature,
+                'occupancy': sensor.occupancy,
+            }
+            sensors.append(sensor)
+        return sensors
+
+    def getSensorData(self):
+        sensor = {
+            'name': self.sensor.name,
+            'active': self.sensor.active,
+            'connected': self.sensor.connected,
+            'type': self.sensor.type,
+            'temperature': self.sensor.temperature,
+            'humidity': self.sensor.humidity,
+            'occupancy': self.sensor.occupancy,
+        }
+        return sensor
+
 
 class RemoteSensor():
     def __init__(self, sensor):
@@ -331,6 +357,18 @@ class CurrentClimateData():
                     self.temperature = farenheitX10_to_degrees(temperature)
             self.end_date = 'transition'
             self.end_time = 'transition'
+        self.data = self.serializeData()
+
+    def serializeData(self):
+        data = {
+            'mode': self.mode,
+            'temperature': self.temperature,
+            'events': self.events,
+            'end_date': self.end_date,
+            'end_time': self.end_time,
+
+        }
+        return data
 
 
 class ClimateObj():
