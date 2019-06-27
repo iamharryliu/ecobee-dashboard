@@ -8,6 +8,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterAppComponent } from './components/register-app/register-app.component';
 import { AppFormComponent } from './components/register-app/components/app-form/app-form.component';
+import { ThermostatsComponent } from './components/thermostats/thermostats.component'
 
 const routes: Routes = [
 
@@ -20,6 +21,7 @@ const routes: Routes = [
     // App
     {path: 'register_app', component: RegisterAppComponent},
     {path: 'apps', component: AppsComponent},
+    {path: 'thermostats', component: ThermostatsComponent},
 
 
 ];
@@ -35,4 +37,5 @@ export const RoutingComponents = [MainComponent,
                                 LoginComponent,
                                 RegisterComponent,
                                 RegisterAppComponent,
-                                AppFormComponent]
+                                AppFormComponent,
+                                ThermostatsComponent]

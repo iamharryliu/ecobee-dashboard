@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { APIService } from '../../api.service'
 
 @Component({
   selector: 'app-apps',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppsComponent implements OnInit {
 
-  constructor() { }
+  public apis = [];
+
+  constructor(private _APIService: APIService) { }
 
   ngOnInit() {
+    this.apis=this._APIService.getAPIS();
   }
+
+  deleteAPI(name){
+    console.log('delete')
+  }
+
+
+
 
 }
