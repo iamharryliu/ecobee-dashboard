@@ -1,6 +1,7 @@
 from ecobee import create_app
 from ecobee.models import apis
-from ecobee.apps.utils import Ecobee_API
+from ecobeeAPI import EcobeeAPI
+from ecobee.apps.utils import getThermostats
 
 import os
 from pathlib import Path
@@ -33,8 +34,8 @@ def push_app_context():
 def handle_app(config):
     """ Handle app. """
     global app
-    app = Ecobee_API(config=config)
-    thermostats = app.get_thermostats()
+    app = EcobeeAPI(config=config)
+    thermostats = getThermostats(app)
     for thermostat in thermostats:
         handle_thermostat(thermostat)
 

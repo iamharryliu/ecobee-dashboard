@@ -2,10 +2,12 @@
     <div class='card bg-dark'>
         <div class='card-body'>
             <h2>{{app.name}}<span class='float-right'>
-                    <form class='float-right' method='POST' action="{{url_for('apps_blueprint.delete_app', name=app.name)}}">
+                    <form class='float-right' method='POST' action="{{ url_for('apps_blueprint.delete_app', name=app.name)
+                }}">
                         <input type="submit" name="" class='btn btn-danger' value='Delete' />
                     </form>
                 </span></h2>
         </div>
     </div>
 </a>
+<a class='btn btn-success' href="{{ url_for('apps_blueprint.edit_app', name=app.name) }}">Edit</a>

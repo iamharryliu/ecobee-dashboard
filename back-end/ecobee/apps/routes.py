@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
-from ecobee import db
-from ecobee.models import apis
-from ecobee.apps.utils import Ecobee_API, TEMPERATURE_OPTIONS
+from ecobee.config import TEMPERATURE_OPTIONS
 from ecobee.apps.forms import EcobeeAppForm
+from ecobee.apps.utils import addApp, getApp, getAppConfig, getAPIs, deleteAPI, getThermostats, getThermostat
+
+from ecobeeAPI import EcobeeAPI
 
 apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='templates')
 
@@ -12,7 +13,7 @@ apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='template
 
 @apps_blueprint.route("/apps")
 def apps():
-    apps = apis.query.all()
+    apps = getAPIs()
     return render_template("apps/view.html", apps=apps)
 
 
@@ -20,34 +21,30 @@ def apps():
 def add_app():
     form = EcobeeAppForm()
     if form.validate_on_submit():
-        name = request.form["name"]
-        api_key = request.form["api_key"]
-        authorization_code = request.form["authorization_code"]
-        access_token = request.form["access_token"]
-        refresh_token = request.form["refresh_token"]
-        app = Ecobee_API(name=name, api_key=api_key, authorization_code=authorization_code, access_token=access_token, refresh_token=refresh_token)
-        if app.isAuthentic():
-            app = apis(
-                name=name,
-                api_key=api_key,
-                authorization_code=authorization_code,
-                access_token=access_token,
-                refresh_token=refresh_token,
-            )
-            db.session.add(app)
-            db.session.commit()
+        if addApp(request):
+            flash('Successfully registered API', 'success')
             return redirect(url_for("main.home"))
         else:
-            flash('App is not valid.', 'danger')
+            flash('Failed to register API', 'danger')
             return redirect(url_for('apps_blueprint.add_app'))
     return render_template("apps/components/add-app.html", form=form)
 
 
+@apps_blueprint.route("/apps/<string:name>/edit", methods=["GET", "POST"])
+def edit_app(name):
+    app = getAppConfig(name)
+    form = EcobeeAppForm()
+    form.name.data = app.name
+    form.api_key.data = app.api_key
+    form.authorization_code.data = app.authorization_code
+    form.access_token.data = app.access_token
+    form.refresh_token.data = app.refresh_token
+    return render_template("apps/components/edit-app.html", form=form)
+
+
 @apps_blueprint.route("/apps/<string:name>/delete", methods=["POST"])
 def delete_app(name):
-    app = apis.query.filter_by(name=name).first()
-    db.session.delete(app)
-    db.session.commit()
+    deleteAPI(name)
     return redirect(url_for("apps_blueprint.apps"))
 
 
@@ -57,14 +54,9 @@ def delete_app(name):
 @apps_blueprint.route("/apps/<string:app_name>/")
 @apps_blueprint.route("/apps/<string:app_name>/thermostats/")
 def thermostats(app_name):
-    app_config = apis.query.filter_by(name=app_name).first()
-    app = Ecobee_API(config=app_config)
-    thermostats = app.get_thermostats()
-    if app.isAuthentic():
-        return render_template("thermostats/view.html", app=app, thermostats=thermostats)
-    else:
-        flash('App is not valid.', 'danger')
-        return redirect(url_for('apps_blueprint.apps'))
+    app = getApp(app_name)
+    thermostats = getThermostats(app)
+    return render_template("thermostats/view.html", app=app, thermostats=thermostats)
 
 
 @apps_blueprint.route(
@@ -73,12 +65,9 @@ def thermostats(app_name):
 )
 def thermostat(app_name, thermostat_identifier):
 
-    # Get app.
-    app_config = apis.query.filter_by(name=app_name).first()
-    app = Ecobee_API(config=app_config)
-
-    # Get thermostat.
-    thermostat = app.get_thermostat(thermostat_identifier)
+    app = getApp(app_name)
+    thermostats = getThermostats(app)
+    thermostat = getThermostat(thermostats, thermostat_identifier)
     temperatures_chart = thermostat.get_thermostat_temperature_chart_data(app.api_key)
     occupancy_chart = thermostat.get_occupancy_chart_data(app.api_key)
 
@@ -93,7 +82,7 @@ def thermostat(app_name, thermostat_identifier):
     )
 
 
-# Thermostat Functions
+# Thermostat Actions
 
 
 @apps_blueprint.route(
@@ -101,8 +90,7 @@ def thermostat(app_name, thermostat_identifier):
     methods=["POST"],
 )
 def resume(app_name, thermostat_identifier):
-    app_config = apis.query.filter_by(name=app_name).first()
-    app = Ecobee_API(config=app_config)
+    app = getApp(app_name)
     app.resume(identifier=thermostat_identifier)
     return redirect(
         url_for(
@@ -118,8 +106,7 @@ def resume(app_name, thermostat_identifier):
     methods=["POST"],
 )
 def set_hvac_mode(app_name, thermostat_identifier):
-    app_config = apis.query.filter_by(name=app_name).first()
-    app = Ecobee_API(config=app_config)
+    app = getApp(app_name)
     hvac_mode = request.form["hvac_mode"]
     app.set_hvac_mode(identifier=thermostat_identifier, hvac_mode=hvac_mode)
     return redirect(
@@ -136,8 +123,7 @@ def set_hvac_mode(app_name, thermostat_identifier):
     methods=["POST"],
 )
 def send_message(app_name, thermostat_identifier):
-    app_config = apis.query.filter_by(name=app_name).first()
-    app = Ecobee_API(config=app_config)
+    app = getApp(app_name)
     message = request.form["message"]
     app.send_message(identifier=thermostat_identifier, message=message)
     flash('Message sent to thermostat.', 'success')
@@ -155,8 +141,7 @@ def send_message(app_name, thermostat_identifier):
     methods=["POST"],
 )
 def set_climate_hold(app_name, thermostat_identifier):
-    app_config = apis.query.filter_by(name=app_name).first()
-    app = Ecobee_API(config=app_config)
+    app = getApp(app_name)
     climate = request.form["climate"]
     app.set_climate_hold(identifier=thermostat_identifier, climate=climate)
     return redirect(
@@ -173,8 +158,7 @@ def set_climate_hold(app_name, thermostat_identifier):
     methods=["POST"],
 )
 def set_temperature_hold(app_name, thermostat_identifier):
-    app_config = apis.query.filter_by(name=app_name).first()
-    app = Ecobee_API(config=app_config)
+    app = getApp(app_name)
     temperature = request.form["temperature"]
     temperature = float(temperature)
     app.set_temperature_hold(identifier=thermostat_identifier, temperature=temperature)
