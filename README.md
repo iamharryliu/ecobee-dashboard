@@ -2,8 +2,8 @@
 Dashboard to interact with Ecobee API. You can register your thermostats on the dashboard to control thermostat settings and access/monitor thermostat information such as room temperatures or room occupancy.
 
 ## Screenshots
-![Screenshot](ecobee/static/images/README/home-view.png)
-![Screenshot](ecobee/static/images/README/thermostat-view.png)
+![Screenshot](back-end/ecobee/static/images/README/home-view.png)
+![Screenshot](back-end/ecobee/static/images/README/thermostat-view.png)
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
@@ -26,7 +26,7 @@ mkdir ~/logs
 ```
 Change directory into the project directory folder.
 ```
-cd ecobee-dashboard
+cd ecobee-dashboard/back-end
 ```
 Create a virtual environment for the app.
 ```
