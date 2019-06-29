@@ -253,7 +253,7 @@ class Thermostat():
                 'active': sensor.active,
                 'connected': sensor.connected,
                 'type': sensor.type,
-                'temperature': sensor.temperature,
+                'temperature': sensor.temperature * 1.0,
                 'occupancy': sensor.occupancy,
             }
             sensors.append(sensor)
@@ -307,7 +307,7 @@ class ThermostatSensor():
         self.active = sensor['inUse']
         self.name = sensor['name']
         self.type = sensor['type']
-        self.humidity = sensor['capability'][1]['value']
+        self.humidity = int(sensor['capability'][1]['value'])
         self.occupancy = True if sensor['capability'][2]['value'] == 'true' else False
         self.active = True
         temperature = sensor['capability'][0]['value']
@@ -364,8 +364,8 @@ class CurrentClimateData():
             'mode': self.mode,
             'temperature': self.temperature,
             'events': self.events,
-            'end_date': self.end_date,
-            'end_time': self.end_time,
+            'endDate': self.end_date,
+            'endTime': self.end_time,
 
         }
         return data

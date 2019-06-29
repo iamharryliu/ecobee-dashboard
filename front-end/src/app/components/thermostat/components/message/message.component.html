@@ -1,0 +1,5 @@
+<div class="form-group">
+    <h3><label for="message">Thermostat Messaging</label></h3>
+    <textarea class="form-control" [(ngModel)]='message' #ctrl="ngModel" rows="6"></textarea>
+</div>
+<button type='submit' class='btn btn-outline-light btn-block mb-3' (click)='sendMessage("hello")'>Send Message</button>

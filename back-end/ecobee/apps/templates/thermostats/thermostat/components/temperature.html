@@ -1,5 +1,5 @@
 <form
-	action='{{ url_for("apps_blueprint.set_temperature_hold", app_name=app_name, thermostat_identifier=thermostat.identifier) }}'
+	action='{{ url_for("apps_blueprint.set_temperature_hold", key=key, identifier=thermostat.identifier) }}'
 	method="post" id='set_temperature_hold'></form>
 
 <div class='card bg-dark'>
@@ -9,7 +9,7 @@
 	<div class='card-body'>
 		<img class="img-fluid mx-auto d-block" src='{{  url_for("static", filename="ecobee_logo.png")}}'
 			style='height: 40px'>
-		<h1 class='card-title text-center'>{{ '%0.1f' | format(thermostat.actual_temperature|float)}}C</h1>
+		<h1 class='card-title text-center'>{{ '%0.1f' | format(thermostat.actual_temperature|float)}} C</h1>
 		<h5 class='text-center'>
 			HVAC Mode: {{ thermostat.hvac_mode | title }}
 		</h5>

@@ -21,3 +21,7 @@ a.app {
 	opacity: 0;
 	transition: visibility 0s 1s, opacity 1s linear;
 }
+
+hr{
+	style: height:1px;
+}

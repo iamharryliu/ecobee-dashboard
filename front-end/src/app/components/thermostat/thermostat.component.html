@@ -1,17 +1,16 @@
 <div *ngIf=all_data_fetched>
-    <p>thermostat {{thermostat.name}} works!</p>
     <div class='row'>
         <div class='col-lg-6 mb-4'>
-            temperature
+            <app-temperature [thermostat]=thermostat></app-temperature>
         </div>
         <div class='col-lg-6 mb-4'>
-            settings
+            <app-settings [thermostat]=thermostat></app-settings>
         </div>
         <div class='col-md-6 col-lg-3 mb-4'>
-            thermostat sensor: {{thermostat.sensor.name}}
+           <app-sensor [sensor]=thermostat.sensor></app-sensor>
         </div>
-        <div class='col-md-6 col-lg-3 mb-3' *ngFor='let sensor of thermostat.remote_sensors'>
-            remote sensor: {{sensor.name}}
+        <div class='col-md-6 col-lg-3 mb-3' *ngFor='let sensor of thermostat.remoteSensors'>
+            <app-sensor [sensor]=sensor></app-sensor>
         </div>
         <div class='col-lg-12 mb-3'>
             <h1>Charts</h1>
@@ -20,7 +19,7 @@
             occupancy chart
         </div>
         <div class='col-lg-12'>
-            Message
+            <app-message></app-message>
         </div>
     </div>
 </div>

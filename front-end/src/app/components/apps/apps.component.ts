@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { APIService } from '../../api.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-apps',
@@ -10,15 +11,20 @@ export class AppsComponent implements OnInit {
 
   public apis = [];
 
-  constructor(private _APIService: APIService) { }
+  constructor(private _APIService: APIService,
+              private _router: Router) { }
 
   ngOnInit() {
     this._APIService.getAPIS()
     .subscribe(data => this.apis = data);
   }
 
-  deleteAPI(name){
-    console.log('delete')
+  onSelect(key){
+    this._router.navigate(['/apps', key])
+  }
+
+  deleteAPI(key){
+    this._APIService.deleteAPI(key)
   }
 
 }

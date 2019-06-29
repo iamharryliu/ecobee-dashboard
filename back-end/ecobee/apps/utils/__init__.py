@@ -33,12 +33,12 @@ def getAPIs():
     return apis.query.all()
 
 
-def getAppConfig(app_name):
-    return apis.query.filter_by(name=app_name).first()
+def getAppConfig(key):
+    return apis.query.filter_by(api_key=key).first()
 
 
-def getApp(app_name):
-    app_config = getAppConfig(app_name)
+def getApp(key):
+    app_config = getAppConfig(key)
     if app_config:
         app = EcobeeAPI(config=app_config, db=db, logger=logger)
         return app

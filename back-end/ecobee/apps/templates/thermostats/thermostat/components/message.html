@@ -1,5 +1,5 @@
 <form
-	action='{{ url_for("apps_blueprint.send_message", app_name=app_name, thermostat_identifier=thermostat.identifier) }}'
+	action='{{ url_for("apps_blueprint.send_message", key=key, identifier=thermostat.identifier) }}'
 	method="post" id='send_message'></form>
 
 <div class="form-group">

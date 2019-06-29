@@ -1,5 +1,5 @@
 <a class='col-12 mt-3 mb-3 app'
-    href="{{url_for('apps_blueprint.thermostat', app_name=app.name, thermostat_identifier=thermostat.identifier)}}">
+    href="{{url_for('apps_blueprint.thermostat', key=app.api_key, identifier=thermostat.identifier)}}">
     <div class='card bg-dark'>
         <div class='card-body'>
             <h2>{{thermostat.name}}<span class='float-right'>{{thermostat.temperature}}</span></h2>

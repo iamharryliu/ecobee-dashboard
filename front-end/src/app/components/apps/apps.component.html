@@ -1,13 +1,13 @@
-<h1>Apps</h1>
+<h1>APIs</h1>
 <div class='row'>
     <div class='col-12 mt-3 mb-3 app' *ngFor='let api of apis'>
         <div class='card bg-dark'>
             <div class='card-body'>
                 <h2 class='d-inline'>{{api.name}}</h2>
                 <div class='float-right'>
-                    <a routerLink='/thermostats' class='btn btn-info'>View</a>
+                    <a (click)='onSelect(api.key)' class='btn btn-info'>View</a>
                     <button class='btn btn-success'>Edit</button>
-                    <button (click)='deleteAPI()' class='btn btn-danger'>Delete</button>
+                    <button (click)='deleteAPI(api.key)' class='btn btn-danger'>Delete</button>
                 </div>
             </div>
         </div>

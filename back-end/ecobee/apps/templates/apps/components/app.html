@@ -3,7 +3,7 @@
         <div class='card-body'>
             <h2 class='d-inline'>{{app.name}}</h2>
             <div class='float-right'>
-                <a href="{{ url_for('apps_blueprint.thermostats', app_name=app.name)  }}" class='btn btn-info'>View</a>
+                <a href="{{ url_for('apps_blueprint.thermostats', key=app.api_key)  }}" class='btn btn-info'>View</a>
                 <a class='btn btn-success' href="{{ url_for('apps_blueprint.edit_app', name=app.name) }}">Edit</a>
                  <form method='POST' action="{{ url_for('apps_blueprint.delete_app', name=app.name)}}" class='d-inline'>
                     <input type="submit" name="" class='btn btn-danger' value='Delete' />

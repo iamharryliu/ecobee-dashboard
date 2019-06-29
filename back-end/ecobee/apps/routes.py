@@ -8,7 +8,6 @@ from ecobeeAPI import EcobeeAPI
 
 apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='templates')
 
-
 # Apps
 
 
@@ -16,47 +15,6 @@ apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder='template
 def apps():
     apps = getAPIs()
     return render_template("apps/view.html", apps=apps)
-
-
-@apps_blueprint.route("/fetchApps")
-@cross_origin()
-def fetchApps():
-    apis = getAPIs()
-    set = []
-    for api in apis:
-        set.append({'name': api.name})
-    return jsonify(set)
-
-
-@apps_blueprint.route("/fetchThermostats")
-@cross_origin()
-def fetchThermostats():
-    app_name = 'home'
-    app = getApp(app_name)
-    thermostats = getThermostats(app)
-    set = []
-    for thermostat in thermostats:
-        set.append({'name': thermostat.name})
-    return jsonify(set)
-
-
-@apps_blueprint.route("/fetchThermostat")
-@cross_origin()
-def fetchThermostat():
-    app_name = 'home'
-    app = getApp(app_name)
-    thermostats = getThermostats(app)
-    thermostat_identifier = '311075659937'
-    thermostat = getThermostat(thermostats, thermostat_identifier)
-    set = {
-        'name': thermostat.name,
-        'actual_temperature': thermostat.actual_temperature,
-        'hvac_mode': thermostat.hvac_mode,
-        'current_climate_data': thermostat.current_climate_data.data,
-        'remote_sensors': thermostat.getRemoteSensorData(),
-        'sensor': thermostat.getSensorData()
-    }
-    return jsonify(set)
 
 
 @apps_blueprint.route("/apps/add", methods=["GET", "POST"])
@@ -72,7 +30,7 @@ def add_app():
     return render_template("apps/components/add-app.html", form=form)
 
 
-@apps_blueprint.route("/apps/<string:name>/edit", methods=["GET", "POST"])
+@apps_blueprint.route("/apps/<name>/edit", methods=["GET", "POST"])
 def edit_app(name):
     app = getAppConfig(name)
     form = EcobeeAppForm()
@@ -84,7 +42,7 @@ def edit_app(name):
     return render_template("apps/components/edit-app.html", form=form)
 
 
-@apps_blueprint.route("/apps/<string:name>/delete", methods=["POST"])
+@apps_blueprint.route("/apps/<name>/delete", methods=["POST"])
 def delete_app(name):
     deleteAPI(name)
     return redirect(url_for("apps_blueprint.apps"))
@@ -93,29 +51,28 @@ def delete_app(name):
 # Thermostats
 
 
-@apps_blueprint.route("/apps/<string:app_name>/")
-@apps_blueprint.route("/apps/<string:app_name>/thermostats/")
-def thermostats(app_name):
-    app = getApp(app_name)
+@apps_blueprint.route("/apps/<key>/")
+@apps_blueprint.route("/apps/<key>/thermostats/")
+def thermostats(key):
+    app = getApp(key)
     thermostats = getThermostats(app)
     return render_template("thermostats/view.html", app=app, thermostats=thermostats)
 
 
 @apps_blueprint.route(
-    "/apps/<string:app_name>/thermostats/<string:thermostat_identifier>/",
+    "/apps/<key>/thermostats/<identifier>/",
     methods=["GET", "POST"],
 )
-def thermostat(app_name, thermostat_identifier):
-
-    app = getApp(app_name)
+def thermostat(key, identifier):
+    app = getApp(key)
     thermostats = getThermostats(app)
-    thermostat = getThermostat(thermostats, thermostat_identifier)
+    thermostat = getThermostat(thermostats, identifier)
     temperatures_chart = thermostat.get_thermostat_temperature_chart_data(app.api_key)
     occupancy_chart = thermostat.get_occupancy_chart_data(app.api_key)
 
     return render_template(
         "thermostats/thermostat/view.html",
-        app_name=app_name,
+        key=app.api_key,
         app=app,
         thermostat=thermostat,
         temperature_options=TEMPERATURE_OPTIONS,
@@ -128,86 +85,205 @@ def thermostat(app_name, thermostat_identifier):
 
 
 @apps_blueprint.route(
-    "/apps/<string:app_name>/thermostats/<string:thermostat_identifier>/resume",
+    "/apps/<key>/thermostats/<identifier>/resume",
     methods=["POST"],
 )
-def resume(app_name, thermostat_identifier):
-    app = getApp(app_name)
-    app.resume(identifier=thermostat_identifier)
+def resume(key, identifier):
+    app = getApp(key)
+    app.resume(identifier=identifier)
     return redirect(
         url_for(
             "apps_blueprint.thermostat",
-            app_name=app_name,
-            thermostat_identifier=thermostat_identifier,
+            key=key,
+            identifier=identifier,
         )
     )
 
 
 @apps_blueprint.route(
-    "/apps/<string:app_name>/thermostats/<string:thermostat_identifier>/set_hvac_mode",
+    "/apps/<key>/thermostats/<identifier>/set_hvac_mode",
     methods=["POST"],
 )
-def set_hvac_mode(app_name, thermostat_identifier):
-    app = getApp(app_name)
+def set_hvac_mode(key, identifier):
+    app = getApp(key)
     hvac_mode = request.form["hvac_mode"]
-    app.set_hvac_mode(identifier=thermostat_identifier, hvac_mode=hvac_mode)
+    app.set_hvac_mode(identifier=identifier, hvac_mode=hvac_mode)
     return redirect(
         url_for(
             "apps_blueprint.thermostat",
-            app_name=app_name,
-            thermostat_identifier=thermostat_identifier,
+            key=key,
+            identifier=identifier,
         )
     )
 
 
 @apps_blueprint.route(
-    "/apps/<string:app_name>/thermostats/<string:thermostat_identifier>/send_message",
+    "/apps/<key>/thermostats/<identifier>/send_message",
     methods=["POST"],
 )
-def send_message(app_name, thermostat_identifier):
-    app = getApp(app_name)
+def send_message(key, identifier):
+    app = getApp(key)
     message = request.form["message"]
-    app.send_message(identifier=thermostat_identifier, message=message)
+    app.send_message(identifier=identifier, message=message)
     flash('Message sent to thermostat.', 'success')
     return redirect(
         url_for(
             "apps_blueprint.thermostat",
-            app_name=app_name,
-            thermostat_identifier=thermostat_identifier,
+            key=key,
+            identifier=identifier,
         )
     )
 
 
 @apps_blueprint.route(
-    "/apps/<string:app_name>/thermostats/<string:thermostat_identifier>/set_climate_hold",
+    "/apps/<key>/thermostats/<identifier>/set_climate_hold",
     methods=["POST"],
 )
-def set_climate_hold(app_name, thermostat_identifier):
-    app = getApp(app_name)
+def set_climate_hold(key, identifier):
+    app = getApp(key)
     climate = request.form["climate"]
-    app.set_climate_hold(identifier=thermostat_identifier, climate=climate)
+    app.set_climate_hold(identifier=identifier, climate=climate)
     return redirect(
         url_for(
             "apps_blueprint.thermostat",
-            app_name=app_name,
-            thermostat_identifier=thermostat_identifier,
+            key=key,
+            identifier=identifier,
         )
     )
 
 
 @apps_blueprint.route(
-    "/apps/<string:app_name>/thermostats/<string:thermostat_identifier>/set_temperature_hold",
+    "/apps/<key>/thermostats/<identifier>/set_temperature_hold",
     methods=["POST"],
 )
-def set_temperature_hold(app_name, thermostat_identifier):
-    app = getApp(app_name)
+def set_temperature_hold(key, identifier):
+    app = getApp(key)
     temperature = request.form["temperature"]
     temperature = float(temperature)
-    app.set_temperature_hold(identifier=thermostat_identifier, temperature=temperature)
+    app.set_temperature_hold(identifier=identifier, temperature=temperature)
     return redirect(
         url_for(
             "apps_blueprint.thermostat",
-            app_name=app_name,
-            thermostat_identifier=thermostat_identifier,
+            key=key,
+            identifier=identifier,
         )
     )
+
+# Fetch for front-end
+
+
+@apps_blueprint.route("/fetchAPIs")
+@cross_origin()
+def fetchAPIs():
+    apis = getAPIs()
+    set = []
+    for api in apis:
+        set.append({'name': api.name, 'key': api.api_key})
+    return jsonify(set)
+
+
+@apps_blueprint.route("/fetchThermostats/<key>")
+@cross_origin()
+def fetchThermostats(key):
+    app = getApp(key)
+    thermostats = getThermostats(app)
+    set = []
+    for thermostat in thermostats:
+        set.append({
+            'name': thermostat.name,
+            'identifier': thermostat.identifier}
+        )
+    return jsonify(set)
+
+
+@apps_blueprint.route("/fetchThermostat/<key>/<identifier>")
+@cross_origin()
+def fetchThermostat(key, identifier):
+    app = getApp(key)
+    thermostats = getThermostats(app)
+    thermostat = getThermostat(thermostats, identifier)
+    set = {
+        'name': thermostat.name,
+        'temperature': thermostat.actual_temperature,
+        'hvacMode': thermostat.hvac_mode,
+        'currentClimateData': thermostat.current_climate_data.data,
+        'remoteSensors': thermostat.getRemoteSensorData(),
+        'sensor': thermostat.getSensorData(),
+        'climates': ['away', 'home', 'sleep']
+    }
+    return jsonify(set)
+
+# Front-end actions
+
+
+@apps_blueprint.route("/addApp", methods=["POST"])
+@cross_origin()
+def addApp():
+    form = EcobeeAppForm()
+    if form.validate_on_submit():
+        if addApp(request):
+            return jsonify({'success': True})
+        else:
+            print(1)
+            return jsonify({'success': False})
+    print(2)
+    return jsonify({'success': False})
+
+
+@apps_blueprint.route(
+    "/setHvacMode/<key>/<identifier>/<mode>",
+    methods=["POST"],
+)
+@cross_origin()
+def setHvacMode(key, identifier, mode):
+    app = getApp(key)
+    r = app.set_hvac_mode(identifier=identifier, hvac_mode=mode)
+    message = f'HVAC mode set to {mode}.'
+    return jsonify({'success': r, 'message': message})
+
+
+@apps_blueprint.route(
+    "/resume/<key>/<identifier>",
+    methods=["POST"])
+@cross_origin()
+def resume2(key, identifier):
+    app = getApp(key)
+    r = app.resume(identifier=identifier)
+    message = f'Regular program resumed.'
+    return jsonify({'success': r, 'message': message})
+
+
+@apps_blueprint.route(
+    "/setClimate/<key>/<identifier>/<climate>",
+    methods=["POST"],
+)
+@cross_origin()
+def setClimate(key, identifier, climate):
+    app = getApp(key)
+    r = app.set_climate_hold(identifier=identifier, climate=climate)
+    message = f'Climate set to {climate}.'
+    return jsonify({'success': r, 'message': message})
+
+
+@apps_blueprint.route(
+    "/setTemperature/<key>/<identifier>/<temperature>",
+    methods=["POST"],
+)
+@cross_origin()
+def setTemperatureHold(key, identifier, temperature):
+    app = getApp(key)
+    r = app.set_temperature_hold(identifier=identifier, temperature=float(temperature))
+    message = f'Temperature set to {temperature}C.'
+    return jsonify({'success': r, 'message': message})
+
+
+@apps_blueprint.route(
+    "/sendMessage/<key>/<identifier>/<message>",
+    methods=["POST"],
+)
+@cross_origin()
+def sendMessage(key, identifier, message):
+    app = getApp(key)
+    r = app.send_message(identifier=identifier, message=message)
+    message = f'Message sent.'
+    return jsonify({'success': r, 'message': message})

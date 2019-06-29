@@ -19,7 +19,6 @@ class EcobeeAPI():
             self.authorization_code = config.authorization_code
             self.access_token = config.access_token
             self.refresh_token = config.refresh_token
-
             self.data = self.requestData()
 
         else:

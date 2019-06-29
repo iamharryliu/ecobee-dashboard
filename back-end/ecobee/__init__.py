@@ -1,10 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
 from ecobee.config import Config
 
 db = SQLAlchemy()
-cors = CORS()
 
 
 def create_app(config_class=Config):
@@ -14,7 +12,6 @@ def create_app(config_class=Config):
     app.config.from_object(Config)
 
     db.init_app(app)
-    cors.init_app(app)
 
     with app.app_context():
         db.create_all()

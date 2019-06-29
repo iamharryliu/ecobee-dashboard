@@ -1,0 +1,22 @@
+<div class="card bg-dark" style='height: 230px'>
+    <h5 class="card-header">{{sensor.name}}</h5>
+    <div class="card-body">
+        <div class="card-text">
+            <div *ngIf="sensor.connected; else elseBlock">
+                Type: remote sensor<br>
+                Temperature:
+                <span class="badge badge-success">{{ sensor.temperature | number :'1.1-1'}}</span><br>
+                <div *ngIf="sensor.humidity">
+                    Humidity: <span class="badge badge-success">{{ sensor.humidity }}%</span><br>
+                </div>
+                Occupancy:
+                <span class="badge" [ngClass]=" sensor.occupancy ? 'badge-success' : 'badge-danger'">
+                    Status
+                </span>
+            </div>
+            <ng-template #elseBlock>
+                CONNECTION LOST
+            </ng-template>
+        </div>
+    </div>
+</div>
