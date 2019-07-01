@@ -24,11 +24,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  { path: 'register_app', component: RegisterAppComponent },
-  { path: 'apps', component: APIsComponent },
+  { path: 'register_api', component: RegisterAppComponent },
+  { path: 'apis', component: APIsComponent },
 
-  { path: 'apps/:key', component: ThermostatsComponent },
-  { path: 'apps/:key/:identifier', component: ThermostatComponent }
+  { path: 'apis/:key', component: ThermostatsComponent },
+  { path: 'apis/:key/:identifier', component: ThermostatComponent }
 
 ];
 

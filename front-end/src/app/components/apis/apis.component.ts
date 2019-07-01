@@ -20,7 +20,7 @@ export class APIsComponent implements OnInit {
   }
 
   onSelect(key) {
-    this._router.navigate(['/apps', key])
+    this._router.navigate(['/apis', key])
   }
 
   deleteAPI(key) {

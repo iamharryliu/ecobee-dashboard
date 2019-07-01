@@ -30,7 +30,7 @@ export class ThermostatsComponent implements OnInit {
   view(thermostat) {
     let key = thermostat.key;
     let identifier = thermostat.identifier;
-    this._router.navigate(['/apps', key, identifier])
+    this._router.navigate(['/apis', key, identifier])
   }
 
 }
