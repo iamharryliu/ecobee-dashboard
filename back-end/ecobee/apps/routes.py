@@ -191,6 +191,7 @@ def fetchThermostats(key):
     for thermostat in thermostats:
         set.append({
             'name': thermostat.name,
+            'key': key,
             'identifier': thermostat.identifier}
         )
     return jsonify(set)
@@ -203,6 +204,8 @@ def fetchThermostat(key, identifier):
     thermostats = getThermostats(app)
     thermostat = getThermostat(thermostats, identifier)
     set = {
+        'key': key,
+        'identifier': identifier,
         'name': thermostat.name,
         'temperature': thermostat.actual_temperature,
         'hvacMode': thermostat.hvac_mode,

@@ -4,10 +4,10 @@
             <app-temperature [thermostat]=thermostat></app-temperature>
         </div>
         <div class='col-lg-6 mb-4'>
-            <app-settings [thermostat]=thermostat></app-settings>
+            <app-settings (updateThermostat)='updateThermostat()' [thermostat]=thermostat></app-settings>
         </div>
         <div class='col-md-6 col-lg-3 mb-4'>
-           <app-sensor [sensor]=thermostat.sensor></app-sensor>
+            <app-sensor [sensor]=thermostat.sensor></app-sensor>
         </div>
         <div class='col-md-6 col-lg-3 mb-3' *ngFor='let sensor of thermostat.remoteSensors'>
             <app-sensor [sensor]=sensor></app-sensor>

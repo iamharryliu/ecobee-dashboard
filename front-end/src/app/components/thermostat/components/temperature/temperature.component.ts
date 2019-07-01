@@ -1,7 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { APIService } from '../../../../api.service';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-temperature',
@@ -11,23 +9,20 @@ import { ActivatedRoute } from '@angular/router';
 export class TemperatureComponent implements OnInit {
 
   @Input() public thermostat;
+  @Output() public updateThermostat: EventEmitter<void> = new EventEmitter();
 
-  public key;
-  public identifier;
+  public temperatureOptions = [18.0, 18.5, 19.0, 19.5, 20.0, 20.5, 21.0, 21.5, 22.0, 22.5, 23.0, 23.5, 24.0];
 
-  public temperatureOptions = [20,20.5,21,21.5,22,22.5,23,23.5,24];
+  constructor(private _APIService: APIService) { }
 
-  constructor(private _APIService: APIService,
-                private _router: Router,
-                private _route: ActivatedRoute) { }
+  ngOnInit() { }
 
-  ngOnInit() {
-    this.key = (this._route.snapshot.paramMap.get('key'));
-    this.identifier = (this._route.snapshot.paramMap.get('identifier'));
-  }
+  setTemperature(temperature) {
+    this._APIService.setTemperature(this.thermostat, temperature).subscribe(resp => {
+      console.log(resp);
 
-  setTemperature(temperature){
-      this._APIService.setTemperature(this.key, this.identifier, temperature)
+      this.updateThermostat.emit()
+    });
   }
 
 }

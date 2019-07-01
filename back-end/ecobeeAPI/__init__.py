@@ -189,6 +189,7 @@ class EcobeeAPI():
     # Actions
 
     def resume(self, identifier, resume_all=False):
+        print('Resume.')
         _type = "resumeProgram"
         params = {"resumeAll": resume_all}
         body = self.getRequestBody(identifier, params=params, _type=_type)
@@ -196,12 +197,14 @@ class EcobeeAPI():
         return self.requestAction(body, log_msg_action)
 
     def set_hvac_mode(self, identifier, hvac_mode):
+        print(f'HVAC mode set to {hvac_mode}')
         settings = {"hvacMode": hvac_mode}
         body = self.getRequestBody(identifier, settings=settings)
         log_msg_action = f'Thermostat: {identifier} HVAC mode set to {hvac_mode}'
         return self.requestAction(body, log_msg_action)
 
     def set_temperature_hold(self, identifier, temperature, hold_type="holdHours", holdHours=2):
+        print(f'Temperature set to {temperature}')
         _type = "setHold"
         temperature = degrees_to_farenheitX10(temperature)
         params = {
@@ -215,6 +218,7 @@ class EcobeeAPI():
         return self.requestAction(body, log_msg_action)
 
     def set_climate_hold(self, identifier, climate, hold_type="nextTransition"):
+        print(f'Climate set to {climate}')
         _type = "setHold"
         params = {"holdType": hold_type, "holdClimateRef": climate}
         body = self.getRequestBody(identifier, params=params, _type=_type)
@@ -222,6 +226,7 @@ class EcobeeAPI():
         return self.requestAction(body, log_msg_action)
 
     def send_message(self, identifier, message="Hello world!"):
+        print(f'Message sent.')
         _type = "sendMessage"
         params = {"text": message[0:500]}
         body = self.getRequestBody(identifier, params=params, _type=_type)

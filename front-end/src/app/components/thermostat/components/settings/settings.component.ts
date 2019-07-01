@@ -1,61 +1,46 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { APIService } from '../../../../api.service'
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
+
+
 export class SettingsComponent implements OnInit {
 
   @Input() public thermostat;
-
-  public key;
-  public identifier;
-  public isHvacOff;
-  public isHeatOn;
-  public isTempHold;
+  @Output() public updateThermostat: EventEmitter<void> = new EventEmitter();
 
 
-  constructor(private _APIService: APIService,
-                private _route: ActivatedRoute) { }
+  constructor(private _APIService: APIService) { }
 
-  ngOnInit() {
+  ngOnInit() { }
 
-      this.key = (this._route.snapshot.paramMap.get('key'));
-      this.identifier = (this._route.snapshot.paramMap.get('identifier'));
-
-      this.isTempHold = this.thermostat.events;
-      this.isHvacOff = this.thermostat.hvacMode == 'off';
-      this.isHeatOn = this.thermostat.hvacMode == 'heat';
+  setHvacMode(mode) {
+    this.thermostat.hvacMode = mode
+    this._APIService.setHvacMode(this.thermostat, mode).subscribe(resp => {
+      console.log(resp);
+      this.updateThermostat.emit()
+    })
   }
 
-  setHvacMode(mode){
-    this._APIService.setHvacMode(this.key, this.identifier, mode)
-    this.isHvacOff = mode == 'off';
-    this.isHeatOn = mode == 'heat';
+  setClimate(climate) {
+    this._APIService.setClimate(this.thermostat, climate).subscribe(resp => {
+      console.log(resp);
+      this.updateThermostat.emit();
+    });
   }
 
-  setClimateHold(climate){
-    this._APIService.setClimateHold(this.key, this.identifier, climate)
-  }
-
-  resume(){
-    this._APIService.resume(this.key, this.identifier)
+  resume() {
+    this.thermostat.currentClimateData.events = false;
+    // change temperature
+    // change climate
+    this._APIService.resume(this.thermostat).subscribe(resp => {
+      console.log(resp);
+      this.updateThermostat.emit()
+    });
   }
 
 }
-
-
-          // <!--   <button class="btn btn-outline-light
-          //       {% if thermostat.current_climate_data.mode == 'hold' %}
-          //           active
-          //       {% else %}
-          //           disabled
-          //       {% endif %}" style='width: 25%'>
-          //       {% if thermostat.current_climate_data.endtime != 'transition' %}
-          //       Hold
-          //       {% else %}
-          //       Reg
-          //       {% endif %}

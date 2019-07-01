@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API } from './api';
-import { Thermostat } from './thermostat';
-
 @Injectable({
     providedIn: 'root'
 })
@@ -13,54 +10,46 @@ export class APIService {
 
     constructor(private http: HttpClient) { }
 
-    getAPIS(): Observable<API[]> {
-        return this.http.get<API[]>('http://localhost:5000/fetchAPIs')
+    getAPIS(): Observable<any> {
+        return this.http.get<any>('http://localhost:5000/fetchAPIs')
     }
 
-    deleteAPI(key){
+    deleteAPI(key) {
         console.log('delete ' + key)
     }
 
-    getThermostats(key): Observable<Thermostat[]>{
-        return this.http.get<Thermostat[]>(`${this.backEndURL}/fetchThermostats/${key}`);
+    getThermostats(key): Observable<any> {
+        return this.http.get<any>(`${this.backEndURL}/fetchThermostats/${key}`);
     }
 
-    getThermostat(key, identifier): Observable<Thermostat[]>{
-        return this.http.get<Thermostat[]>(`${this.backEndURL}/fetchThermostat/${key}/${identifier}`);
+    getThermostat(key, identifier): Observable<any> {
+        return this.http.get<any>(`${this.backEndURL}/fetchThermostat/${key}/${identifier}`);
     }
 
-    setHvacMode(key, identifier, mode){
-        let url = `${this.backEndURL}/setHvacMode/${key}/${identifier}/${mode}`
-        this.http.post(url, null).subscribe(resp => {
-          console.log(resp);
-        });
+    setHvacMode(thermostat, mode): Observable<any> {
+        let url = `${this.backEndURL}/setHvacMode/${thermostat.key}/${thermostat.identifier}/${mode}`
+        return this.http.post(url, null)
     }
 
-    resume(key, identifier){
-        let url = `${this.backEndURL}/resume/${key}/${identifier}`
-        this.http.post(url, null).subscribe(resp => {
-          console.log(resp);
-        });
+    resume(thermostat): Observable<any> {
+        let url = `${this.backEndURL}/resume/${thermostat.key}/${thermostat.identifier}`
+        return this.http.post(url, null)
     }
 
-    setClimateHold(key, identifier, climate){
-        let url = `${this.backEndURL}/setClimate/${key}/${identifier}/${climate}`
-        this.http.post(url, null).subscribe(resp => {
-          console.log(resp);
-        });
+    setClimate(thermostat, climate): Observable<any> {
+        let url = `${this.backEndURL}/setClimate/${thermostat.key}/${thermostat.identifier}/${climate}`
+        return this.http.post(url, null)
     }
 
-    setTemperature(key, identifier, temperature){
-        let url = `${this.backEndURL}/setTemperature/${key}/${identifier}/${temperature}`
-        this.http.post(url, null).subscribe(resp => {
-          console.log(resp);
-        });
+    setTemperature(thermostat, temperature): Observable<any> {
+        let url = `${this.backEndURL}/setTemperature/${thermostat.key}/${thermostat.identifier}/${temperature}`
+        return this.http.post(url, null);
     }
 
-    sendMessage(key, identifier, message){
+    sendMessage(key, identifier, message) {
         let url = `${this.backEndURL}/sendMessage/${key}/${identifier}/${message}`
         this.http.post(url, null).subscribe(resp => {
-          console.log(resp);
+            console.log(resp);
         });
     }
 

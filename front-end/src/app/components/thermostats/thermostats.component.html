@@ -1,12 +1,12 @@
 <div *ngIf=all_data_fetched>
-<h1>Thermostats</h1>
+    <h1>Thermostats</h1>
     <div class='row'>
         <div class='col-12 mt-3 mb-3 app' *ngFor='let thermostat of thermostats'>
             <div class='card bg-dark'>
                 <div class='card-body'>
                     <h2 class='d-inline'>{{thermostat.name}}</h2>
                     <div class='float-right'>
-                        <a (click)='view(key, thermostat.identifier)' class='btn btn-info'>View</a>
+                        <a (click)='view(thermostat)' class='btn btn-info'>View</a>
                     </div>
                 </div>
             </div>

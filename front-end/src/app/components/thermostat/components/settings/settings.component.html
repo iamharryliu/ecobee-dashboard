@@ -6,14 +6,14 @@
         <div class='btn-group w-100 mb-3'>
             <button value='heat'
                 class="btn btn-outline-light"
-                [class.active] = "isHeatOn"
+                [class.active] = "this.thermostat.hvacMode == 'heat'"
                 style="width: 50%;"
                 (click)="setHvacMode('heat')">
                 Heat
             </button>
             <button value='off'
             class="btn btn-outline-light"
-            [class.active] = "isHvacOff"
+            [class.active] = "this.thermostat.hvacMode == 'off'"
             style="width: 50%;"
             (click)="setHvacMode('off')">
                 Off
@@ -21,10 +21,10 @@
         </div>
         <div class='btn-group w-100 mb-3'>
             <button class="btn btn-outline-light"
-                [class.active] = "isTempHold"
-                [class.disabled] = "!isTempHold"
+                [class.active] = "thermostat.currentClimateData.events"
+                [class.disabled] = "!thermostat.currentClimateData.events"
                 style='width: 25%'>
-                <div *ngIf='isTempHold; else elseBlock'>
+                <div *ngIf='thermostat.currentClimateData.events; else elseBlock'>
                     Hold
             </div>
                 <ng-template #elseBlock>
@@ -34,7 +34,7 @@
             <button *ngFor='let climate of thermostat.climates'
             class="btn btn-outline-light"
             style="width: 25%;"
-            [class.active] = 'thermostat.currentClimateData.mode == climate' (click)="setClimateHold(climate)">
+            [class.active] = 'thermostat.currentClimateData.mode == climate' (click)="setClimate(climate)">
             {{ climate | titlecase }}
             </button>
         </div>

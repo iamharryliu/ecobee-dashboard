@@ -10,22 +10,29 @@ import { ActivatedRoute } from '@angular/router';
 export class ThermostatComponent implements OnInit {
 
   public thermostat;
-  public key;
-  public identifier;
   public all_data_fetched = false;
 
   constructor(private _APIService: APIService,
-                private _route: ActivatedRoute) { }
+    private _route: ActivatedRoute) { }
 
   ngOnInit() {
-        this.key = (this._route.snapshot.paramMap.get('key'));
-        this.identifier = (this._route.snapshot.paramMap.get('identifier'));
-        this._APIService.getThermostat(this.key, this.identifier)
-        .subscribe(data => {
-            this.thermostat = data;
-            this.all_data_fetched = true;
-        });
+    let key = (this._route.snapshot.paramMap.get('key'));
+    let identifier = (this._route.snapshot.paramMap.get('identifier'));
 
+    this._APIService.getThermostat(key, identifier)
+      .subscribe(data => {
+        this.thermostat = data;
+        this.all_data_fetched = true;
+      });
+
+  }
+
+  updateThermostat() {
+    this._APIService.getThermostat(this.thermostat.key, this.thermostat.identifier)
+      .subscribe(data => {
+        this.thermostat = data;
+        console.log(this.thermostat.currentClimateData.temperature)
+      });
   }
 
 }
