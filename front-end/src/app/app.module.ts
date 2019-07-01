@@ -7,11 +7,13 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule, RoutingComponents } from './app-routing.module';
 
 import { APIService } from './api.service';
+import { APIsComponent } from './components/apis/apis.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RoutingComponents,
+    APIsComponent,
   ],
   imports: [
     BrowserModule,

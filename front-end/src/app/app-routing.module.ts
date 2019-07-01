@@ -1,10 +1,10 @@
-import { NgModule }             from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { MainComponent } from './components/main/main.component';
 
-import { AppsComponent } from './components/apps/apps.component'
+import { APIsComponent } from './components/apis/apis.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RegisterAppComponent } from './components/register-app/register-app.component';
@@ -19,34 +19,34 @@ import { MessageComponent } from './components/thermostat/components/message/mes
 
 const routes: Routes = [
 
-    {path: '', component: MainComponent},
+  { path: '', component: MainComponent },
 
-    {path: 'login', component: LoginComponent},
-    {path: 'register', component: RegisterComponent},
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
 
-    {path: 'register_app', component: RegisterAppComponent},
-    {path: 'apps', component: AppsComponent},
+  { path: 'register_app', component: RegisterAppComponent },
+  { path: 'apps', component: APIsComponent },
 
-    {path: 'apps/:key', component: ThermostatsComponent},
-    {path: 'apps/:key/:identifier', component: ThermostatComponent}
+  { path: 'apps/:key', component: ThermostatsComponent },
+  { path: 'apps/:key/:identifier', component: ThermostatComponent }
 
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [ RouterModule ]
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
 export const RoutingComponents = [MainComponent,
-                                NavbarComponent,
-                                AppsComponent,
-                                LoginComponent,
-                                RegisterComponent,
-                                RegisterAppComponent,
-                                AppFormComponent,
-                                ThermostatsComponent,
-                                ThermostatComponent,
-                                TemperatureComponent,
-                                SettingsComponent,
-                                SensorComponent,
-                                MessageComponent,]
+  NavbarComponent,
+  APIsComponent,
+  LoginComponent,
+  RegisterComponent,
+  RegisterAppComponent,
+  AppFormComponent,
+  ThermostatsComponent,
+  ThermostatComponent,
+  TemperatureComponent,
+  SettingsComponent,
+  SensorComponent,
+  MessageComponent,]
