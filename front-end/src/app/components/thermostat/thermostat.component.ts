@@ -31,7 +31,6 @@ export class ThermostatComponent implements OnInit {
     this._APIService.getThermostat(this.thermostat.key, this.thermostat.identifier)
       .subscribe(data => {
         this.thermostat = data;
-        console.log('updated')
       });
   }
 
