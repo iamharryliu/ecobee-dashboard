@@ -16,7 +16,9 @@ export class APIsComponent implements OnInit {
 
   ngOnInit() {
     this._APIService.getAPIS()
-      .subscribe(data => { this.apis = data; console.log(data) })
+      .subscribe(data => {
+        this.apis = data
+      })
   }
 
   onSelect(key) {
