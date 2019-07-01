@@ -20,7 +20,6 @@ export class TemperatureComponent implements OnInit {
   setTemperature(temperature) {
     this._APIService.setTemperature(this.thermostat, temperature).subscribe(resp => {
       console.log(resp);
-
       this.updateThermostat.emit()
     });
   }

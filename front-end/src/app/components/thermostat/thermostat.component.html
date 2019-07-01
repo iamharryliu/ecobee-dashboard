@@ -1,9 +1,9 @@
 <div *ngIf=all_data_fetched>
     <div class='row'>
         <div class='col-lg-6 mb-4'>
-            <app-temperature [thermostat]=thermostat></app-temperature>
+            <app-temperature (updateThermostat)='updateThermostat()' [thermostat]=thermostat></app-temperature>
         </div>
-        <div class='col-lg-6 mb-4'>
+        <div class=' col-lg-6 mb-4'>
             <app-settings (updateThermostat)='updateThermostat()' [thermostat]=thermostat></app-settings>
         </div>
         <div class='col-md-6 col-lg-3 mb-4'>
