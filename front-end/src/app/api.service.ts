@@ -46,11 +46,9 @@ export class APIService {
         return this.http.post(url, null);
     }
 
-    sendMessage(key, identifier, message) {
+    sendMessage(key, identifier, message): Observable<any> {
         let url = `${this.backEndURL}/sendMessage/${key}/${identifier}/${message}`
-        this.http.post(url, null).subscribe(resp => {
-            console.log(resp);
-        });
+        return this.http.post(url, null)
     }
 
 

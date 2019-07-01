@@ -15,15 +15,17 @@ export class MessageComponent implements OnInit {
   public message = '';
 
   constructor(private _APIService: APIService,
-                private _route: ActivatedRoute) { }
+    private _route: ActivatedRoute) { }
 
   ngOnInit() {
     this.key = (this._route.snapshot.paramMap.get('key'));
     this.identifier = (this._route.snapshot.paramMap.get('identifier'));
   }
 
-  sendMessage(){
-      this._APIService.sendMessage(this.key, this.identifier, this.message)
+  sendMessage() {
+    this._APIService.sendMessage(this.key, this.identifier, this.message).subscribe(resp => {
+      console.log(resp);
+    })
   }
 
 }
