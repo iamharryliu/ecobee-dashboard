@@ -20,7 +20,7 @@ A step by step series of examples that tell you how to get a development environ
 cd ~
 git clone https://github.com/itzliu/ecobee.git
 mkdir ~/logs
-cd ecobee-dashboard/back-end
+cd ecobee/back-end
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
