@@ -1,5 +1,5 @@
 # Ecobee Dashboard
-Dashboard to interact with Ecobee API. You can register your thermostats on the dashboard to control thermostat settings and access/monitor thermostat information such as room temperatures or room occupancy.
+Dashboard to interact with Ecobee API. You can register your thermostats on the dashboard to control thermostat settings and access/monitor thermostat information including HVAC mode, temperature, sensor temperatures, sensor occupancy, humidity, and climate setting.
 
 ## Screenshots
 ![Screenshot](back-end/ecobee/static/images/README/home-view.png)
@@ -11,43 +11,30 @@ These instructions will get you a copy of the project up and running on your loc
 ### Requirements
 * Python3.6+
 * pip3
-* SQL
+* SQL (ecobee-dashboard/back-end/ecobee/config.py file)
 
 ### Installation
 A step by step series of examples that tell you how to get a development environment running.
 
-Clone the repository onto your machine.
 ```
+cd ~
 git clone https://github.com/itzliu/ecobee.git
-```
-Create folder for logs in home directory.
-```
 mkdir ~/logs
-```
-Change directory into the project directory folder.
-```
 cd ecobee-dashboard/back-end
-```
-Create a virtual environment for the app.
-```
 python3 -m venv venv
-```
-Activate your virtual environment.
-```
 source venv/bin/activate
-```
-Install Python dependencies.
-```
 pip install -r requirements.txt
-```
-Run the application.
-```
 python run.py
 ```
 
+Prior to running the application you need to setup your SQL configuration for storing API credentials inside the ecobee-dashboard/back-end/ecobee/config.py file.
+
+
 ## Built With
-* Flask - framework
+* Ecobee API
+* Flask - back-end framework
 * SQL - database
+* Angular - front-end framework
 * Bootstrap - templating
 
 ## What I Learned
