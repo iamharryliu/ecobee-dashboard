@@ -11,7 +11,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Requirements
 * Python3.6+
 * pip3
-* SQL (ecobee-dashboard/back-end/ecobee/config.py file)
+* SQL (configure your SQL settings in ecobee-dashboard/back-end/ecobee/config.py file)
 
 ### Installation
 A step by step series of examples that tell you how to get a development environment running.
