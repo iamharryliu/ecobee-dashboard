@@ -5,8 +5,8 @@ import logging
 from pathlib import Path
 
 # Database path to be in the main directory to work with Flask-Migrate.
-DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-PARENT_PATH = os.path.abspath(os.path.join(DIR_PATH, os.pardir))
+# DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+# PARENT_PATH = os.path.abspath(os.path.join(DIR_PATH, os.pardir))
 
 
 class Config:
@@ -21,14 +21,16 @@ class Config:
 
 logger = logging.getLogger(__name__)
 home_dir = str(Path.home())
-file_handler = logging.FileHandler(f'{home_dir}/logs/ecobee_dash.log')
-formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
+file_handler = logging.FileHandler(f"{home_dir}/logs/ecobee_dash.log")
+formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(message)s")
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 logger.setLevel(logging.DEBUG)
 
-temp_log_dir = f'{home_dir}/logs/ecobee_data/temp_and_humidity'
-occupancy_log_dir = f'{home_dir}/logs/ecobee_data/occupancy'
+temp_log_dir = f"{home_dir}/logs/ecobee_data/temp_and_humidity"
+occupancy_log_dir = f"{home_dir}/logs/ecobee_data/occupancy"
 
-TEMPERATURE_OPTIONS = [n * 0.5 + 18 for n in range(17)]  # 18 to 26 degrees celsius, incrementing by .5
-OCCUPANCY_HOURS = 24  # Span of time that you want shown on the thermostat occupancy chart.
+# 18 to 26 degrees celsius, incrementing by .5
+TEMPERATURE_OPTIONS = [n * 0.5 + 18 for n in range(17)]
+# Span of hours that you want shown on the thermostat occupancy chart.
+OCCUPANCY_HOURS = 24
