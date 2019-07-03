@@ -18,8 +18,8 @@ export class ThermostatComponent implements OnInit {
   ngOnInit() {
     let key = (this._route.snapshot.paramMap.get('key'));
     let identifier = (this._route.snapshot.paramMap.get('identifier'));
-
-    this._APIService.getThermostat(key, identifier)
+    this.thermostat = { key: key, identifier: identifier }
+    this._APIService.getThermostat(this.thermostat)
       .subscribe(data => {
         this.thermostat = data;
         this.all_data_fetched = true;
@@ -28,7 +28,7 @@ export class ThermostatComponent implements OnInit {
   }
 
   updateThermostat() {
-    this._APIService.getThermostat(this.thermostat.key, this.thermostat.identifier)
+    this._APIService.getThermostat(this.thermostat)
       .subscribe(data => {
         this.thermostat = data;
       });

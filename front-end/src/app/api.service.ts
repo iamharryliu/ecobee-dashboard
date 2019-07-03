@@ -22,33 +22,59 @@ export class APIService {
         return this.http.get<any>(`${this.backEndURL}/fetchThermostats/${key}`);
     }
 
-    getThermostat(key, identifier): Observable<any> {
+    getThermostat(thermostat): Observable<any> {
+        let key = thermostat.key;
+        let identifier = thermostat.identifier;
         return this.http.get<any>(`${this.backEndURL}/fetchThermostat/${key}/${identifier}`);
     }
 
     setHvacMode(thermostat, mode): Observable<any> {
-        let url = `${this.backEndURL}/setHvacMode/${thermostat.key}/${thermostat.identifier}/${mode}`
-        return this.http.post(url, null)
+        let data = {
+            key: thermostat.key,
+            identifier: thermostat.identifier,
+            mode: mode
+        }
+        let url = `${this.backEndURL}/setHvacMode`
+        return this.http.post(url, data)
     }
 
     resume(thermostat): Observable<any> {
-        let url = `${this.backEndURL}/resume/${thermostat.key}/${thermostat.identifier}`
-        return this.http.post(url, null)
+        let data = {
+            key: thermostat.key,
+            identifier: thermostat.identifier
+        }
+        let url = `${this.backEndURL}/resume`
+        return this.http.post<any>(url, data)
     }
 
     setClimate(thermostat, climate): Observable<any> {
-        let url = `${this.backEndURL}/setClimate/${thermostat.key}/${thermostat.identifier}/${climate}`
-        return this.http.post(url, null)
+        let data = {
+            key: thermostat.key,
+            identifier: thermostat.identifier,
+            climate: climate
+        }
+        let url = `${this.backEndURL}/setClimate`
+        return this.http.post(url, data)
     }
 
     setTemperature(thermostat, temperature): Observable<any> {
-        let url = `${this.backEndURL}/setTemperature/${thermostat.key}/${thermostat.identifier}/${temperature}`
-        return this.http.post(url, null);
+        let data = {
+            key: thermostat.key,
+            identifier: thermostat.identifier,
+            temperature: temperature
+        }
+        let url = `${this.backEndURL}/setTemperature`
+        return this.http.post(url, data);
     }
 
-    sendMessage(key, identifier, message): Observable<any> {
-        let url = `${this.backEndURL}/sendMessage/${key}/${identifier}/${message}`
-        return this.http.post(url, null)
+    sendMessage(thermostat, message): Observable<any> {
+        let data = {
+            key: thermostat.key,
+            identifier: thermostat.identifier,
+            message: message
+        }
+        let url = `${this.backEndURL}/sendMessage`
+        return this.http.post(url, data)
     }
 
 

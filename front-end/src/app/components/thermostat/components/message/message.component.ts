@@ -23,7 +23,7 @@ export class MessageComponent implements OnInit {
   }
 
   sendMessage() {
-    this._APIService.sendMessage(this.key, this.identifier, this.message).subscribe(resp => {
+    this._APIService.sendMessage(this.thermostat, this.message).subscribe(resp => {
       console.log(resp);
       this.message = '';
     })

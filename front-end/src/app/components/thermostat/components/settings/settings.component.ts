@@ -34,9 +34,6 @@ export class SettingsComponent implements OnInit {
   }
 
   resume() {
-    this.thermostat.currentClimateData.events = false;
-    // change temperature
-    // change climate
     this._APIService.resume(this.thermostat).subscribe(resp => {
       console.log(resp);
       this.updateThermostat.emit()
