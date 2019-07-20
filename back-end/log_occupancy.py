@@ -1,5 +1,5 @@
 from ecobee import create_app
-from ecobee.models import apis
+from ecobee.models import App
 from ecobeeAPI import EcobeeAPI
 from ecobee.apps.utils import getThermostats
 
@@ -19,7 +19,7 @@ timestamp = timestamp.isoformat()
 
 def main():
     push_app_context()
-    apps = apis.query.all()
+    apps = App.query.all()
     for config in apps:
         handle_app(config)
 

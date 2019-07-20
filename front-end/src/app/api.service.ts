@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
+const httpOptions = {
+    withCredentials: true,
+    headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'charset': 'UTF-8',
+    })
+};
+
 @Injectable({
     providedIn: 'root'
 })
@@ -10,12 +19,20 @@ export class APIService {
 
     constructor(private http: HttpClient) { }
 
-    getAPIS(): Observable<any> {
-        return this.http.get<any>('http://localhost:5000/fetchAPIs')
+    authorizeApp(apiKey: string): Observable<any> {
+        return this.http.get<any>(`${this.backEndURL}/authorizeApp/${apiKey}`, httpOptions)
     }
 
-    deleteAPI(key) {
-        console.log('delete ' + key)
+    createApp(form: any): Observable<any> {
+        return this.http.post<any>(`${this.backEndURL}/apps/create`, form, httpOptions)
+    }
+
+    getApps(): Observable<any> {
+        return this.http.get<any>(`${this.backEndURL}/apps`, httpOptions)
+    }
+
+    deleteApp(api_key): Observable<any> {
+        return this.http.delete<any>(`${this.backEndURL}/apps/delete/${api_key}`)
     }
 
     getThermostats(key): Observable<any> {
@@ -27,6 +44,8 @@ export class APIService {
         let identifier = thermostat.identifier;
         return this.http.get<any>(`${this.backEndURL}/fetchThermostat/${key}/${identifier}`);
     }
+
+    // Thermostat Actions
 
     setHvacMode(thermostat, mode): Observable<any> {
         let data = {

@@ -1,0 +1,6 @@
+[submodule "ecobeeApp"]
+	path = ecobeeApp
+	url = https://github.com/itzliu/ecobeeApp.git
+[submodule "back-end/ecobeeApp"]
+	path = back-end/ecobeeApp
+	url = https://github.com/itzliu/ecobeeApp.git

@@ -13,16 +13,21 @@
                 <li class="nav-item">
                     <a class="nav-link" routerLink='' routerLinkActive="active">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink='apis' routerLinkActive="active">Your APIs</a>
+                <li class="nav-item" *ngIf='loginStatus'>
+                    <a class="nav-link" routerLink='apps' routerLinkActive="active">Your Apps</a>
                 </li>
             </ul>
-            <ul class="navbar-nav">
+            <ul class="navbar-nav" *ngIf='!loginStatus'>
                 <li class="nav-item">
                     <a class="nav-link" routerLink='login' routerLinkActive="active">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink='register' routerLinkActive="active">Register</a>
+                    <a class="nav-link" routerLink='registerUser' routerLinkActive="active">Register</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav" *ngIf="loginStatus">
+                <li class="nav-item">
+                    <a class="nav-link" (click)='logoutUser()'>Logout</a>
                 </li>
             </ul>
         </div>

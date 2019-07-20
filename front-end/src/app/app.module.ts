@@ -5,15 +5,13 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule, RoutingComponents } from './app-routing.module';
+import { AuthGuard } from './auth.guard'
 
 import { APIService } from './api.service';
-import { APIsComponent } from './components/apis/apis.component';
-
 @NgModule({
   declarations: [
     AppComponent,
     RoutingComponents,
-    APIsComponent,
   ],
   imports: [
     BrowserModule,
@@ -21,7 +19,7 @@ import { APIsComponent } from './components/apis/apis.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [APIService],
+  providers: [APIService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

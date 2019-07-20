@@ -16,7 +16,7 @@
             </div>
             <select class="custom-select" [(ngModel)]="thermostat.currentClimateData.temperature" id="temperature"
                 name='temperature' form='set_temperature_hold' style='text-align-last: center'
-                (change)="setTemperature(selectField.value)" #selectField>
+                (change)="onChange(selectField.value)" #selectField>
                 <option *ngFor='let temperature of temperatureOptions' [value]='temperature'>
                     {{temperature | number: '1.1-1'}}
                 </option>

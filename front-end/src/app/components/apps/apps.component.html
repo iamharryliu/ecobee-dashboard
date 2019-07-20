@@ -1,0 +1,19 @@
+<div class='row'>
+    <h1 class='col-6'>Apps</h1>
+    <div class='col-6'>
+        <a class='btn btn-primary btn-lg float-right' routerLink='/register_api'>Register App</a>
+    </div>
+</div>
+<div class='row'>
+    <div class='col-12 mt-3 mb-3 app' *ngFor='let app of apps'>
+        <div class='card bg-dark'>
+            <div class='card-body'>
+                <h2 class='d-inline'>{{app.name}}</h2>
+                <div class='float-right'>
+                    <a (click)='onSelect(app.key)' class='btn btn-info'>View</a>
+                    <button (click)='deleteApp(app.key)' class='btn btn-danger'>Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

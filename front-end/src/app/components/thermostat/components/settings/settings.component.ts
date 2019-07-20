@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { APIService } from '../../../../api.service'
 
 @Component({
   selector: 'app-settings',
@@ -10,34 +9,39 @@ import { APIService } from '../../../../api.service'
 
 export class SettingsComponent implements OnInit {
 
-  @Input() public thermostat;
-  @Output() public updateThermostat: EventEmitter<void> = new EventEmitter();
+  @Input() public thermostat: any;
+  @Output() public setHvacMode: EventEmitter<string> = new EventEmitter();
+  @Output() public setClimate: EventEmitter<string> = new EventEmitter();
+  @Output() public resume: EventEmitter<void> = new EventEmitter();
 
 
-  constructor(private _APIService: APIService) { }
+  constructor() { }
 
   ngOnInit() { }
 
-  setHvacMode(mode) {
-    this.thermostat.hvacMode = mode
-    this._APIService.setHvacMode(this.thermostat, mode).subscribe(resp => {
-      console.log(resp);
-      this.updateThermostat.emit()
-    })
+  isHeatOn() {
+    return this.thermostat.hvacMode == 'heat'
   }
 
-  setClimate(climate) {
-    this._APIService.setClimate(this.thermostat, climate).subscribe(resp => {
-      console.log(resp);
-      this.updateThermostat.emit();
-    });
+  isOnClimateHold() {
+    return this.thermostat.currentClimateData.events
   }
 
-  resume() {
-    this._APIService.resume(this.thermostat).subscribe(resp => {
-      console.log(resp);
-      this.updateThermostat.emit()
-    });
+  isClimateActive(climate: string) {
+    return this.thermostat.currentClimateData.mode == climate
   }
+
+  onSelectClimate(climate: string) {
+    this.setClimate.emit(climate);
+  }
+
+  onSelectHvacMode(mode: string) {
+    this.setHvacMode.emit(mode);
+  }
+
+  onResume() {
+    this.resume.emit();
+  }
+
 
 }
