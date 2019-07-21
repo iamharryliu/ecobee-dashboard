@@ -2,12 +2,13 @@ import os
 import json
 
 import logging
-from pathlib import Path
 
-# Database path to be in the main directory to work with Flask-Migrate.
+# Database path to main directory to work with Flask-Migrate and SQLite.
 # DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 # PARENT_PATH = os.path.abspath(os.path.join(DIR_PATH, os.pardir))
 
+from pathlib import Path
+home_dir = str(Path.home())
 
 class Config:
     SECRET_KEY = "secret"
@@ -16,16 +17,19 @@ class Config:
     SQLALCHEMY_DATABASE_URI = "postgresql://localhost/ecobee"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
-    # CORS_HEADERS = 'Content-Type'
-
 
 logger = logging.getLogger(__name__)
-home_dir = str(Path.home())
-file_handler = logging.FileHandler(f"{home_dir}/logs/ecobee_dash.log")
-formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(message)s")
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s:%(message)s")
+
+file_handler = logging.FileHandler(f"{home_dir}/logs/ecobeeApp.log")
+file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
-logger.setLevel(logging.DEBUG)
+
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
 
 temp_log_dir = f"{home_dir}/logs/ecobee_data/temp_and_humidity"
 occupancy_log_dir = f"{home_dir}/logs/ecobee_data/occupancy"
