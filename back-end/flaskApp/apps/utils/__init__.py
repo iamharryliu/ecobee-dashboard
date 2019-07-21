@@ -1,7 +1,7 @@
 from flask import abort, request
 from flask_login import current_user
 from flaskApp import db
-from flaskApp.config import logger, temp_log_dir, occupancy_log_dir
+from flaskApp.config import ecobeeAppLogger, temp_log_dir, occupancy_log_dir
 from flaskApp.models import App
 from flaskApp.apps.utils.thermostat_utils import Thermostat
 
@@ -41,7 +41,7 @@ def getAppByKey(key):
     ''' Get App by key. '''
     appConfig = getAppConfigByKey(key)
     if appConfig:
-        app = ecobeeApp(config=appConfig, db=db, logger=logger)
+        app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
         return app
     else:
         abort(404)

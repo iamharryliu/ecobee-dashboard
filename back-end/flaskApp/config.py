@@ -18,18 +18,18 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+ecobeeAppLogger = logging.getLogger(__name__)
+ecobeeAppLogger.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s:%(message)s")
 
 file_handler = logging.FileHandler(f"{home_dir}/logs/ecobeeApp.log")
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+ecobeeAppLogger.addHandler(file_handler)
 
 stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
+ecobeeAppLogger.addHandler(stream_handler)
 
 temp_log_dir = f"{home_dir}/logs/ecobee_data/temp_and_humidity"
 occupancy_log_dir = f"{home_dir}/logs/ecobee_data/occupancy"
