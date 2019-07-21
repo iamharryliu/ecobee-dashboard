@@ -7,9 +7,6 @@ import logging
 # DIR_PATH = os.path.dirname(os.path.realpath(__file__))
 # PARENT_PATH = os.path.abspath(os.path.join(DIR_PATH, os.pardir))
 
-from pathlib import Path
-home_dir = str(Path.home())
-
 class Config:
     SECRET_KEY = "secret"
     # SQLALCHEMY_DATABASE_URI = f"sqlite:///{PARENT_PATH}/site.db"
@@ -17,6 +14,9 @@ class Config:
     SQLALCHEMY_DATABASE_URI = "postgresql://localhost/ecobee"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = True
+    
+from pathlib import Path
+home_dir = str(Path.home())
 
 ecobeeAppLogger = logging.getLogger(__name__)
 ecobeeAppLogger.setLevel(logging.DEBUG)
