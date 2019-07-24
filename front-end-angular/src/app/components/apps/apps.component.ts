@@ -20,7 +20,7 @@ export class AppsComponent implements OnInit {
 
   ngOnInit() {
     if (this._UserService.loginStatus) {
-      this.fetchApps()
+      this.fetchApps();
     }
   }
 
@@ -31,8 +31,8 @@ export class AppsComponent implements OnInit {
       })
   }
 
-  onSelect(key: string) {
-    this._router.navigate(['/apis', key])
+  onSelect() {
+    this._router.navigate(['/thermostats'])
   }
 
   deleteApp(key: string) {
