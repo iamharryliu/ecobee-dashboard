@@ -14,7 +14,10 @@
                     <a class="nav-link" routerLink='' routerLinkActive="active">Home</a>
                 </li>
                 <li class="nav-item" *ngIf='loginStatus'>
-                    <a class="nav-link" routerLink='apps' routerLinkActive="active">Your Apps</a>
+                    <a class="nav-link" routerLink='apps' routerLinkActive="active">Apps</a>
+                </li>
+                <li class="nav-item" *ngIf='loginStatus'>
+                    <a class="nav-link" routerLink='thermostats' routerLinkActive="active">Thermostats</a>
                 </li>
             </ul>
             <ul class="navbar-nav" *ngIf='!loginStatus'>
