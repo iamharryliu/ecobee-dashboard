@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 
 const httpOptions = {
     withCredentials: true,
-    headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'charset': 'UTF-8',
-    })
+    // headers: new HttpHeaders({
+    //     'Content-Type': 'application/json',
+    //     'charset': 'UTF-8',
+    // })
 };
 
 @Injectable({
@@ -20,7 +20,7 @@ export class APIService {
     constructor(private http: HttpClient) { }
 
     authorizeApp(apiKey: string): Observable<any> {
-        return this.http.get<any>(`${this.backEndURL}/authorizeApp/${apiKey}`, httpOptions)
+        return this.http.get<any>(`${this.backEndURL}/apps/authorize/${apiKey}`, httpOptions)
     }
 
     createApp(form: any): Observable<any> {
@@ -35,8 +35,8 @@ export class APIService {
         return this.http.delete<any>(`${this.backEndURL}/apps/delete/${api_key}`)
     }
 
-    getThermostats(key): Observable<any> {
-        return this.http.get<any>(`${this.backEndURL}/fetchThermostats/${key}`);
+    getUserThermostats(): Observable<any> {
+        return this.http.get<any>(`${this.backEndURL}/getUserThermostats`, httpOptions);
     }
 
     getThermostat(thermostat): Observable<any> {

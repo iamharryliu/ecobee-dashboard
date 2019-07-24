@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { APIService } from '../../api.service';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-thermostats',
@@ -15,12 +14,10 @@ export class ThermostatsComponent implements OnInit {
   public key: string;
 
   constructor(private _APIService: APIService,
-    private _router: Router,
-    private _route: ActivatedRoute) { }
+    private _Router: Router, ) { }
 
   ngOnInit() {
-    this.key = (this._route.snapshot.paramMap.get('key'));
-    this._APIService.getThermostats(this.key)
+    this._APIService.getUserThermostats()
       .subscribe(data => {
         this.thermostats = data;
         this.all_data_fetched = true;
@@ -30,7 +27,7 @@ export class ThermostatsComponent implements OnInit {
   view(thermostat) {
     let key = thermostat.key;
     let identifier = thermostat.identifier;
-    this._router.navigate(['/apis', key, identifier])
+    this._Router.navigate(['/apis', key, identifier])
   }
 
 }

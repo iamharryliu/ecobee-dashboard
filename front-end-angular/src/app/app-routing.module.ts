@@ -29,7 +29,7 @@ const routes: Routes = [
   { path: 'register_api', component: RegisterApiComponent },
   { path: 'apps', component: AppsComponent, canActivate: [AuthGuard] },
 
-  { path: 'apis/:key', component: ThermostatsComponent },
+  { path: 'thermostats', component: ThermostatsComponent },
   { path: 'apis/:key/:identifier', component: ThermostatComponent }
 
 ];

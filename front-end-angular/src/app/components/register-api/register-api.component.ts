@@ -25,7 +25,6 @@ export class RegisterApiComponent implements OnInit {
   ngOnInit() { }
 
   authorizeApp() {
-    // console.log(this.form.apiKey)
     this._APIService.authorizeApp(this.form.apiKey)
       .subscribe(r => {
         this.handleAuthorizeAppResponse(r)

@@ -10,10 +10,13 @@
             <div class='card-body'>
                 <h2 class='d-inline'>{{app.name}}</h2>
                 <div class='float-right'>
-                    <a (click)='onSelect(app.key)' class='btn btn-info'>View</a>
+                    <a (click)='onSelect()' class='btn btn-info'>View</a>
                     <button (click)='deleteApp(app.key)' class='btn btn-danger'>Delete</button>
                 </div>
             </div>
         </div>
+    </div>
+    <div class='col-12 mt-3 mb-3' *ngIf='!apps.length'>
+        You currently have no apps registered with this account.
     </div>
 </div>
