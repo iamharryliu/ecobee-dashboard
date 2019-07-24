@@ -3,9 +3,10 @@ from flask_cors import cross_origin
 from flaskApp.apps.utils import (
     createApp,
     deleteApp,
-    getApps,
+    getUserApps,
     getAppByKey,
     getThermostats,
+    getUserThermostats,
     getThermostat,
 )
 from flask_login import login_required
@@ -18,12 +19,12 @@ apps_blueprint = Blueprint("apps_blueprint", __name__, template_folder="template
 # Register
 
 
-@apps_blueprint.route("/apps/authorizeApp/<string:api_key>", methods=["GET"])
+@apps_blueprint.route("/apps/authorize/<string:api_key>", methods=["GET"])
 @cross_origin(supports_credentials=True)
 @login_required
 def _authorizeApp(api_key):
     try:
-        pin, authorization_code = EcobeeAPI.requestPinAndAuthorizationCode(api_key)
+        pin, authorization_code = ecobeeApp.requestPinAndAuthorizationCode(api_key)
     except:
         success = False
         data = None
@@ -48,14 +49,6 @@ def _createApp():
     return jsonify({"success": success})
 
 
-@apps_blueprint.route("/apps", methods=["GET"])
-@cross_origin(supports_credentials=True)
-@login_required
-def _getApps():
-    apps = getApps()
-    return jsonify(apps)
-
-
 @apps_blueprint.route("/apps/delete/<string:api_key>", methods=["DELETE"])
 @cross_origin(supports_credentials=True)
 def _deleteApp(api_key):
@@ -68,17 +61,21 @@ def _deleteApp(api_key):
     return jsonify({"success": success})
 
 
-@apps_blueprint.route("/fetchThermostats/<key>")
+@apps_blueprint.route("/apps", methods=["GET"])
 @cross_origin(supports_credentials=True)
-def _getThermostatsByKey(key):
-    app = getAppByKey(key)
-    thermostats = getThermostats(app)
-    set = []
-    for thermostat in thermostats:
-        set.append(
-            {"name": thermostat.name, "key": key, "identifier": thermostat.identifier}
-        )
-    return jsonify(set)
+@login_required
+def _getUserApps():
+    apps = getUserApps()
+    apps = [{"name": app.name, "key": app.api_key} for app in apps]
+    return jsonify(apps)
+
+
+@apps_blueprint.route("/getUserThermostats")
+@cross_origin(supports_credentials=True)
+@login_required
+def _getUserThermostats():
+    thermostats = getUserThermostats()
+    return jsonify(thermostats)
 
 
 @apps_blueprint.route("/fetchThermostat/<key>/<identifier>")

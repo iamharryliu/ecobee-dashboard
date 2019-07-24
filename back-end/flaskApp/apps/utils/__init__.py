@@ -32,6 +32,11 @@ def getApps():
     apps = [{'name':app.name, 'key':app.api_key} for app in apps]
     return apps
 
+def getUserApps():
+    apps = App.query.filter_by(owner=current_user)
+    return apps
+    
+
 def getAppConfigByKey(key):
     ''' get App config by key. '''
     return App.query.filter_by(api_key=key).first()
@@ -54,15 +59,32 @@ def deleteApp(api_key):
     db.session.commit()
 
 
-def getThermostats(api):
+def getThermostats(app):
     thermostats = []
-    thermostats_data = api.data['thermostatList']
+    thermostats_data = app.data['thermostatList']
     for thermostat_data in thermostats_data:
         thermostat_data['temp_log_dir'] = temp_log_dir
         thermostat_data['occupancy_log_dir'] = occupancy_log_dir
         thermostat = Thermostat(thermostat_data)
         thermostats.append(thermostat)
     return thermostats
+
+def getUserThermostats():
+    thermostats = []
+    appConfigs = getUserApps()
+    for appConfig in appConfigs:
+        app = ecobeeApp(config=appConfig)
+        data = getThermostats(app)
+        for thermostat in data:
+            thermostats.append(
+                {
+                    "name": thermostat.name,
+                    "key": appConfig.api_key,
+                    "identifier": thermostat.identifier,
+                }
+            )
+    return thermostats
+
 
 
 def getThermostat(thermostats, identifier):
