@@ -69,22 +69,18 @@ def getThermostats(app):
         thermostats.append(thermostat)
     return thermostats
 
+
 def getUserThermostats():
     thermostats = []
     appConfigs = getUserApps()
     for appConfig in appConfigs:
         app = ecobeeApp(config=appConfig)
-        data = getThermostats(app)
-        for thermostat in data:
-            thermostats.append(
-                {
-                    "name": thermostat.name,
-                    "key": appConfig.api_key,
-                    "identifier": thermostat.identifier,
-                }
-            )
+        data = app.requestDataForThermostatsPage()
+        thermostatList = data['thermostatList']
+        for thermostat in thermostatList:
+            thermostat['key'] = appConfig.api_key
+        thermostats += thermostatList
     return thermostats
-
 
 
 def getThermostat(thermostats, identifier):
