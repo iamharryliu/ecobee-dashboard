@@ -1,4 +1,4 @@
-from flask import abort, request
+from flask import request
 from flask_login import current_user
 from flaskApp import db
 from flaskApp.config import ecobeeAppLogger, temp_log_dir, occupancy_log_dir
@@ -12,7 +12,6 @@ def createApp():
     app_name = data['appName']
     api_key = data['apiKey']
     authorization_code = data['authorizationCode']
-    print(app_name,api_key,authorization_code)
     access_token, refresh_token = ecobeeApp.requestTokens(api_key, authorization_code)
     app = App(
         owner=current_user,
@@ -74,12 +73,15 @@ def getUserThermostats():
     thermostats = []
     appConfigs = getUserApps()
     for appConfig in appConfigs:
-        app = ecobeeApp(config=appConfig)
-        data = app.requestDataForThermostatsPage()
-        thermostatList = data['thermostatList']
-        for thermostat in thermostatList:
-            thermostat['key'] = appConfig.api_key
-        thermostats += thermostatList
+        app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
+        data = app.requestData()
+        if data:
+            thermostatList = data['thermostatList']
+            for thermostat in thermostatList:
+                thermostat['key'] = appConfig.api_key
+            thermostats += thermostatList
+        else:
+            print(f'{appConfig.api_key} is not working.')
     return thermostats
 
 
@@ -88,4 +90,4 @@ def getThermostat(thermostats, identifier):
     if thermostat:
         return thermostat
     else:
-        abort(404)
+        return None
