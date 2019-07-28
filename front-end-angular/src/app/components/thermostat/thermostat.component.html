@@ -7,10 +7,7 @@
             <app-settings (setHvacMode)='setHvacMode($event)' (setClimate)='setClimate($event)'
                 (resume)='resume($event)' [thermostat]=thermostat></app-settings>
         </div>
-        <div class='col-md-6 col-lg-3 mb-4'>
-            <app-sensor [sensor]=thermostat.sensor></app-sensor>
-        </div>
-        <div class='col-md-6 col-lg-3 mb-3' *ngFor='let sensor of thermostat.remoteSensors'>
+        <div class='col-md-6 col-lg-3 mb-4' *ngFor='let sensor of remoteSensors'>
             <app-sensor [sensor]=sensor></app-sensor>
         </div>
         <div class='col-lg-12 mb-3'>
@@ -20,7 +17,7 @@
             occupancy chart
         </div>
         <div class='col-lg-12'>
-            <app-message></app-message>
+            <app-message [thermostat]=thermostat></app-message>
         </div>
     </div>
 </div>

@@ -11,6 +11,8 @@
                 <h2 class='d-inline'>{{app.name}}</h2>
                 <div class='float-right'>
                     <a (click)='onSelect()' class='btn btn-info'>View</a>
+                    <a (click)='reAuthorizeApp(app.key)' class='btn btn-info'>Reauthorize</a>
+                    <a (click)='updateAppCredentials(app.key)' class='btn btn-info'>Update App Credentials</a>
                     <button (click)='deleteApp(app.key)' class='btn btn-danger'>Delete</button>
                 </div>
             </div>

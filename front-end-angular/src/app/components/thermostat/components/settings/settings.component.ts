@@ -14,34 +14,34 @@ export class SettingsComponent implements OnInit {
   @Output() public setClimate: EventEmitter<string> = new EventEmitter();
   @Output() public resume: EventEmitter<void> = new EventEmitter();
 
-
   constructor() { }
 
   ngOnInit() { }
 
-  isHeatOn() {
-    return this.thermostat.hvacMode == 'heat'
+  get isHeatOn() {
+    return this.thermostat.settings.hvacMode == 'heat'
   }
 
-  isOnClimateHold() {
-    return this.thermostat.currentClimateData.events
+  get isOnClimateHold() {
+    return this.thermostat.events.length
   }
 
-  isClimateActive(climate: string) {
-    return this.thermostat.currentClimateData.mode == climate
+  isClimateActive(climate: any) {
+    return this.thermostat.currentClimateRef == climate.climateRef
   }
 
-  onSelectClimate(climate: string) {
-    this.setClimate.emit(climate);
-  }
+  // Actions
 
   onSelectHvacMode(mode: string) {
     this.setHvacMode.emit(mode);
   }
 
+  onSelectClimate(climate: any) {
+    this.setClimate.emit(climate.climateRef);
+  }
+
   onResume() {
     this.resume.emit();
   }
-
 
 }

@@ -9,18 +9,12 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MessageComponent implements OnInit {
 
-  @Input() public thermostat;
-  public key;
-  public identifier;
+  @Input() public thermostat: any;
   public message = '';
 
-  constructor(private _APIService: APIService,
-    private _route: ActivatedRoute) { }
+  constructor(private _APIService: APIService) { }
 
-  ngOnInit() {
-    this.key = (this._route.snapshot.paramMap.get('key'));
-    this.identifier = (this._route.snapshot.paramMap.get('identifier'));
-  }
+  ngOnInit() { }
 
   sendMessage() {
     this._APIService.sendMessage(this.thermostat, this.message).subscribe(resp => {

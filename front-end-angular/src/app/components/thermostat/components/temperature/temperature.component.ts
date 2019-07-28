@@ -16,6 +16,8 @@ export class TemperatureComponent implements OnInit {
 
   ngOnInit() { }
 
+  // Actions
+
   onChange(temperature: string) {
     this.setTemperature.emit(temperature);
   }

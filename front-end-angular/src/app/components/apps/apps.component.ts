@@ -11,6 +11,7 @@ import { UserService } from '../../user.service'
 export class AppsComponent implements OnInit {
 
   public apps = [];
+  public authorizationCode: string;
 
   constructor(
     private _APIService: APIService,
@@ -43,4 +44,30 @@ export class AppsComponent implements OnInit {
       });
   }
 
+  reAuthorizeApp(key: string) {
+    this._APIService.authorizeApp(key).
+      subscribe(response => {
+        this.authorizationCode = response.data.authorization_code
+        alert(response.data.pin)
+      })
+  }
+
+  updateAppCredentials(key: string) {
+    if (this.authorizationCode) {
+      this._APIService.updateAppCredentials(key, this.authorizationCode).subscribe(response => {
+        if (response.success) {
+          alert('updated')
+          this.fetchApps();
+        }
+        else {
+          alert('Failed to reauthorize, try again.')
+        }
+      })
+
+    }
+    else {
+      alert('Reauthorize App first.')
+    }
+
+  }
 }

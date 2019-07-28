@@ -4,17 +4,18 @@
     </div>
     <div class='card-body'>
         <img class="img-fluid mx-auto d-block" src='favicon.ico' style='height: 40px'>
-        <h1 class='card-title text-center'>{{ thermostat.temperature | number: '1.1-1'}} C</h1>
+        <h1 class='card-title text-center'>
+            {{ thermostat.actualTemperature | number: '1.1-1'}} C</h1>
         <h5 class='text-center'>
-            HVAC Mode: {{ thermostat.hvacMode | titlecase }}
+            HVAC Mode: {{ thermostat.settings.hvacMode | titlecase }}
         </h5>
         <div class="input-group">
             <div class="input-group-prepend">
                 <label class="input-group-text" for="temperature">
-                    {{ thermostat.currentClimateData.mode | titlecase }}
+                    {{ thermostat.currentClimateRef | titlecase }}
                 </label>
             </div>
-            <select class="custom-select" [(ngModel)]="thermostat.currentClimateData.temperature" id="temperature"
+            <select class="custom-select" [(ngModel)]="thermostat.currentClimateRefTemp" id="temperature"
                 name='temperature' form='set_temperature_hold' style='text-align-last: center'
                 (change)="onChange(selectField.value)" #selectField>
                 <option *ngFor='let temperature of temperatureOptions' [value]='temperature'>
@@ -23,8 +24,8 @@
             </select>
             <div class='input-group-append'>
                 <span class="input-group-text" id="basic-addon2">
-                    <div *ngIf='thermostat.currentClimateData.events; else elseBlock'>
-                        C until {{ thermostat.currentClimateData.endDate}} {{thermostat.currentClimateData.endTime }}
+                    <div *ngIf='thermostat.events.length; else elseBlock'>
+                        C until {{ thermostat.events[0].endDate}} {{thermostat.events[0].endTime }}
                     </div>
                     <ng-template #elseBlock>
                         C until next transition.

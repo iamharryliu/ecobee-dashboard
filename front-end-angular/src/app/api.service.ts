@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const httpOptions = {
     withCredentials: true,
-    // headers: new HttpHeaders({
-    //     'Content-Type': 'application/json',
-    //     'charset': 'UTF-8',
-    // })
 };
 
 @Injectable({
@@ -19,12 +15,22 @@ export class APIService {
 
     constructor(private http: HttpClient) { }
 
+    // Apps
+
     authorizeApp(apiKey: string): Observable<any> {
         return this.http.get<any>(`${this.backEndURL}/apps/authorize/${apiKey}`, httpOptions)
     }
 
     createApp(form: any): Observable<any> {
         return this.http.post<any>(`${this.backEndURL}/apps/create`, form, httpOptions)
+    }
+
+    updateAppCredentials(api_key: string, authorization_code: string): Observable<any> {
+        let form = {
+            'api_key': api_key,
+            'authorization_code': authorization_code
+        }
+        return this.http.post<any>(`${this.backEndURL}/apps/updateAppCredentials`, form, httpOptions)
     }
 
     getApps(): Observable<any> {
@@ -35,14 +41,19 @@ export class APIService {
         return this.http.delete<any>(`${this.backEndURL}/apps/delete/${api_key}`)
     }
 
+    // Thermostats
+
     getUserThermostats(): Observable<any> {
         return this.http.get<any>(`${this.backEndURL}/getUserThermostats`, httpOptions);
     }
 
     getThermostat(thermostat): Observable<any> {
-        let key = thermostat.key;
         let identifier = thermostat.identifier;
-        return this.http.get<any>(`${this.backEndURL}/fetchThermostat/${key}/${identifier}`);
+        return this.http.get<any>(`${this.backEndURL}/thermostat/${identifier}`, httpOptions);
+    }
+
+    getThermostatRuntimeReport(): Observable<any> {
+        return this.http.get<any>(`${this.backEndURL}/runtimeReport`, httpOptions);
     }
 
     // Thermostat Actions
