@@ -1,9 +1,8 @@
 from flask import request
 from flask_login import current_user
 from flaskApp import db
-from flaskApp.config import ecobeeAppLogger, temp_log_dir, occupancy_log_dir
+from flaskApp.config import ecobeeAppLogger
 from flaskApp.models import App
-from flaskApp.apps.utils.thermostat_utils import Thermostat
 
 from ecobeeApp import ecobeeApp
 
@@ -47,8 +46,6 @@ def getAppByKey(key):
     if appConfig:
         app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
         return app
-    else:
-        abort(404)
 
 
 def deleteApp(api_key):
@@ -57,18 +54,7 @@ def deleteApp(api_key):
     db.session.delete(app)
     db.session.commit()
 
-
-def getThermostats(app):
-    thermostats = []
-    thermostats_data = app.data['thermostatList']
-    for thermostat_data in thermostats_data:
-        thermostat_data['temp_log_dir'] = temp_log_dir
-        thermostat_data['occupancy_log_dir'] = occupancy_log_dir
-        thermostat = Thermostat(thermostat_data)
-        thermostats.append(thermostat)
-    return thermostats
-
-
+    
 def getUserThermostats():
     thermostats = []
     appConfigs = getUserApps()
@@ -78,8 +64,7 @@ def getUserThermostats():
         if data:
             thermostatList = data['thermostatList']
             for thermostat in thermostatList:
-                thermostat['key'] = appConfig.api_key
-            thermostats += thermostatList
+                thermostats.append({'api_key':appConfig.api_key,'data':thermostat})
         else:
             print(f'{appConfig.api_key} is not working.')
     return thermostats

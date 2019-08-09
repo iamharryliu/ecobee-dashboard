@@ -19,11 +19,11 @@ export class SettingsComponent implements OnInit {
   ngOnInit() { }
 
   get isHeatOn() {
-    return this.thermostat.settings.hvacMode == 'heat'
+    return this.thermostat.data.settings.hvacMode == 'heat'
   }
 
   get isOnClimateHold() {
-    return this.thermostat.events.length
+    return this.thermostat.data.events.length
   }
 
   isClimateActive(climate: any) {

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService } from '../../api.service';
+import { AppService } from '../../app.service';
 import { Router } from '@angular/router';
+
+import { Thermostat } from '../../../../app'
 
 @Component({
   selector: 'app-thermostats',
@@ -13,21 +15,21 @@ export class ThermostatsComponent implements OnInit {
   public all_data_fetched = false;
   public key: string;
 
-  constructor(private _APIService: APIService,
+  constructor(private _AppService: AppService,
     private _Router: Router, ) { }
 
   ngOnInit() {
-    this._APIService.getUserThermostats()
+    this._AppService.getUserThermostats()
       .subscribe(data => {
         this.thermostats = data;
         this.all_data_fetched = true;
       });
   }
 
-  view(thermostat) {
-    let key = thermostat.key;
-    let identifier = thermostat.identifier;
-    this._Router.navigate(['/apis', key, identifier])
+  view(thermostat: Thermostat) {
+    let key = thermostat.api_key;
+    let identifier = thermostat.data.identifier;
+    this._Router.navigate(['/apps/thermostats/', key, identifier])
   }
 
 }

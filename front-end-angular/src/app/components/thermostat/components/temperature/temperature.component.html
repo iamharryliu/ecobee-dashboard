@@ -7,7 +7,7 @@
         <h1 class='card-title text-center'>
             {{ thermostat.actualTemperature | number: '1.1-1'}} C</h1>
         <h5 class='text-center'>
-            HVAC Mode: {{ thermostat.settings.hvacMode | titlecase }}
+            HVAC Mode: {{ thermostat.data.settings.hvacMode | titlecase }}
         </h5>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -24,8 +24,8 @@
             </select>
             <div class='input-group-append'>
                 <span class="input-group-text" id="basic-addon2">
-                    <div *ngIf='thermostat.events.length; else elseBlock'>
-                        C until {{ thermostat.events[0].endDate}} {{thermostat.events[0].endTime }}
+                    <div *ngIf='thermostat.data.events.length; else elseBlock'>
+                        C until {{ thermostat.data.events[0].endDate}} {{thermostat.data.events[0].endTime }}
                     </div>
                     <ng-template #elseBlock>
                         C until next transition.

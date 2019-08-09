@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService } from '../../api.service'
+import { AppService } from '../../app.service'
 import { Router } from '@angular/router';
 
 class appForm {
@@ -11,13 +11,13 @@ class appForm {
 }
 
 @Component({
-  selector: 'app-register-api',
-  templateUrl: './register-api.component.html',
-  styleUrls: ['./register-api.component.css']
+  selector: 'app-register-app',
+  templateUrl: './register-app.component.html',
+  styleUrls: ['./register-app.component.css']
 })
-export class RegisterApiComponent implements OnInit {
+export class RegisterAppComponent implements OnInit {
 
-  constructor(private _APIService: APIService,
+  constructor(private _AppService: AppService,
     private _router: Router) { }
 
   form = new appForm('', '', '')
@@ -25,7 +25,7 @@ export class RegisterApiComponent implements OnInit {
   ngOnInit() { }
 
   authorizeApp() {
-    this._APIService.authorizeApp(this.form.apiKey)
+    this._AppService.authorizeApp(this.form.apiKey)
       .subscribe(r => {
         this.handleAuthorizeAppResponse(r)
       });
@@ -47,7 +47,7 @@ export class RegisterApiComponent implements OnInit {
   }
 
   onSubmit() {
-    this._APIService.createApp(this.form)
+    this._AppService.createApp(this.form)
       .subscribe(r => {
         if (r.success) {
           this._router.navigate(['/apps'])

@@ -1,37 +1,31 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { MainComponent } from './components/main/main.component';
-
-import { AppsComponent } from './components/apps/apps.component';
-
+import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { LoginComponent } from './components/login/login.component';
-
-import { RegisterApiComponent } from './components/register-api/register-api.component';
-import { ThermostatsComponent } from './components/thermostats/thermostats.component'
+import { AppsComponent } from './components/apps/apps.component';
+import { RegisterAppComponent } from './components/register-app/register-app.component';
+import { ThermostatsComponent } from './components/thermostats/thermostats.component';
 import { ThermostatComponent } from './components/thermostat/thermostat.component';
 import { TemperatureComponent } from './components/thermostat/components/temperature/temperature.component';
 import { SettingsComponent } from './components/thermostat/components/settings/settings.component';
 import { SensorComponent } from './components/thermostat/components/sensor/sensor.component';
+import { WeatherChartComponent } from './components/thermostat/components/weather-chart/weather-chart.component';
+import { OccupancyChartComponent } from './components/thermostat/components/occupancy-chart/occupancy-chart.component';
 import { MessageComponent } from './components/thermostat/components/message/message.component';
 
 import { AuthGuard } from './auth.guard'
 
 const routes: Routes = [
-
   { path: '', component: MainComponent },
-
   { path: 'login', component: LoginComponent },
-  { path: 'registerUser', component: RegisterUserComponent },
-
-  { path: 'register_api', component: RegisterApiComponent },
+  { path: 'register', component: RegisterUserComponent },
   { path: 'apps', component: AppsComponent, canActivate: [AuthGuard] },
-
-  { path: 'thermostats', component: ThermostatsComponent, canActivate: [AuthGuard] },
-  { path: 'apis/:key/:identifier', component: ThermostatComponent }
-
+  { path: 'apps/register', component: RegisterAppComponent },
+  { path: 'apps/thermostats', component: ThermostatsComponent, canActivate: [AuthGuard] },
+  { path: 'apps/thermostats/:key/:identifier', component: ThermostatComponent }
 ];
 
 @NgModule({
@@ -39,15 +33,19 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const RoutingComponents = [MainComponent,
+export const RoutingComponents = [
+  MainComponent,
   NavbarComponent,
-  AppsComponent,
   RegisterUserComponent,
   LoginComponent,
-  RegisterApiComponent,
+  AppsComponent,
+  RegisterAppComponent,
   ThermostatsComponent,
   ThermostatComponent,
   TemperatureComponent,
   SettingsComponent,
   SensorComponent,
-  MessageComponent,]
+  WeatherChartComponent,
+  OccupancyChartComponent,
+  MessageComponent,
+]

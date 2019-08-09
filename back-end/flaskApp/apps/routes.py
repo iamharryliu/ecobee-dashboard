@@ -1,27 +1,24 @@
 from flask import Blueprint, jsonify, request
+from flask_login import login_required
 from flask_cors import cross_origin
+
+from flaskApp import db
+from flaskApp.config import ecobeeAppLogger
+from flaskApp.models import App
 from flaskApp.apps.utils import (
     createApp,
     deleteApp,
     getUserApps,
     getAppByKey,
-    getThermostats,
     getUserThermostats,
     getThermostat,
 )
-from flask_login import login_required
 
 from ecobeeApp import ecobeeApp
 
 apps_blueprint = Blueprint("apps_blueprint", __name__)
 
-
-from flaskApp import db
-from flaskApp.config import ecobeeAppLogger
-from flaskApp.models import App
-
 # Register
-
 
 @apps_blueprint.route("/apps/authorize/<string:api_key>", methods=["GET"])
 @cross_origin(supports_credentials=True)
@@ -37,7 +34,6 @@ def _authorizeApp(api_key):
         data = {"pin": pin, "authorization_code": authorization_code}
     r = {"success": success, "data": data}
     return jsonify(r)
-    
 
 
 @apps_blueprint.route("/apps/create", methods=["POST"])
@@ -53,22 +49,25 @@ def _createApp():
         success = True
     return jsonify({"success": success})
 
+
 @apps_blueprint.route("/apps/updateAppCredentials", methods=["POST"])
 @cross_origin(supports_credentials=True)
 @login_required
-def _updateAppCredentials():    
+def _updateAppCredentials():
     data = request.get_json()
-    api_key = data['api_key']
-    authorization_code = data['authorization_code']
+    api_key = data["api_key"]
+    authorization_code = data["authorization_code"]
     try:
-        access_token, refresh_token = ecobeeApp.requestTokens(api_key, authorization_code)
+        access_token, refresh_token = ecobeeApp.requestTokens(
+            api_key, authorization_code
+        )
     except:
         success = False
     else:
         app = App.query.filter_by(api_key=api_key).first()
-        app.authorization_code=authorization_code
-        app.access_token=access_token
-        app.refresh_token=refresh_token
+        app.authorization_code = authorization_code
+        app.access_token = access_token
+        app.refresh_token = refresh_token
         db.session.commit()
         success = True
     return jsonify({"success": success})
@@ -102,6 +101,7 @@ def _getUserThermostats():
     data = getUserThermostats()
     return jsonify(data)
 
+
 @apps_blueprint.route("/thermostat/<identifier>")
 @cross_origin(supports_credentials=True)
 @login_required
@@ -111,7 +111,7 @@ def _getThermostatByIdentifier(identifier):
         (
             thermostat
             for thermostat in thermostats
-            if thermostat["identifier"] == identifier
+            if thermostat["data"]["identifier"] == identifier
         ),
         None,
     )
@@ -188,8 +188,6 @@ def sendMessage():
     r = app.send_message(identifier=identifier, message=message)
     message = f"Message sent."
     return jsonify({"success": r, "message": message})
-
-# Testing
 
 @apps_blueprint.route("/runtimeReport", methods=["GET"])
 @cross_origin(supports_credentials=True)

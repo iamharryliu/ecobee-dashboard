@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { APIService } from '../../api.service'
+import { AppService } from '../../app.service'
 import { Router } from '@angular/router';
 import { UserService } from '../../user.service'
 
@@ -14,7 +14,7 @@ export class AppsComponent implements OnInit {
   public authorizationCode: string;
 
   constructor(
-    private _APIService: APIService,
+    private _AppService: AppService,
     private _router: Router,
     private _UserService: UserService
   ) { }
@@ -26,18 +26,18 @@ export class AppsComponent implements OnInit {
   }
 
   fetchApps() {
-    this._APIService.getApps()
+    this._AppService.getApps()
       .subscribe(data => {
         this.apps = data;
       })
   }
 
   onSelect() {
-    this._router.navigate(['/thermostats'])
+    this._router.navigate(['/apps/thermostats'])
   }
 
   deleteApp(key: string) {
-    this._APIService.deleteApp(key)
+    this._AppService.deleteApp(key)
       .subscribe(r => {
         console.log(r)
         this.fetchApps()
@@ -45,7 +45,7 @@ export class AppsComponent implements OnInit {
   }
 
   reAuthorizeApp(key: string) {
-    this._APIService.authorizeApp(key).
+    this._AppService.authorizeApp(key).
       subscribe(response => {
         this.authorizationCode = response.data.authorization_code
         alert(response.data.pin)
@@ -54,7 +54,7 @@ export class AppsComponent implements OnInit {
 
   updateAppCredentials(key: string) {
     if (this.authorizationCode) {
-      this._APIService.updateAppCredentials(key, this.authorizationCode).subscribe(response => {
+      this._AppService.updateAppCredentials(key, this.authorizationCode).subscribe(response => {
         if (response.success) {
           alert('updated')
           this.fetchApps();
