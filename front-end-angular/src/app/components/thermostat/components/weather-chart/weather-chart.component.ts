@@ -116,7 +116,7 @@ export class WeatherChartComponent implements OnInit {
             type: 'spline',
             yAxis: 0,
             data: sensor.data,
-            visible: false
+            visible: true
           })
         }
         if (sensor.sensorType == 'humidity') {
@@ -129,7 +129,6 @@ export class WeatherChartComponent implements OnInit {
           })
         }
       }
-      console.log(sensors)
       this.series.push({
         name: 'Outdoor Temp',
         type: 'spline',
