@@ -5,8 +5,15 @@
         <hr class='my-4'>
         <p>Minimalist Ecobee web app designed to have full control over your Ecobee app.</p>
     </div>
+    <div *ngIf="loginStatus; then thenBlock else elseBlock"></div>
     <p class='lead text-light'>
-        <a class='btn btn-success btn-lg' routerLink='/apps'>View Apps</a>
-        <a class='btn btn-success btn-lg' routerLink='/registerApp'>Register App</a>
+        <ng-template #thenBlock>
+            <a class='btn btn-primary btn-lg' routerLink='/apps'>View Apps</a>
+            <a class='btn btn-primary btn-lg' routerLink='/apps/thermostats'>Thermostats</a>
+        </ng-template>
+        <ng-template #elseBlock>
+            <a class='btn btn-primary btn-lg' routerLink='/login'>Login</a>
+            <a class='btn btn-primary btn-lg' routerLink='/register'>Register</a>
+        </ng-template>
     </p>
 </div>
