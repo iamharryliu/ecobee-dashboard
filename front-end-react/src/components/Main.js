@@ -10,8 +10,10 @@ const Main = () => {
                 <p>Minimalist Ecobee web app designed to have full control over your Ecobee app.</p>
             </div>
             <p className='lead text-light'>
-                <a href='/apps' className='btn btn-success btn-lg'>View Apps</a>
-                <a href='/apps/register' className='btn btn-success btn-lg'>Register App</a>
+                <a href='/login' className='btn btn-primary btn-lg'>Login</a>
+                <a href='/register' className='btn btn-primary btn-lg'>Register</a>
+                <a href='/apps' className='btn btn-primary btn-lg'>View Apps</a>
+                <a href='/thermostats' className='btn btn-primary btn-lg'>Thermostats</a>
             </p>
         </div>
     )
