@@ -1,4 +1,6 @@
 venv
+venv-flask
+venv-django
 site.db
 .DS_Store
 .vscode
