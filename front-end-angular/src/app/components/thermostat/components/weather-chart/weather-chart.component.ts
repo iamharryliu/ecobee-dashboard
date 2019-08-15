@@ -30,9 +30,9 @@ export class WeatherChartComponent implements OnInit {
   constructor(private _AppService: AppService) { }
 
   ngOnInit() {
-    let utcTime = this.thermostat.data.utcTime
+    // let utcTime = this.thermostat.data.utcTime
 
-    this._AppService.getThermostatRuntimeReport().subscribe(data => {
+    this._AppService.getThermostatRuntimeReport(this.thermostat).subscribe(data => {
 
       let outdoorTempSeries = [];
       let zoneAveTempSeries = [];

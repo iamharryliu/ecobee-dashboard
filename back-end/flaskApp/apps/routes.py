@@ -189,13 +189,14 @@ def sendMessage():
     message = f"Message sent."
     return jsonify({"success": r, "message": message})
 
-@apps_blueprint.route("/runtimeReport", methods=["GET"])
+@apps_blueprint.route("/thermostats/<string:identifier>/runtimeReport", methods=["GET"])
 @cross_origin(supports_credentials=True)
 @login_required
-def runtimeReport():
+def runtimeReport(identifier):
     appConfig = App.query.first()
     app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
-    data = app.getRuntimeReport()
+    data = app.getRuntimeReport(identifier)
+    print(identifier)
     return jsonify(data)
 
 

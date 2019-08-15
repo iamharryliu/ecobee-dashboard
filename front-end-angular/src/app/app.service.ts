@@ -54,8 +54,9 @@ export class AppService {
     return this.http.get<Thermostat>(`${this.backEndURL}/thermostat/${identifier}`, httpOptions);
   }
 
-  getThermostatRuntimeReport(): Observable<any> {
-    return this.http.get<any>(`${this.backEndURL}/runtimeReport`, httpOptions);
+  getThermostatRuntimeReport(thermostat: Thermostat): Observable<any> {
+    let identifier = thermostat.data.identifier;
+    return this.http.get<any>(`${this.backEndURL}/thermostats/${identifier}/runtimeReport`, httpOptions);
   }
 
   // Thermostat Actions
@@ -99,7 +100,7 @@ export class AppService {
     return this.http.post(url, data);
   }
 
-  sendMessage(thermostat, message: string): Observable<any> {
+  sendMessage(thermostat: Thermostat, message: string): Observable<any> {
     let data = {
       key: thermostat.api_key,
       identifier: thermostat.data.identifier,
