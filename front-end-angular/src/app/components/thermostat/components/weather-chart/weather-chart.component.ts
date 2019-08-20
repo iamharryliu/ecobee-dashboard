@@ -7,13 +7,11 @@ declare var require: any;
 let noData = require('highcharts/modules/no-data-to-display');
 let HC_exporting = require('highcharts/modules/exporting')
 let HC_export_data = require('highcharts/modules/export-data')
-// let Boost = require('highcharts/modules/boost');
-
+let theme = require('highcharts/themes/sand-signika')
 noData(Highstock);
 HC_exporting(Highstock);
 HC_export_data(Highstock);
-// Boost(Highstock);
-
+theme(Highstock);
 
 @Component({
   selector: 'app-weather-chart',
@@ -30,7 +28,6 @@ export class WeatherChartComponent implements OnInit {
   constructor(private _AppService: AppService) { }
 
   ngOnInit() {
-    // let utcTime = this.thermostat.data.utcTime
 
     this._AppService.getThermostatRuntimeReport(this.thermostat).subscribe(data => {
 
@@ -72,10 +69,12 @@ export class WeatherChartComponent implements OnInit {
           rowList[i].splice(outdoorHumidityIndex, 1, outdoorHumidity)
           rowList[i].splice(zoneHumidityIndex, 1, zoneHumidity)
           rowList[i].splice(0, 2, time)
-          if (rowList[i][0] % (30 * 60 * 1000) == 0) {
-            outdoorTempSeries.push([rowList[i][0], rowList[i][outdoorTempIndex - 1]])
-            outdoorHumiditySeries.push([rowList[i][0], rowList[i][outdoorHumidityIndex - 1]])
-          }
+          // if (rowList[i][0] % (30 * 60 * 1000) == 0) {
+          //   outdoorTempSeries.push([rowList[i][0], rowList[i][outdoorTempIndex - 1]])
+          //   outdoorHumiditySeries.push([rowList[i][0], rowList[i][outdoorHumidityIndex - 1]])
+          // }
+          outdoorTempSeries.push([rowList[i][0], rowList[i][outdoorTempIndex - 1]])
+          outdoorHumiditySeries.push([rowList[i][0], rowList[i][outdoorHumidityIndex - 1]])
           zoneAveTempSeries.push([rowList[i][0], rowList[i][zoneAveTempIndex - 1]])
           zoneHeatTempSeries.push([rowList[i][0], rowList[i][zoneHeatTempIndex - 1]])
           zoneHumiditySeries.push([rowList[i][0], rowList[i][zoneHumidityIndex - 1]])
@@ -164,7 +163,6 @@ export class WeatherChartComponent implements OnInit {
         data: zoneHumiditySeries,
         visible: false
       })
-
       this.setOptions()
       Highstock.stockChart('container', this.options);
     })
@@ -221,12 +219,9 @@ export class WeatherChartComponent implements OnInit {
           count: 3,
           text: '3d'
         }, {
-          type: 'week',
-          count: 1,
-          text: '1w'
-        }, {
-          type: 'all',
-          text: 'All'
+          type: 'day',
+          count: 7,
+          text: '7d'
         }]
       },
       tooltip: {
