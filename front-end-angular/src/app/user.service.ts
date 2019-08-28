@@ -1,18 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const httpOptions = {
   withCredentials: true,
-  // headers: new HttpHeaders({
-  //   'Content-Type': 'application/json',
-  //   'charset': 'UTF-8',
-  // })
 };
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class UserService {
 
   public loginStatus = false;
