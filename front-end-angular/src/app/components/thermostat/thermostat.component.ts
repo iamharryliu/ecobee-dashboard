@@ -14,10 +14,11 @@ export class ThermostatComponent implements OnInit {
   public thermostatSensor: any;
   public remoteSensors: any;
   public all_data_fetched = false;
-  public runtimeReport: any;
 
-  constructor(private _AppService: AppService,
-    private _route: ActivatedRoute) { }
+  constructor(
+    private _AppService: AppService,
+    private _route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
     let key = (this._route.snapshot.paramMap.get('key'));
