@@ -23,9 +23,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterUserComponent },
   { path: 'apps', component: AppsComponent, canActivate: [AuthGuard] },
-  { path: 'apps/register', component: RegisterAppComponent },
+  { path: 'apps/register', component: RegisterAppComponent, canActivate: [AuthGuard] },
   { path: 'apps/thermostats', component: ThermostatsComponent, canActivate: [AuthGuard] },
-  { path: 'apps/thermostats/:key/:identifier', component: ThermostatComponent }
+  { path: 'apps/thermostats/:key/:identifier', component: ThermostatComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
