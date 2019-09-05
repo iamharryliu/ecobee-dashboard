@@ -8,28 +8,26 @@ const httpOptions = {
   withCredentials: true,
 };
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AppService {
-
-  public backEndURL = 'http://localhost:5000';
 
   constructor(private http: HttpClient) { }
 
+  public backEndURL = 'http://localhost:5000';
+
   // Apps
 
-  authorizeApp(apiKey: string): Observable<any> {
-    return this.http.get<any>(`${this.backEndURL}/apps/authorize/${apiKey}`, httpOptions)
+  authorizeApp(key: string): Observable<any> {
+    return this.http.get<any>(`${this.backEndURL}/apps/authorize/${key}`, httpOptions)
   }
 
   createApp(form: any): Observable<any> {
     return this.http.post<any>(`${this.backEndURL}/apps/create`, form, httpOptions)
   }
 
-  updateAppCredentials(api_key: string, authorization_code: string): Observable<any> {
+  updateAppCredentials(key: string, authorization_code: string): Observable<any> {
     let form = {
-      'api_key': api_key,
+      'api_key': key,
       'authorization_code': authorization_code
     }
     return this.http.post<any>(`${this.backEndURL}/apps/updateAppCredentials`, form, httpOptions)
@@ -39,8 +37,8 @@ export class AppService {
     return this.http.get<any>(`${this.backEndURL}/apps`, httpOptions)
   }
 
-  deleteApp(api_key: string): Observable<any> {
-    return this.http.delete<any>(`${this.backEndURL}/apps/delete/${api_key}`)
+  deleteApp(key: string): Observable<any> {
+    return this.http.delete<any>(`${this.backEndURL}/apps/delete/${key}`)
   }
 
   // Thermostats

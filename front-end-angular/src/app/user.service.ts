@@ -6,16 +6,13 @@ const httpOptions = {
   withCredentials: true,
 };
 
-@Injectable({
-  providedIn: 'root'
-})
-
+@Injectable()
 export class UserService {
+
+  constructor(private http: HttpClient) { }
 
   public loginStatus = false;
   public backEndURL = 'http://localhost:5000';
-
-  constructor(private http: HttpClient) { }
 
   setLoginStatus(status: boolean) {
     this.loginStatus = status
