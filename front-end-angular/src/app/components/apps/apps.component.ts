@@ -11,6 +11,8 @@ import { UserService } from '../../user.service'
 export class AppsComponent implements OnInit {
 
   public apps = [];
+  public key: string;
+  public pin: string;
   public authorizationCode: string;
 
   constructor(
@@ -44,19 +46,19 @@ export class AppsComponent implements OnInit {
       });
   }
 
-  reAuthorizeApp(key: string) {
+  reauthorizeApp(key: string) {
     this._AppService.authorizeApp(key).
       subscribe(response => {
+        this.key = key
+        this.pin = response.data.pin
         this.authorizationCode = response.data.authorization_code
-        alert(response.data.pin)
       })
   }
 
-  updateAppCredentials(key: string) {
+  updateAppCredentials() {
     if (this.authorizationCode) {
-      this._AppService.updateAppCredentials(key, this.authorizationCode).subscribe(response => {
+      this._AppService.updateAppCredentials(this.key, this.authorizationCode).subscribe(response => {
         if (response.success) {
-          alert('updated')
           this.fetchApps();
         }
         else {
