@@ -1,17 +1,25 @@
 <h1>Login</h1>
-<form (submit)=loginUser($event)>
+<form [formGroup]="loginForm" (ngSubmit)=loginUser()>
   <div class="form-group">
     <label for="email">Email address</label>
-    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    <input type="email" id="email" class="form-control" placeholder="Enter email" autocomplete="off"
+      formControlName='email' [class.is-invalid]="email.invalid && email.touched">
+    <div *ngIf="email.invalid && email.touched">
+      <small class="text-danger" *ngIf="email.errors?.required">Email is required.</small>
+      <small class="text-danger" *ngIf="email.errors?.email">Email is invalid.</small>
+    </div>
   </div>
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="password" class="form-control" id="password" placeholder="Password">
+    <input type="password" id="password" class="form-control" placeholder="Password" formControlName='password'
+      [class.is-invalid]="password.invalid && password.touched">
+    <div *ngIf="password.invalid && password.touched">
+      <small *ngIf="password.errors?.required" class="text-danger">Password is required.</small>
+    </div>
   </div>
   <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="rememberMe">
+    <input type="checkbox" id='rememberMe' class="form-check-input" formControlName='remember'>
     <label class="form-check-label" for="rememberMe">Remember Me</label>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary mt-2">Submit</button>
 </form>

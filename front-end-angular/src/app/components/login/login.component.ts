@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms'
 import { UserService } from '../../user.service'
 
 @Component({
@@ -9,26 +10,21 @@ import { UserService } from '../../user.service'
 })
 export class LoginComponent implements OnInit {
 
-  constructor(
+  constructor(private _FormBuilder: FormBuilder,
     private _Router: Router,
-    private _UserService: UserService) { }
+    private _UserService: UserService
+  ) { }
 
-  ngOnInit() {
-  }
+  public loginForm = this._FormBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+    remember: [null, [Validators.required]]
+  })
 
-  loginUser(event) {
+  ngOnInit() { }
 
-    const target = event.target
-    const email = target.querySelector('#email').value
-    const password = target.querySelector('#password').value
-    const remember = target.querySelector('#rememberMe').checked
-
-    let data = {
-      'email': email,
-      'password': password,
-      'remember': remember
-    }
-
+  loginUser() {
+    let data = this.loginForm.value
     this._UserService.loginUser(data).subscribe(data => {
       if (data.success) {
         this._UserService.setLoginStatus(true)
@@ -38,4 +34,13 @@ export class LoginComponent implements OnInit {
       }
     })
   }
+
+  get email() {
+    return this.loginForm.get('email')
+  }
+
+  get password() {
+    return this.loginForm.get('password')
+  }
+
 }

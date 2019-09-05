@@ -1,17 +1,47 @@
 <h1>Register User</h1>
-<form (submit)=registerUser($event)>
+<form [formGroup]="registerForm" (ngSubmit)=registerUser()>
     <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter username">
+        <input type="text" id='username' class="form-control" placeholder="Enter username" autocomplete="off"
+            formControlName='username' [class.is-invalid]="username.invalid && username.touched">
+        <div *ngIf="username.invalid && username.touched">
+            <small class="text-danger" *ngIf=" username.errors?.minlength">Username must be at least
+                {{usernameMinLength}} characters
+                long.</small>
+            <small class="text-danger" *ngIf=" username.errors?.required">Username is required.</small>
+        </div>
     </div>
     <div class="form-group">
         <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <input type="email" id='email' class="form-control" placeholder="Enter email" autocomplete="off"
+            formControlName='email' [class.is-invalid]="password.invalid && password.touched">
+        <div *ngIf="email.invalid && email.touched">
+            <small class="text-danger" *ngIf="email.errors?.required">Email is required.</small>
+            <small class="text-danger" *ngIf="email.errors?.email">Email is invalid.</small>
+        </div>
     </div>
     <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Password">
+        <input type="password" id='password' class="form-control" placeholder="Password" formControlName='password'
+            [class.is-invalid]="password.invalid && password.touched">
+
+        <div *ngIf="password.invalid && password.touched">
+            <small class="text-danger" *ngIf="password.errors?.minlength">Password must be at least
+                {{usernameMinLength}} characters
+                long.</small>
+            <small class="text-danger" *ngIf="password.errors?.required">Password is required.</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id='confirmPassword' class="form-control" placeholder="Confirm Password"
+            formControlName='confirmPassword'
+            [class.is-invalid]="registerForm.errors?.misMatch || confirmPassword.invalid && confirmPassword.touched">
+        <div *ngIf="(confirmPassword.invalid || registerForm.errors?.misMatch) && confirmPassword.touched">
+            <small class="text-danger" *ngIf="confirmPassword.errors?.required">Password confirmation is
+                required.</small>
+            <small class="text-danger" *ngIf="registerForm.errors?.misMatch">Passwords do not match.</small>
+        </div>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
