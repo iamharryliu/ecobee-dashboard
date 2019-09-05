@@ -43,5 +43,5 @@
             <small class="text-danger" *ngIf="registerForm.errors?.misMatch">Passwords do not match.</small>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!registerForm.valid">Submit</button>
 </form>
