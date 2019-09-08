@@ -1,14 +1,14 @@
 <h1>Register User</h1>
-<form [formGroup]="registerForm" (ngSubmit)=registerUser()>
+<form [formGroup]="registerForm" (ngSubmit)="registerUser()">
     <div class="form-group">
         <label for="username">Username</label>
         <input type="text" id='username' class="form-control" placeholder="Enter username" autocomplete="off"
             formControlName='username' [class.is-invalid]="username.invalid && username.touched">
         <div *ngIf="username.invalid && username.touched">
+            <small class="text-danger" *ngIf=" username.errors?.required">Username is required.</small>
             <small class="text-danger" *ngIf=" username.errors?.minlength">Username must be at least
                 {{usernameMinLength}} characters
                 long.</small>
-            <small class="text-danger" *ngIf=" username.errors?.required">Username is required.</small>
         </div>
     </div>
     <div class="form-group">
@@ -26,10 +26,10 @@
             [class.is-invalid]="password.invalid && password.touched">
 
         <div *ngIf="password.invalid && password.touched">
+            <small class="text-danger" *ngIf="password.errors?.required">Password is required.</small>
             <small class="text-danger" *ngIf="password.errors?.minlength">Password must be at least
                 {{usernameMinLength}} characters
                 long.</small>
-            <small class="text-danger" *ngIf="password.errors?.required">Password is required.</small>
         </div>
     </div>
     <div class="form-group">
