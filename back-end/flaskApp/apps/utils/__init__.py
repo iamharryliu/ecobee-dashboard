@@ -8,8 +8,8 @@ from ecobeeApp import ecobeeApp
 
 def createApp():
     data = request.get_json()
-    app_name = data['appName']
-    api_key = data['apiKey']
+    app_name = data['name']
+    api_key = data['key']
     authorization_code = data['authorizationCode']
     access_token, refresh_token = ecobeeApp.requestTokens(api_key, authorization_code)
     app = App(
