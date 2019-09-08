@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms'
+import { AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../user.service';
-import { FormBuilder, Validators } from '@angular/forms'
 
-import { AbstractControl } from '@angular/forms';
 function PasswordValidator(control: AbstractControl): { [key: string]: boolean } | null {
   const password = control.get('password')
   const confirmPassword = control.get('confirmPassword')
@@ -19,14 +19,14 @@ function PasswordValidator(control: AbstractControl): { [key: string]: boolean }
 })
 export class RegisterUserComponent implements OnInit {
 
-  public usernameMinLength = 8;
-  public passwordMinLength = 8;
-
   constructor(
     private _FormBuilder: FormBuilder,
     private _Router: Router,
     private _UserService: UserService
   ) { }
+
+  public usernameMinLength = 8;
+  public passwordMinLength = 8;
 
   public registerForm = this._FormBuilder.group({
     username: ['', [Validators.required, Validators.minLength(this.usernameMinLength)]],
