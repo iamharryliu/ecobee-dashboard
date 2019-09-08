@@ -1,37 +1,62 @@
 <h1>Register App</h1>
-<form #registerForm='ngForm' (ngSubmit)='onSubmit()' novalidate>
+<form [formGroup]="authorizeForm" (ngSubmit)='authorizeApp()'>
     <div class='row'>
-        <div class='col-6'>
+        <div class='col-12 col-md-6'>
             <div class="form-group row">
-                <label class="col-4 col-form-label">App Name</label>
-                <div class="col-8">
-                    <input type="text" class="form-control"
-                        [class.is-invalid]='appName.errors && (appName.invalid && appName.touched)'
-                        placeholder="Enter App Name" name='appName' #appName='ngModel' [(ngModel)]='form.appName'
-                        required>
-                    <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-4 col-form-label">API Key</label>
-                <div class="col-8">
-                    <input type="text" class="form-control" pattern='^([a-zA-Z0-9]){32}$'
-                        [class.is-invalid]='apiKey.errors && (apiKey.invalid && apiKey.touched)'
-                        placeholder="Enter API Key" name='apIKey' #apiKey='ngModel' [(ngModel)]='form.apiKey'
-                        (change)='onApiKeyChange()' required>
-                    <div class="invalid-feedback">
-                        Please fill out fields and authorize app.
+                <label for="key" class="col-12 col-md-4 col-form-label">API Key</label>
+                <div class="col-12 col-md-8">
+                    <input type="text" name='key' class="form-control" placeholder="Enter API Key" formControlName="key"
+                        [class.is-invalid]='key.invalid && key.touched'>
+                    <div *ngIf="key.invalid && key.touched">
+                        <small class="text-danger" *ngIf="key.errors?.required">Password is required.</small>
+                        <small class="text-danger" *ngIf="key.errors?.minlength || key.errors?.maxlength">Password must
+                            be {{keyLength}} characters long.</small>
                     </div>
                 </div>
             </div>
-            <input type="hidden" pattern='^([a-zA-Z0-9]){32}$' name="authorizationCode"
-                [(ngModel)]='form.authorizationCode' required>
+            <input type="hidden" name="authorizationCode">
         </div>
     </div>
-    <button type='button' class="btn btn-primary mb-2" [class.disabled]='apiKey.invalid'
-        (click)='authorizeApp()'>Authorize App
-    </button>
-    <button type="submit" class="btn btn-primary mb-2" [disabled]='registerForm.invalid'>Register
+    <button type='submit' class="btn btn-primary mb-2" [class.disabled]='key.invalid'>Authorize
         App
     </button>
 </form>
+
+<!-- Modal -->
+<div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Register App Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Instructions <br />
+                {{pin}}
+                <form id='registerForm' [formGroup]="registerForm" (ngSubmit)="registerApp()">
+                    <div class="form-group">
+                        <label for="name" class="col-form-label">App Name:</label>
+                        <input type="text" id="name" class="form-control" placeholder="Enter App Name"
+                            autocomplete="off" formControlName='name' [class.is-invalid]="name.invalid && name.touched">
+                        <div *ngIf="name.invalid && name.touched">
+                            <small class="text-danger" *ngIf="name.errors?.required">Name is required.</small>
+                            <small class="text-danger" *ngIf="name.errors?.minlength">name must be at least
+                                {{nameMinLength}} characters
+                                long.</small>
+                        </div>
+                        <input type="hidden" formControlName='key'>
+                        <input type="hidden" formControlName='authorizationCode'>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" form='registerForm'>Register
+                    App</button>
+            </div>
+        </div>
+    </div>
+</div>
