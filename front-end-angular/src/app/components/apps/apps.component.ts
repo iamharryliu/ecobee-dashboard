@@ -10,6 +10,7 @@ import { UserService } from '../../user.service'
 })
 export class AppsComponent implements OnInit {
 
+  public dataLoaded = false;
   public apps = [];
   public key: string;
   public pin: string;
@@ -31,6 +32,7 @@ export class AppsComponent implements OnInit {
     this._AppService.getApps()
       .subscribe(data => {
         this.apps = data;
+        this.dataLoaded = true
       })
   }
 

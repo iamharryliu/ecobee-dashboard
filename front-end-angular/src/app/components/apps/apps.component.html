@@ -1,27 +1,31 @@
-<div class='row'>
+<div *ngIf='dataLoaded'>
+  <div class='row'>
     <h1 class='col-6'>Apps</h1>
     <div class='col-6'>
-        <a class='btn btn-primary btn-lg float-right' routerLink='/apps/register'>Register App</a>
+      <a class='btn btn-primary btn-lg float-right' routerLink='/apps/register'>Register App</a>
     </div>
     <div class='col-12 mt-3 mb-3 app' *ngFor='let app of apps'>
-        <div class='card bg-dark'>
-            <div class='card-body'>
-                <h2 class='d-inline'>{{app.name}}</h2>
-                <div class='float-right'>
-                    <a (click)='onSelect()' class='btn btn-info'>View</a>
-                    <button (click)='reauthorizeApp(app.key)' type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">Reauthorize</button>
-                    <button (click)='deleteApp(app.key)' class='btn btn-danger'>Delete</button>
-                </div>
-            </div>
+      <div class='card bg-dark'>
+        <div class='card-body'>
+          <h2 class='d-inline'>{{app.name}}</h2>
+          <div class='float-right'>
+            <a (click)='onSelect()' class='btn btn-info'>View</a>
+            <button (click)='reauthorizeApp(app.key)' type="button" class="btn btn-info" data-toggle="modal"
+              data-target="#exampleModal">Reauthorize</button>
+            <button (click)='deleteApp(app.key)' class='btn btn-danger'>Delete</button>
+          </div>
         </div>
+      </div>
     </div>
     <div class='col-12 mt-3 mb-3' *ngIf='!apps.length'>
-        You currently have no apps registered with this account.
+      You currently have no apps registered with this account.
     </div>
+  </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -31,12 +35,13 @@
         </button>
       </div>
       <div class="modal-body">
-        Instructions<br/> 
+        Instructions<br />
         {{pin}}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button (click)='updateAppCredentials()' type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+        <button (click)='updateAppCredentials()' type="button" class="btn btn-primary" data-dismiss="modal">Save
+          changes</button>
       </div>
     </div>
   </div>
