@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import auth from './auth'
+import { withRouter } from 'react-router-dom'
 
 class Login extends Component {
     constructor(props) {
         super(props)
+        this.handleSubmit = this.handleSubmit.bind(this)
         this.state = {
             email: '',
             password: '',
@@ -15,29 +15,19 @@ class Login extends Component {
     changeEmailEventHandler = (event) => {
         this.setState({ email: event.target.value })
     }
+
     changePasswordEventHandler = (event) => {
         this.setState({ password: event.target.value })
     }
+
     changeRememberMeEventHandler = (event) => {
         this.setState({ remember: event.target.checked });
     }
-    handleSubmit = (event) => {
+
+    handleSubmit = event => {
         event.preventDefault()
-        axios.post('http://localhost:5000/loginUser', this.state, { withCredentials: true })
-            .then(response => {
-                if (response.data.success) {
-                    console.log('You have successfully logged in.')
-                    auth.login(() => {
-                        this.props.history.push('/thermostats')
-                    })
-                }
-                else {
-                    alert('Unsuccessful login.')
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        this.props.login(this.state, () =>
+            this.props.history.push('/thermostats'))
     }
 
     render() {
@@ -58,11 +48,11 @@ class Login extends Component {
                         <input type="checkbox" className="form-check-input" id="rememberMe" checked={this.state.rememberMe} onChange={this.changeRememberMeEventHandler} />
                         <label className="form-check-label" htmlFor="rememberMe">Remember Me</label>
                     </div>
-                    <button type="  " className="btn btn-primary">Submit</button>
+                    <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
             </div >
         )
     };
 }
 
-export default Login;
+export default withRouter(Login);
