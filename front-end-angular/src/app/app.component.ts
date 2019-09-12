@@ -7,13 +7,16 @@ import { UserService } from './user.service'
 })
 export class AppComponent implements OnInit {
 
+  public dataLoaded = false;
+
   constructor(
     private _UserService: UserService
   ) { }
 
   ngOnInit() {
     this._UserService.getLoginStatus().subscribe(data => {
-      this._UserService.setLoginStatus(data.success)
+      this.dataLoaded = true;
+      this._UserService.setLoginStatus(data.success);
     })
   }
 }

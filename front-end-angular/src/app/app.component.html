@@ -1,4 +1,6 @@
-<app-navbar></app-navbar>
-<main class='container pt-3 pb-3 text-light'>
-  <router-outlet></router-outlet>
-</main>
+<div *ngIf='dataLoaded'>
+  <app-navbar></app-navbar>
+  <main class='container pt-3 pb-3 text-light'>
+    <router-outlet></router-outlet>
+  </main>
+</div>
