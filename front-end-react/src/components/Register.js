@@ -10,16 +10,16 @@ class RegisterUser extends Component {
             password: '',
         }
     }
-    changeUsernameEventHandler = (event) => {
+    changeUsernameEventHandler = event => {
         this.setState({ username: event.target.value })
     }
-    changeEmailEventHandler = (event) => {
+    changeEmailEventHandler = event => {
         this.setState({ email: event.target.value })
     }
-    changePasswordEventHandler = (event) => {
+    changePasswordEventHandler = event => {
         this.setState({ password: event.target.value })
     }
-    handleSubmit = (event) => {
+    handleSubmit = event => {
         event.preventDefault()
         axios.post('http://localhost:5000/registerUser', this.state, { withCredentials: true })
             .then(response => {
@@ -33,7 +33,6 @@ class RegisterUser extends Component {
             })
     }
 
-
     render() {
         return (
             <div>
@@ -41,16 +40,16 @@ class RegisterUser extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
-                        <input type="text" className="form-control" id="username" aria-describedby="emailHelp" placeholder="Enter username" value={this.state.username} onChange={this.changeUsernameEventHandler} />
+                        <input type="text" id="username" className="form-control" placeholder="Enter username" autoComplete="off" value={this.state.username} onChange={this.changeUsernameEventHandler} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="email">Email address</label>
-                        <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" value={this.state.email} onChange={this.changeEmailEventHandler} />
+                        <input type="email" id="email" className="form-control" placeholder="Enter email" autoComplete="off" value={this.state.email} onChange={this.changeEmailEventHandler} />
                         <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" id="password" value={this.state.password} onChange={this.changePasswordEventHandler} placeholder="Password" />
+                        <input type="password" id="password" className="form-control" placeholder="Password" autoComplete="off" value={this.state.password} onChange={this.changePasswordEventHandler} />
                     </div>
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
