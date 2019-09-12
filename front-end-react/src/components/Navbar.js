@@ -1,33 +1,20 @@
 import React, { Component } from 'react';
-import auth from './auth'
 import { withRouter, Link } from 'react-router-dom'
+
 class Navbar extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            authorized: false
-        }
+        this.logout = this.logout.bind(this)
+        this.state = {}
     }
 
-
-    componentDidMount() {
-        auth.checkLoginStatus().then(response => {
-            this.setState({
-                authorized: response
-            });
-        })
-    }
-
-
-    logout = () => {
-        auth.logout(() =>
-            this.props.history.push('/'),
-        )
+    logout() {
+        this.props.logout(() => this.props.history.push('/'))
     }
 
     render() {
+        const { isLoggedIn } = this.props
         return (
-
             <nav className="navbar navbar-expand-md navbar-dark fixed-top" >
                 <div className='container'>
                     <Link to='/' className="navbar-brand">
@@ -42,10 +29,7 @@ class Navbar extends Component {
                             <li className="nav-item">
                                 <Link to='/' className="nav-link">Home</Link>
                             </li>
-                            <li className="nav-item">
-                                <Link to='/' className="nav-link">{this.state.authorized.toString()}</Link>
-                            </li>
-                            {this.state.authorized &&
+                            {isLoggedIn &&
                                 <div className="navbar-nav">
                                     <li className="nav-item">
                                         <Link to='/apps' className="nav-link">Apps</Link>
@@ -56,8 +40,7 @@ class Navbar extends Component {
                                 </div>
                             }
                         </ul>
-
-                        {!this.state.authorized &&
+                        {!isLoggedIn &&
                             <div>
                                 <ul className="navbar-nav">
                                     <li className="nav-item">
@@ -69,8 +52,7 @@ class Navbar extends Component {
                                 </ul>
                             </div>
                         }
-
-                        {this.state.authorized &&
+                        {isLoggedIn &&
                             <ul className="navbar-nav">
                                 <li className="nav-item">
                                     <a onClick={this.logout} className="nav-link">Logout</a>
@@ -83,4 +65,5 @@ class Navbar extends Component {
         )
     }
 }
+
 export default withRouter(Navbar)
