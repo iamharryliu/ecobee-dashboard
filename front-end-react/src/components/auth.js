@@ -14,24 +14,24 @@ class Auth {
             })
     }
 
-    login(cb) {
-        this.authenticated = true;
-        cb();
-    }
+    // login(cb) {
+    //     this.authenticated = true;
+    //     cb();
+    // }
 
-    logout(cb) {
-        this.authenticated = false;
-        axios.post('http://localhost:5000/logoutUser', null, { withCredentials: true })
-            .then(response => {
-                if (response.data.success) {
-                    console.log("You have successfully logged out.")
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            });
-        cb();
-    }
+    // logout(cb) {
+    //     this.authenticated = false;
+    //     axios.post('http://localhost:5000/logoutUser', null, { withCredentials: true })
+    //         .then(response => {
+    //             if (response.data.success) {
+    //                 console.log("You have successfully logged out.")
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.log(error)
+    //         });
+    //     cb();
+    // }
 
     isAuthenticated() {
         return this.authenticated
