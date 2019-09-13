@@ -47,6 +47,10 @@ export class AppService {
     return this.http.get<Thermostat[]>(`${this.backEndURL}/getUserThermostats`, httpOptions);
   }
 
+  getAppThermostats(key: string): Observable<Thermostat[]> {
+    return this.http.get<Thermostat[]>(`${this.backEndURL}/getAppThermostats/${key}`, httpOptions)
+  }
+
   getThermostat(thermostat: Thermostat): Observable<any> {
     let identifier = thermostat.data.identifier;
     return this.http.get<Thermostat>(`${this.backEndURL}/thermostat/${identifier}`, httpOptions);

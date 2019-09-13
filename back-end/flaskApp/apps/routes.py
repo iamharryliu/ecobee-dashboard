@@ -11,6 +11,7 @@ from flaskApp.apps.utils import (
     getUserApps,
     getAppByKey,
     getUserThermostats,
+    getAppThermostats,
     getThermostat,
 )
 
@@ -100,6 +101,14 @@ def _getUserApps():
 def _getUserThermostats():
     data = getUserThermostats()
     return jsonify(data)
+
+@apps_blueprint.route("/getAppThermostats/<string:key>")
+@cross_origin(supports_credentials=True)
+@login_required
+def _getAppThermostats(key):
+    data = getAppThermostats(key)
+    return jsonify(data)
+
 
 
 @apps_blueprint.route("/thermostat/<identifier>")

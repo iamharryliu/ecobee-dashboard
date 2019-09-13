@@ -9,7 +9,7 @@
         <div class='card-body'>
           <h2 class='d-inline'>{{app.name}}</h2>
           <div class='float-right'>
-            <a (click)='onSelect()' class='btn btn-info'>View</a>
+            <a (click)='onSelect(app.key)' class='btn btn-info'>View</a>
             <button (click)='reauthorizeApp(app.key)' type="button" class="btn btn-info" data-toggle="modal"
               data-target="#exampleModal">Reauthorize</button>
             <button (click)='deleteApp(app.key)' class='btn btn-danger'>Delete</button>

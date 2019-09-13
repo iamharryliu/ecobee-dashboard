@@ -36,8 +36,8 @@ export class AppsComponent implements OnInit {
       })
   }
 
-  onSelect() {
-    this._router.navigate(['/apps/thermostats'])
+  onSelect(key: string) {
+    this._router.navigate([`/thermostats/${key}`])
   }
 
   deleteApp(key: string) {

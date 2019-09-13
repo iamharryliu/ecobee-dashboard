@@ -33,8 +33,11 @@ def getApps():
 def getUserApps():
     apps = App.query.filter_by(owner=current_user)
     return apps
-    
 
+def getApp(key):
+    app = App.query.filter_by(owner=current_user, api_key=key)
+    return app
+    
 def getAppConfigByKey(key):
     ''' get App config by key. '''
     return App.query.filter_by(api_key=key).first()
@@ -47,14 +50,12 @@ def getAppByKey(key):
         app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
         return app
 
-
 def deleteApp(api_key):
     ''' Delete App by key. '''
     app = getAppConfigByKey(api_key)
     db.session.delete(app)
     db.session.commit()
-
-    
+ 
 def getUserThermostats():
     thermostats = []
     appConfigs = getUserApps()
@@ -69,6 +70,18 @@ def getUserThermostats():
             print(f'{appConfig.api_key} is not working.')
     return thermostats
 
+def getAppThermostats(key):
+    thermostats = []
+    appConfig = getApp(key)[0]
+    app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
+    data = app.requestData()
+    if data:
+        thermostatList = data['thermostatList']
+        for thermostat in thermostatList:
+            thermostats.append({'api_key':appConfig.api_key,'data':thermostat})
+    else:
+        print(f'{appConfig.api_key} is not working.')
+    return thermostats
 
 def getThermostat(thermostats, identifier):
     thermostat = next((thermostat for thermostat in thermostats if thermostat.identifier == identifier), None)
