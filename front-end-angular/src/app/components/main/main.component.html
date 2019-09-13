@@ -8,8 +8,8 @@
     <div *ngIf="loginStatus; then thenBlock else elseBlock"></div>
     <p class='lead text-light'>
         <ng-template #thenBlock>
+            <a class='btn btn-primary btn-lg' routerLink='/thermostats'>View Thermostats</a>
             <a class='btn btn-primary btn-lg' routerLink='/apps'>View Apps</a>
-            <a class='btn btn-primary btn-lg' routerLink='/apps/thermostats'>Thermostats</a>
         </ng-template>
         <ng-template #elseBlock>
             <a class='btn btn-primary btn-lg' routerLink='/login'>Login</a>
