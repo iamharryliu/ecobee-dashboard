@@ -35,7 +35,7 @@ class RegisterUser extends Component {
 
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <h1>Register User</h1>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
@@ -53,7 +53,7 @@ class RegisterUser extends Component {
                     </div>
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
-            </div >
+            </React.Fragment>
 
         );
     }

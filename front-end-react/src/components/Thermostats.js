@@ -30,7 +30,7 @@ class Thermostats extends Component {
     render() {
         const { dataLoaded, thermostats, errMessage } = this.state
         return (
-            <div>
+            <React.Fragment>
                 {dataLoaded &&
                     <div className='row'>
                         <h1 className='col-12'> Thermostats</h1 >
@@ -57,7 +57,7 @@ class Thermostats extends Component {
                         }
                     </div>
                 }
-            </div>
+            </React.Fragment>
 
         );
     }

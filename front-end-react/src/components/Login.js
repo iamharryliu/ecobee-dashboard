@@ -32,25 +32,25 @@ class Login extends Component {
 
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <h1>Login</h1>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="email">Email address</label>
-                        <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" value={this.state.username} onChange={this.changeEmailEventHandler} />
+                        <input type="email" id="email" className="form-control" placeholder="Enter email" autoComplete="off" value={this.state.username} onChange={this.changeEmailEventHandler} />
                         <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" id="password" placeholder="Password" value={this.state.password} onChange={this.changePasswordEventHandler} />
+                        <input type="password" id="password" className="form-control" placeholder="Password" autoComplete="off" value={this.state.password} onChange={this.changePasswordEventHandler} />
                     </div>
                     <div className="form-check">
-                        <input type="checkbox" className="form-check-input" id="rememberMe" checked={this.state.rememberMe} onChange={this.changeRememberMeEventHandler} />
+                        <input type="checkbox" id="rememberMe" className="form-check-input" checked={this.state.rememberMe} onChange={this.changeRememberMeEventHandler} />
                         <label className="form-check-label" htmlFor="rememberMe">Remember Me</label>
                     </div>
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
-            </div >
+            </React.Fragment>
         )
     };
 }

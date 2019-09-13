@@ -29,7 +29,7 @@ class Apps extends Component {
     render() {
         const { dataLoaded, apps, errMessage } = this.state
         return (
-            <div>
+            <React.Fragment>
                 {dataLoaded &&
                     <div className='row'>
                         <h1 className='col-6'>Apps</h1>
@@ -63,7 +63,7 @@ class Apps extends Component {
                     </div>
                 }
 
-            </div >
+            </React.Fragment >
 
         );
     }
