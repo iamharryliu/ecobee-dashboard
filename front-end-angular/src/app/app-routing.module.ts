@@ -3,8 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MainComponent } from './components/main/main.component';
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
+
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { LoginComponent } from './components/login/login.component';
+
 import { AppsComponent } from './components/apps/apps.component';
 import { RegisterAppComponent } from './components/register-app/register-app.component';
 import { ThermostatsComponent } from './components/thermostats/thermostats.component';
@@ -24,8 +26,9 @@ const routes: Routes = [
   { path: 'register', component: RegisterUserComponent },
   { path: 'apps', component: AppsComponent, canActivate: [AuthGuard] },
   { path: 'apps/register', component: RegisterAppComponent, canActivate: [AuthGuard] },
-  { path: 'apps/thermostats', component: ThermostatsComponent, canActivate: [AuthGuard] },
-  { path: 'apps/thermostats/:key/:identifier', component: ThermostatComponent, canActivate: [AuthGuard] }
+  { path: 'thermostats', component: ThermostatsComponent, canActivate: [AuthGuard] },
+  { path: 'thermostats/:key', component: ThermostatsComponent, canActivate: [AuthGuard] },
+  { path: 'thermostats/:key/:identifier', component: ThermostatComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
