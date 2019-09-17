@@ -25,7 +25,8 @@
     "lodash": "^4.17.15",
     "popper.js": "^1.15.0",
     "rxjs": "~6.5.3",
-    "tslib": "^1.10.0"
+    "tslib": "^1.10.0",
+    "typescript": "^3.5.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.4",
@@ -46,7 +47,6 @@
     "protractor": "~5.4.2",
     "ts-node": "~8.3.0",
     "tslint": "~5.20.0",
-    "typescript": "^3.5.3",
     "zone.js": "^0.9.1"
   }
 }
