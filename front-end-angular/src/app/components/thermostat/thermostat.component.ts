@@ -17,12 +17,12 @@ export class ThermostatComponent implements OnInit {
 
   constructor(
     private _AppService: AppService,
-    private _route: ActivatedRoute
+    private _Route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    let key = (this._route.snapshot.paramMap.get('key'));
-    let identifier = (this._route.snapshot.paramMap.get('identifier'));
+    let key = (this._Route.snapshot.paramMap.get('key'));
+    let identifier = (this._Route.snapshot.paramMap.get('identifier'));
     this.thermostat = { key: key, data: { identifier: identifier } }
     this.updateThermostat()
   }
