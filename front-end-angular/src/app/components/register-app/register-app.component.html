@@ -1,12 +1,16 @@
 <h1>Register App</h1>
-<form [formGroup]="authorizeForm" (ngSubmit)='authorizeApp()'>
+<h4>Step 1: <a href="https://www.ecobee.com/home/ecobeeLogin.jsp" target="_blank">Login to Ecobee</a></h4>
+<h4>Step 2: Navigate: Account Menu > Developer</h4>
+<h4>Step 3: Create New App with Ecobee Pin Authentication</h4>
+<h4>Step 4: Enter the API Key provided from the App below and click Authorize App</h4>
+<form class="mt-3" [formGroup]="authorizeForm" (ngSubmit)='authorizeApp()'>
     <div class='row'>
         <div class='col-12 col-md-6'>
             <div class="form-group row">
                 <label for="key" class="col-12 col-md-4 col-form-label">API Key</label>
                 <div class="col-12 col-md-8">
-                    <input type="text" name='key' class="form-control" placeholder="Enter API Key" formControlName="key"
-                        [class.is-invalid]='key.invalid && key.touched'>
+                    <input type="text" name='key' id='key' class="form-control" placeholder="Enter API Key"
+                        formControlName="key" [class.is-invalid]='key.invalid && key.touched'>
                     <div *ngIf="key.invalid && key.touched">
                         <small class="text-danger" *ngIf="key.errors?.required">Password is required.</small>
                         <small class="text-danger" *ngIf="key.errors?.minlength || key.errors?.maxlength">Password must
@@ -34,8 +38,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                Instructions <br />
-                {{pin}}
+                <h5>Instructions</h5>
+                <p>
+                    From the Ecobee Page <br />
+                    Navigate: Account Menu > My Apps <br />
+                    Click Add Application and use the pin below to validate the application.
+                </p>
+                <h5>Pin: {{pin}}</h5>
+                <p>
+                    Finally, enter a name for your App that you would like to refer to it as. For example, if it is the
+                    App
+                    for your home thermostat you may put 'Home' as the name or even your address.
+                </p>
                 <form id='registerForm' [formGroup]="registerForm" (ngSubmit)="registerApp()">
                     <div class="form-group">
                         <label for="name" class="col-form-label">App Name:</label>
