@@ -57,8 +57,9 @@ export class AppService {
   }
 
   getThermostatRuntimeReport(thermostat: Thermostat): Observable<any> {
+    let key = thermostat.api_key;
     let identifier = thermostat.data.identifier;
-    return this.http.get<any>(`${this.backEndURL}/thermostats/${identifier}/runtimeReport`, httpOptions);
+    return this.http.get<any>(`${this.backEndURL}/thermostats/${key}/${identifier}/runtimeReport`, httpOptions);
   }
 
   // Thermostat Actions
