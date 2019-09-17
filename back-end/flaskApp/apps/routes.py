@@ -1,18 +1,15 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from flask_cors import cross_origin
-
-from flaskApp import db
-from flaskApp.config import ecobeeAppLogger
-from flaskApp.models import App
 from flaskApp.apps.utils import (
     createApp,
+    updateAppCredentials,
     deleteApp,
-    getUserApps,
+    getUserConfigs,
     getAppByKey,
     getUserThermostats,
     getAppThermostats,
-    getThermostat,
+    getRuntimeReport,
 )
 
 from ecobeeApp import ecobeeApp
@@ -20,6 +17,7 @@ from ecobeeApp import ecobeeApp
 apps_blueprint = Blueprint("apps_blueprint", __name__)
 
 # Register
+
 
 @apps_blueprint.route("/apps/authorize/<string:api_key>", methods=["GET"])
 @cross_origin(supports_credentials=True)
@@ -62,14 +60,11 @@ def _updateAppCredentials():
         access_token, refresh_token = ecobeeApp.requestTokens(
             api_key, authorization_code
         )
-    except:
+        updateAppCredentials(api_key, authorization_code, access_token, refresh_token)
+    except Exception as e:
+        print(e)
         success = False
     else:
-        app = App.query.filter_by(api_key=api_key).first()
-        app.authorization_code = authorization_code
-        app.access_token = access_token
-        app.refresh_token = refresh_token
-        db.session.commit()
         success = True
     return jsonify({"success": success})
 
@@ -90,8 +85,7 @@ def _deleteApp(api_key):
 @cross_origin(supports_credentials=True)
 @login_required
 def _getUserApps():
-    apps = getUserApps()
-    apps = [{"name": app.name, "key": app.api_key} for app in apps]
+    apps = getUserConfigs()
     return jsonify(apps)
 
 
@@ -102,13 +96,13 @@ def _getUserThermostats():
     data = getUserThermostats()
     return jsonify(data)
 
+
 @apps_blueprint.route("/getAppThermostats/<string:key>")
 @cross_origin(supports_credentials=True)
 @login_required
 def _getAppThermostats(key):
     data = getAppThermostats(key)
     return jsonify(data)
-
 
 
 @apps_blueprint.route("/thermostat/<identifier>")
@@ -198,21 +192,11 @@ def sendMessage():
     message = f"Message sent."
     return jsonify({"success": r, "message": message})
 
-@apps_blueprint.route("/thermostats/<string:identifier>/runtimeReport", methods=["GET"])
+
+@apps_blueprint.route(
+    "/thermostats/<string:key>/<string:identifier>/runtimeReport", methods=["GET"]
+)
 @cross_origin(supports_credentials=True)
 @login_required
-def runtimeReport(identifier):
-    appConfig = App.query.first()
-    app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
-    data = app.getRuntimeReport(identifier)
-    print(identifier)
-    return jsonify(data)
-
-
-@apps_blueprint.route("/data", methods=["GET"])
-def data():
-    appConfig = App.query.first()
-    app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
-    data = app.requestData()
-    data = data["thermostatList"][0]
-    return jsonify(data)
+def runtimeReport(key, identifier):
+    return getRuntimeReport(key, identifier)
