@@ -36,7 +36,6 @@ export class WeatherChartComponent implements OnInit {
       let zoneHeatTempSeries = [];
       let outdoorHumiditySeries = [];
       let zoneHumiditySeries = [];
-
       let hvacModeIndex = data.columns.split(',').indexOf('HVACmode') + 2
       let zoneCalendarEventIndex = data.columns.split(',').indexOf('zoneCalendarEvent') + 2
       let zoneOccupancyIndex = data.columns.split(',').indexOf('zoneOccupancy') + 2
