@@ -29,6 +29,9 @@ export class WeatherChartComponent implements OnInit {
 
   ngOnInit() {
 
+    this.setOptions()
+    Highstock.stockChart('container', this.options);
+
     this._AppService.getThermostatRuntimeReport(this.thermostat).subscribe(data => {
 
       let outdoorTempSeries = [];
