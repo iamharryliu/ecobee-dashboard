@@ -31,6 +31,8 @@ pip-review==1.0
 psycopg2==2.8.3
 pycparser==2.19
 pylint==2.3.1
+pylint-flask==0.6
+pylint-plugin-utils==0.5
 pyparsing==2.4.2
 python-dateutil==2.8.0
 python-editor==1.0.4
