@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppService } from '../../app.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Thermostat } from '../../../../app'
 
@@ -9,27 +9,42 @@ import { Thermostat } from '../../../../app'
   templateUrl: './thermostats.component.html',
   styleUrls: ['./thermostats.component.css']
 })
+
 export class ThermostatsComponent implements OnInit {
 
-  public thermostats = [];
   public all_data_fetched = false;
+  public thermostats = [];
   public key: string;
 
-  constructor(private _AppService: AppService,
-    private _Router: Router, ) { }
+  constructor(
+    private _Route: ActivatedRoute,
+    private _AppService: AppService,
+    private _Router: Router,
+  ) { }
 
   ngOnInit() {
-    this._AppService.getUserThermostats()
-      .subscribe(data => {
-        this.thermostats = data;
-        this.all_data_fetched = true;
-      });
+    let key = this._Route.snapshot.paramMap.get('key')
+    if (key) {
+      this._AppService.getAppThermostats(key)
+        .subscribe(data => {
+          this.thermostats = data;
+          this.all_data_fetched = true;
+        });
+    }
+    else {
+
+      this._AppService.getUserThermostats()
+        .subscribe(data => {
+          this.thermostats = data;
+          this.all_data_fetched = true;
+        });
+    }
   }
 
   view(thermostat: Thermostat) {
     let key = thermostat.api_key;
     let identifier = thermostat.data.identifier;
-    this._Router.navigate(['/apps/thermostats/', key, identifier])
+    this._Router.navigate(['/thermostats/', key, identifier])
   }
 
 }
