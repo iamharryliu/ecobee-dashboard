@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../../user.service'
 
+
+declare var $: any;
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -14,7 +17,17 @@ export class NavbarComponent implements OnInit {
     private _UserService: UserService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    $(document).ready(function () {
+      $(document).click(function (event) {
+        var clickover = $(event.target);
+        var _opened = $(".collapse").is(":visible");
+        if (_opened === true && !clickover.hasClass("navbar-toggler")) {
+          $("button.navbar-toggler").click();
+        }
+      });
+    });
+  }
 
   get loginStatus() {
     return this._UserService.loginStatus
