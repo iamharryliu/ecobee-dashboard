@@ -61,6 +61,7 @@ export class AppsComponent implements OnInit {
     if (this.authorizationCode) {
       this._AppService.updateAppCredentials(this.key, this.authorizationCode).subscribe(response => {
         if (response.success) {
+          console.log('Reauthorized app!')
           this.fetchApps();
         }
         else {
