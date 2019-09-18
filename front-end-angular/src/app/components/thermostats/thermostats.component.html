@@ -6,7 +6,8 @@
                 <div class='card-body'>
                     <h2 class='d-inline'>{{thermostat.data.name}}</h2>
                     <div class='float-right'>
-                        <a (click)='view(thermostat)' class='btn btn-info'>View</a>
+                        <a href='thermostats/{{thermostat.api_key}}/{{thermostat.data.identifier}}'
+                            class='btn btn-info'>View</a>
                     </div>
                 </div>
             </div>
