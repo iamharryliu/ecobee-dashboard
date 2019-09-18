@@ -20,10 +20,13 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     $(document).ready(function () {
       $(document).click(function (event) {
-        var clickover = $(event.target);
-        var _opened = $(".collapse").is(":visible");
-        if (_opened === true && !clickover.hasClass("navbar-toggler")) {
+        let clickover = $(event.target);
+        let notNavbarToggler = !clickover.hasClass("navbar-toggler")
+        let _opened = $(".collapse").is(":visible");
+        // $(window).width() + 15 because of scrollbar width...
+        if (_opened === true && notNavbarToggler && $(window).width() + 15 < 768) {
           $("button.navbar-toggler").click();
+          console.log('click')
         }
       });
     });
