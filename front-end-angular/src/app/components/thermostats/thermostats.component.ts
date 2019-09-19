@@ -23,9 +23,11 @@ export class ThermostatsComponent implements OnInit {
   ngOnInit() {
     let key = this._Route.snapshot.paramMap.get('key')
     if (key) {
+      this.key = key
       this.getAppThermostats(key)
     }
     else {
+      this.key = ''
       this.getUserThermostats()
     }
   }
