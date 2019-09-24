@@ -13,25 +13,26 @@ export class UserService {
 
   public loginStatus = false;
   public backEndURL = 'http://localhost:5000';
+  public url = `${this.backEndURL}/users`
 
   setLoginStatus(status: boolean) {
     this.loginStatus = status
   }
 
   getLoginStatus(): Observable<any> {
-    return this.http.get<any>(`${this.backEndURL}/getLoggedInStatus`, httpOptions)
+    return this.http.get<any>(`${this.url}/getLoggedInStatus`, httpOptions)
   }
 
   registerUser(data: any): Observable<any> {
-    return this.http.post<any>(`${this.backEndURL}/registerUser`, data, httpOptions)
+    return this.http.post<any>(`${this.url}/registerUser`, data, httpOptions)
   }
 
   loginUser(data: any): Observable<any> {
-    return this.http.post<any>(`${this.backEndURL}/loginUser`, data, httpOptions)
+    return this.http.post<any>(`${this.url}/loginUser`, data, httpOptions)
   }
 
   logoutUser(): Observable<any> {
-    return this.http.post<any>(`${this.backEndURL}/logoutUser`, null, httpOptions)
+    return this.http.post<any>(`${this.url}/logoutUser`, null, httpOptions)
   }
 
 }

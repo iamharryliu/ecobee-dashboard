@@ -7,12 +7,12 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 
 db = SQLAlchemy()
+admin = Admin()
 login_manager = LoginManager()
 # login_manager.session_protection = None
 # login_manager.login_view = "users_blueprint.login"
 # login_manager.login_message_category = "info"
 bcrypt = Bcrypt()
-admin = Admin()
 
 
 def create_app(config_class=Config):
@@ -26,22 +26,20 @@ def create_app(config_class=Config):
     with app.app_context():
         db.create_all()
 
-    # Blueprint Routes
-    from flaskApp.apps.routes import apps_blueprint
-    from flaskApp.users.routes import users_blueprint
-
-    app.register_blueprint(apps_blueprint)
-    app.register_blueprint(users_blueprint)
+    # Admin Views
+    admin.init_app(app)
+    from flaskApp.models import User, App
+    admin.add_view(ModelView(User, db.session))
+    admin.add_view(ModelView(App, db.session))
 
     # Login Manager and Bcrypt
     login_manager.init_app(app)
     bcrypt.init_app(app)
 
-    # Admin Views
-    admin.init_app(app)
-    from flaskApp.models import User, App
-
-    admin.add_view(ModelView(User, db.session))
-    admin.add_view(ModelView(App, db.session))
+    # Blueprint Routes
+    from flaskApp.apps.routes import apps_blueprint
+    from flaskApp.users.routes import users_blueprint
+    app.register_blueprint(apps_blueprint, url_prefix='/apps')
+    app.register_blueprint(users_blueprint, url_prefix='/users')
 
     return app
