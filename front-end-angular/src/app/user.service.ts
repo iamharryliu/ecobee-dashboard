@@ -20,19 +20,19 @@ export class UserService {
   }
 
   getLoginStatus(): Observable<any> {
-    return this.http.get<any>(`${this.url}/getLoggedInStatus`, httpOptions)
+    return this.http.get<any>(`${this.url}/loginStatus`, httpOptions)
   }
 
   registerUser(data: any): Observable<any> {
-    return this.http.post<any>(`${this.url}/registerUser`, data, httpOptions)
+    return this.http.post<any>(`${this.url}/register`, data, httpOptions)
   }
 
   loginUser(data: any): Observable<any> {
-    return this.http.post<any>(`${this.url}/loginUser`, data, httpOptions)
+    return this.http.post<any>(`${this.url}/login`, data, httpOptions)
   }
 
   logoutUser(): Observable<any> {
-    return this.http.post<any>(`${this.url}/logoutUser`, null, httpOptions)
+    return this.http.post<any>(`${this.url}/logout`, null, httpOptions)
   }
 
 }
