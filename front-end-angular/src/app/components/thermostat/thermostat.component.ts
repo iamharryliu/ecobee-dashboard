@@ -13,7 +13,7 @@ export class ThermostatComponent implements OnInit {
   public thermostat: any;
   public thermostatSensor: any;
   public remoteSensors: any;
-  public all_data_fetched = false;
+  public allDataFetched = false;
 
   constructor(
     private _AppService: AppService,
@@ -30,10 +30,10 @@ export class ThermostatComponent implements OnInit {
   updateThermostat() {
     this._AppService.getThermostat(this.thermostat)
       .subscribe(data => {
-        this.thermostat = data;
+        this.thermostat = data.thermostat;
         this.remoteSensors = this.thermostat.data.remoteSensors;
         this.reserializeThermostatData();
-        this.all_data_fetched = true;
+        this.allDataFetched = true;
       });
   }
 
