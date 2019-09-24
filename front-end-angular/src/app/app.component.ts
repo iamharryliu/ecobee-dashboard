@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this._UserService.getLoginStatus().subscribe(data => {
-      this._UserService.setLoginStatus(data.success);
+      this._UserService.setLoginStatus(data.status);
       this.dataLoaded = true;
     })
   }
