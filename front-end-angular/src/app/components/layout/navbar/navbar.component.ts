@@ -26,7 +26,6 @@ export class NavbarComponent implements OnInit {
         // $(window).width() + 15 because of scrollbar width...
         if (_opened === true && notNavbarToggler && $(window).width() + 15 < 768) {
           $("button.navbar-toggler").click();
-          console.log('click')
         }
       });
     });
