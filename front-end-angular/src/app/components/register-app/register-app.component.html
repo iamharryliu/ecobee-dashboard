@@ -12,8 +12,8 @@
                     <input type="text" name='key' id='key' class="form-control" placeholder="Enter API Key"
                         formControlName="key" [class.is-invalid]='key.invalid && key.touched'>
                     <div *ngIf="key.invalid && key.touched">
-                        <small class="text-danger" *ngIf="key.errors?.required">Password is required.</small>
-                        <small class="text-danger" *ngIf="key.errors?.minlength || key.errors?.maxlength">Password must
+                        <small class="text-danger" *ngIf="key.errors?.required">Key is required.</small>
+                        <small class="text-danger" *ngIf="key.errors?.minlength || key.errors?.maxlength">Key must
                             be {{keyLength}} characters long.</small>
                     </div>
                 </div>
