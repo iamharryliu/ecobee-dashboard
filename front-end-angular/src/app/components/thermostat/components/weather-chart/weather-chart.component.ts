@@ -1,6 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import * as Highstock from 'highcharts/highstock';
 import { AppService } from '../../../../app.service'
+import { Subscription } from 'rxjs';
 
 declare var require: any;
 
@@ -18,10 +19,11 @@ theme(Highstock);
   templateUrl: './weather-chart.component.html',
   styleUrls: ['./weather-chart.component.css']
 })
-export class WeatherChartComponent implements OnInit {
+export class WeatherChartComponent implements OnInit, OnDestroy {
 
   @Input() public thermostat: any;
   public runtimeReport: any;
+  public runtimeReportSub: Subscription;
   public options: any;
   public series = [];
 
@@ -32,7 +34,7 @@ export class WeatherChartComponent implements OnInit {
     this.setOptions()
     Highstock.stockChart('container', this.options);
 
-    this._AppService.getThermostatRuntimeReport(this.thermostat).subscribe(data => {
+    this.runtimeReportSub = this._AppService.getThermostatRuntimeReport(this.thermostat).subscribe(data => {
 
       let outdoorTempSeries = [];
       let zoneAveTempSeries = [];
@@ -169,6 +171,13 @@ export class WeatherChartComponent implements OnInit {
       Highstock.stockChart('container', this.options);
     })
   }
+
+  ngOnDestroy() {
+    if (this.runtimeReportSub) {
+      this.runtimeReportSub.unsubscribe()
+    }
+  }
+
   setOptions() {
     this.options = {
       chart: {
