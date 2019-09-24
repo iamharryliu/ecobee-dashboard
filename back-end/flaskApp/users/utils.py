@@ -29,8 +29,6 @@ def login():
     if user and bcrypt.check_password_hash(user.password, password):
         login_user(user, remember=remember)
         return True
-    else:
-        return False
 
 
 def logout():
