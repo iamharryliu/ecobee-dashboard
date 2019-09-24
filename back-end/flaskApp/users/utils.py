@@ -1,6 +1,5 @@
 from flask import request, session
-from flask_cors import cross_origin
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import login_user, current_user, logout_user
 from flaskApp import db, bcrypt
 from flaskApp.models import User
 import json
@@ -32,6 +31,7 @@ def login():
         return True
     else:
         return False
+
 
 def logout():
     logout_user()
