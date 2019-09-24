@@ -5,7 +5,7 @@ from flaskApp.users.utils import register, get_login_status, login, logout
 users_blueprint = Blueprint("users_blueprint", __name__)
 
 
-@users_blueprint.route("/registerUser", methods=["POST"])
+@users_blueprint.route("/register", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def _register():
     try:
@@ -17,32 +17,22 @@ def _register():
     return jsonify({"success": success})
 
 
-@users_blueprint.route("/getLoggedInStatus", methods=["GET"])
+@users_blueprint.route("/loginStatus", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def _get_login_status():
     status = get_login_status()
-    return jsonify({"success": status})
+    return jsonify({"success": True, "status": status})
 
 
-@users_blueprint.route("/loginUser", methods=["POST"])
+@users_blueprint.route("/login", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def _login():
-    try:
-        success = login()
-    except:
-        success = False
-    else:
-        pass
+    success = True if login() else False
     return jsonify({"success": success})
 
 
-@users_blueprint.route("/logoutUser", methods=["POST"])
+@users_blueprint.route("/logout", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def _logout():
-    try:
-        logout()
-    except:
-        success = False
-    else:
-        success = True
-    return jsonify({"success": success})
+    logout()
+    return jsonify({"success": True})
