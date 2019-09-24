@@ -27,8 +27,8 @@ export class RegisterAppComponent implements OnInit {
   })
   public pin: string;
   public registerForm = this._FormBuilder.group({
-    name: ['', [Validators.required, Validators.minLength(this.nameMinLength)]],
     key: [''],
+    name: ['', [Validators.required, Validators.minLength(this.nameMinLength)]],
     authorizationCode: [''],
   })
 
