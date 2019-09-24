@@ -2,17 +2,17 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required
 from flask_cors import cross_origin
 from flaskApp.apps.utils import (
-    createApp,
-    updateAppCredentials,
-    deleteApp,
-    getUserConfigs,
+    get_app_auth,
+    create_app,
+    update_app_credentials,
+    delete_app,
+    get_user_configs,
     getAppByKey,
-    getUserThermostats,
-    getAppThermostats,
+    get_user_thermostats,
+    get_app_thermostats,
+    get_thermostat,
     getRuntimeReport,
 )
-
-from ecobeeApp import ecobeeApp
 
 apps_blueprint = Blueprint("apps_blueprint", __name__)
 
@@ -22,27 +22,25 @@ apps_blueprint = Blueprint("apps_blueprint", __name__)
 @apps_blueprint.route("/apps/authorize/<string:api_key>", methods=["GET"])
 @cross_origin(supports_credentials=True)
 @login_required
-def _authorizeApp(api_key):
+def _get_app_auth(api_key):
     try:
-        pin, authorization_code = ecobeeApp.requestPinAndAuthorizationCode(api_key)
+        pin, authorization_code = get_app_auth(api_key)
     except:
         success = False
         data = None
     else:
         success = True
         data = {"pin": pin, "authorization_code": authorization_code}
-    r = {"success": success, "data": data}
-    return jsonify(r)
+    return {"success": success, "data": data}
 
 
 @apps_blueprint.route("/apps/create", methods=["POST"])
 @cross_origin(supports_credentials=True)
 @login_required
-def _createApp():
+def _create_app():
     try:
-        createApp()
-    except Exception as e:
-        print(e)
+        create_app()
+    except:
         success = False
     else:
         success = True
@@ -52,17 +50,10 @@ def _createApp():
 @apps_blueprint.route("/apps/updateAppCredentials", methods=["POST"])
 @cross_origin(supports_credentials=True)
 @login_required
-def _updateAppCredentials():
-    data = request.get_json()
-    api_key = data["api_key"]
-    authorization_code = data["authorization_code"]
+def _update_app_credentials():
     try:
-        access_token, refresh_token = ecobeeApp.requestTokens(
-            api_key, authorization_code
-        )
-        updateAppCredentials(api_key, authorization_code, access_token, refresh_token)
-    except Exception as e:
-        print(e)
+        update_app_credentials()
+    except:
         success = False
     else:
         success = True
@@ -71,9 +62,9 @@ def _updateAppCredentials():
 
 @apps_blueprint.route("/apps/delete/<string:api_key>", methods=["DELETE"])
 @cross_origin(supports_credentials=True)
-def _deleteApp(api_key):
+def _delete_app(api_key):
     try:
-        deleteApp(api_key)
+        delete_app(api_key)
     except:
         success = False
     else:
@@ -84,8 +75,8 @@ def _deleteApp(api_key):
 @apps_blueprint.route("/apps", methods=["GET"])
 @cross_origin(supports_credentials=True)
 @login_required
-def _getUserApps():
-    apps = getUserConfigs()
+def _get_user_configs():
+    apps = get_user_configs()
     return jsonify(apps)
 
 
@@ -93,31 +84,23 @@ def _getUserApps():
 @cross_origin(supports_credentials=True)
 @login_required
 def _getUserThermostats():
-    data = getUserThermostats()
+    data = get_user_thermostats()
     return jsonify(data)
 
 
 @apps_blueprint.route("/getAppThermostats/<string:key>")
 @cross_origin(supports_credentials=True)
 @login_required
-def _getAppThermostats(key):
-    data = getAppThermostats(key)
+def _get_app_thermostats(key):
+    data = get_app_thermostats(key)
     return jsonify(data)
 
 
 @apps_blueprint.route("/thermostat/<identifier>")
 @cross_origin(supports_credentials=True)
 @login_required
-def _getThermostatByIdentifier(identifier):
-    thermostats = getUserThermostats()
-    thermostat = next(
-        (
-            thermostat
-            for thermostat in thermostats
-            if thermostat["data"]["identifier"] == identifier
-        ),
-        None,
-    )
+def _get_thermostat(identifier):
+    thermostat = get_thermostat(identifier)
     if thermostat:
         return jsonify(thermostat)
     else:

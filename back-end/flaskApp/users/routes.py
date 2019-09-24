@@ -27,12 +27,22 @@ def _get_login_status():
 @users_blueprint.route("/loginUser", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def _login():
-    success = login()
+    try:
+        success = login()
+    except:
+        success = False
+    else:
+        pass
     return jsonify({"success": success})
 
 
 @users_blueprint.route("/logoutUser", methods=["POST"])
 @cross_origin(supports_credentials=True)
 def _logout():
-    logout()
-    return jsonify({"success": True})
+    try:
+        logout()
+    except:
+        success = False
+    else:
+        success = True
+    return jsonify({"success": success})
