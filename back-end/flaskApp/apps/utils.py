@@ -5,6 +5,11 @@ from flaskApp.config import ecobeeAppLogger
 from flaskApp.models import App
 from ecobeeApp import ecobeeApp
 
+import json
+
+
+# Apps
+
 
 def get_app_auth(api_key):
     return ecobeeApp.requestPinAndAuthorizationCode(api_key)
@@ -40,62 +45,64 @@ def update_app_credentials():
     db.session.commit()
 
 
-def getApps():
-    apps = App.query.all()
-    apps = [{"name": app.name, "key": app.api_key} for app in apps]
-    return apps
-
-
 def get_user_configs():
     apps = App.query.filter_by(owner=current_user)
     return [{"name": app.name, "key": app.api_key} for app in apps]
 
 
-def getAppConfig(key):
-    return App.query.get(key)
-
-
 def getAppByKey(key):
-    appConfig = getAppConfig(key)
+    appConfig = App.query.get(key)
     if appConfig:
         app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
         return app
 
 
 def delete_app(key):
-    app = getAppConfig(key)
+    app = App.query.get(key)
     db.session.delete(app)
     db.session.commit()
 
 
+# Thermostats
+
+
 def get_user_thermostats():
     thermostats = []
-    configs = App.query.filter_by(owner=current_user)
-    apps = [
-        ecobeeApp(config=config, db=db, logger=ecobeeAppLogger) for config in configs
-    ]
-    for app in apps:
+    try:
+        configs = App.query.filter_by(owner=current_user)
+        apps = [
+            ecobeeApp(config=config, db=db, logger=ecobeeAppLogger)
+            for config in configs
+        ]
+    except:
+        print("Unsuccessful app request.")
+    else:
+        for app in apps:
+            data = app.requestData()
+            if data:
+                thermostatList = data["thermostatList"]
+                for thermostat in thermostatList:
+                    thermostats.append({"api_key": app.api_key, "data": thermostat})
+            else:
+                print(f"{app.api_key} is not working.")
+    return thermostats
+
+
+def get_app_thermostats(key):
+    thermostats = []
+    try:
+        config = App.query.get(key)
+        app = ecobeeApp(config=config, db=db, logger=ecobeeAppLogger)
         data = app.requestData()
+    except:
+        print("Unsuccessful app request.")
+    else:
         if data:
             thermostatList = data["thermostatList"]
             for thermostat in thermostatList:
                 thermostats.append({"api_key": app.api_key, "data": thermostat})
         else:
             print(f"{app.api_key} is not working.")
-    return thermostats
-
-
-def get_app_thermostats(key):
-    thermostats = []
-    config = getAppConfig(key)
-    app = ecobeeApp(config=config, db=db, logger=ecobeeAppLogger)
-    data = app.requestData()
-    if data:
-        thermostatList = data["thermostatList"]
-        for thermostat in thermostatList:
-            thermostats.append({"api_key": app.api_key, "data": thermostat})
-    else:
-        print(f"{app.api_key} is not working.")
     return thermostats
 
 
@@ -112,8 +119,57 @@ def get_thermostat(identifier):
     return thermostat
 
 
-def getRuntimeReport(key, identifier):
+def get_runtime_report(key, identifier):
     appConfig = App.query.get(key)
     app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
     data = app.getRuntimeReport(identifier)
     return jsonify(data)
+
+
+# Thermostat Actions
+
+
+def set_hvac_mode():
+    data = json.loads(request.data.decode())
+    key = data["key"]
+    identifier = data["identifier"]
+    mode = data["mode"]
+    app = getAppByKey(key)
+    return app.set_hvac_mode(identifier=identifier, hvac_mode=mode)
+
+
+def resume():
+    data = json.loads(request.data.decode())
+    key = data["key"]
+    identifier = data["identifier"]
+    app = getAppByKey(key)
+    return app.resume(identifier=identifier)
+
+
+def set_climate():
+    data = json.loads(request.data.decode())
+    key = data["key"]
+    identifier = data["identifier"]
+    climate = data["climate"]
+    app = getAppByKey(key)
+    return app.set_climate_hold(identifier=identifier, climate=climate)
+
+
+def set_temperature_hold():
+    data = json.loads(request.data.decode())
+    key = data["key"]
+    identifier = data["identifier"]
+    temperature = data["temperature"]
+    app = getAppByKey(key)
+    return app.set_temperature_hold(
+        identifier=identifier, temperature=float(temperature)
+    )
+
+
+def send_message():
+    data = json.loads(request.data.decode())
+    key = data["key"]
+    identifier = data["identifier"]
+    message = data["message"]
+    app = getAppByKey(key)
+    return app.send_message(identifier=identifier, message=message)

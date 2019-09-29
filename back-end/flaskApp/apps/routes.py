@@ -11,12 +11,18 @@ from flaskApp.apps.utils import (
     get_user_thermostats,
     get_app_thermostats,
     get_thermostat,
-    getRuntimeReport,
+    get_runtime_report,
+    set_hvac_mode,
+    resume,
+    set_climate,
+    set_temperature_hold,
+    send_message,
 )
 
 apps_blueprint = Blueprint("apps_blueprint", __name__)
 
-# Register
+
+# Apps
 
 
 @apps_blueprint.route("/apps/authorize/<string:api_key>", methods=["GET"])
@@ -26,9 +32,11 @@ def _get_app_auth(api_key):
     try:
         pin, authorization_code = get_app_auth(api_key)
     except:
+        print("Unsuccessfuly authorized app.")
         success = False
         data = None
     else:
+        print("Successfully authorized app.")
         success = True
         data = {"pin": pin, "authorization_code": authorization_code}
     return {"success": success, "data": data}
@@ -41,8 +49,10 @@ def _create_app():
     try:
         create_app()
     except:
+        print("Successfully created app.")
         success = False
     else:
+        print("Unsuccessfully created app.")
         success = True
     return jsonify({"success": success})
 
@@ -54,8 +64,10 @@ def _update_app_credentials():
     try:
         update_app_credentials()
     except:
+        print("Unsuccessfully updated app.")
         success = False
     else:
+        print("Successfully updated app.")
         success = True
     return jsonify({"success": success})
 
@@ -66,8 +78,10 @@ def _delete_app(api_key):
     try:
         delete_app(api_key)
     except:
+        print("Unsuccessfully deleted app.")
         success = False
     else:
+        print("Successfully deleted app.")
         success = True
     return jsonify({"success": success})
 
@@ -80,20 +94,23 @@ def _get_user_configs():
     return jsonify(apps)
 
 
+# Thermostats
+
+
 @apps_blueprint.route("/getUserThermostats")
 @cross_origin(supports_credentials=True)
 @login_required
 def _getUserThermostats():
-    data = get_user_thermostats()
-    return jsonify(data)
+    thermostats = get_user_thermostats()
+    return jsonify(thermostats)
 
 
 @apps_blueprint.route("/getAppThermostats/<string:key>")
 @cross_origin(supports_credentials=True)
 @login_required
 def _get_app_thermostats(key):
-    data = get_app_thermostats(key)
-    return jsonify(data)
+    thermostats = get_app_thermostats(key)
+    return jsonify(thermostats)
 
 
 @apps_blueprint.route("/thermostat/<identifier>")
@@ -101,79 +118,8 @@ def _get_app_thermostats(key):
 @login_required
 def _get_thermostat(identifier):
     thermostat = get_thermostat(identifier)
-    if thermostat:
-        return jsonify(thermostat)
-    else:
-        return jsonify({"success": False})
-
-
-# Front-end actions
-
-import json
-
-
-@apps_blueprint.route("/setHvacMode", methods=["POST"])
-@cross_origin(supports_credentials=True)
-def setHvacMode():
-    data = json.loads(request.data.decode())
-    key = data["key"]
-    identifier = data["identifier"]
-    mode = data["mode"]
-    app = getAppByKey(key)
-    r = app.set_hvac_mode(identifier=identifier, hvac_mode=mode)
-    message = f"HVAC mode set to {mode}."
-    return jsonify({"success": r, "message": message})
-
-
-@apps_blueprint.route("/resume", methods=["POST"])
-@cross_origin(supports_credentials=True)
-def resume():
-    data = json.loads(request.data.decode())
-    key = data["key"]
-    identifier = data["identifier"]
-    app = getAppByKey(key)
-    r = app.resume(identifier=identifier)
-    message = f"Regular program resumed."
-    return jsonify({"success": r, "message": message})
-
-
-@apps_blueprint.route("/setClimate", methods=["POST"])
-@cross_origin(supports_credentials=True)
-def setClimate():
-    data = json.loads(request.data.decode())
-    key = data["key"]
-    identifier = data["identifier"]
-    climate = data["climate"]
-    app = getAppByKey(key)
-    r = app.set_climate_hold(identifier=identifier, climate=climate)
-    message = f"Climate set to {climate}."
-    return jsonify({"success": r, "message": message})
-
-
-@apps_blueprint.route("/setTemperature", methods=["POST"])
-@cross_origin(supports_credentials=True)
-def setTemperatureHold():
-    data = json.loads(request.data.decode())
-    key = data["key"]
-    identifier = data["identifier"]
-    temperature = data["temperature"]
-    app = getAppByKey(key)
-    r = app.set_temperature_hold(identifier=identifier, temperature=float(temperature))
-    message = f"Temperature set to {temperature}C."
-    return jsonify({"success": r, "message": message})
-
-
-@apps_blueprint.route("/sendMessage", methods=["POST"])
-@cross_origin(supports_credentials=True)
-def sendMessage():
-    data = json.loads(request.data.decode())
-    key = data["key"]
-    identifier = data["identifier"]
-    message = data["message"]
-    app = getAppByKey(key)
-    r = app.send_message(identifier=identifier, message=message)
-    message = f"Message sent."
-    return jsonify({"success": r, "message": message})
+    success = True if thermostat else False
+    return jsonify({"success": success, "thermostat": thermostat})
 
 
 @apps_blueprint.route(
@@ -181,5 +127,38 @@ def sendMessage():
 )
 @cross_origin(supports_credentials=True)
 @login_required
-def runtimeReport(key, identifier):
-    return getRuntimeReport(key, identifier)
+def _get_runtime_report(key, identifier):
+    return get_runtime_report(key, identifier)
+
+
+# Thermostat Actions
+
+
+@apps_blueprint.route("/setHvacMode", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def _set_hvac_mode():
+    return jsonify({"success": set_hvac_mode()})
+
+
+@apps_blueprint.route("/resume", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def _resume():
+    return jsonify({"success": resume()})
+
+
+@apps_blueprint.route("/setClimate", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def _set_climate():
+    return jsonify({"success": set_climate()})
+
+
+@apps_blueprint.route("/setTemperature", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def _set_temperature_hold():
+    return jsonify({"success": set_temperature_hold()})
+
+
+@apps_blueprint.route("/sendMessage", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def _send_message():
+    return jsonify({"success": send_message()})
