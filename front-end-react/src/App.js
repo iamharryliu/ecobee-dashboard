@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './App.css';
-import Main from './components/Main';
-import Navbar from './components/Navbar';
-import Register from './components/Register'
-import Login from './components/Login'
-import Apps from './components/Apps';
-import Thermostats from './components/Thermostats';
 import { BrowserRouter as Router, Switch, Route, withRouter } from 'react-router-dom';
 import { ProtectedRoute } from './components/protected.route'
-import axios from 'axios';
+
+import Main from './components/Main';
+import Navbar from './components/Navbar';
+import RegisterUser from './components/RegisterUser'
+import Login from './components/Login'
+import Apps from './components/Apps';
+import RegisterApp from './components/RegisterApp'
+import Thermostats from './components/Thermostats';
+
 
 import auth from './components/auth'
 
@@ -19,8 +22,9 @@ class App extends Component {
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
     this.state = {
+      dataLoaded: false,
       isLoggedIn: false,
-      dataLoaded: false
+      keyLength: 32
     }
   }
 
@@ -33,11 +37,11 @@ class App extends Component {
     })
   }
 
-  componentDidUpdate(prevState) {
-    if (this.state.isLoggedIn !== prevState.isLoggedIn) {
-      console.log('log')
-    }
-  }
+  // componentDidUpdate(prevState) {
+  //   if (this.state.isLoggedIn !== prevState.isLoggedIn) {
+  //     console.log('log')
+  //   }
+  // }
 
   login(data, cb) {
     axios.post('http://localhost:5000/loginUser', data, { withCredentials: true })
@@ -71,7 +75,7 @@ class App extends Component {
   }
 
   render() {
-    const { dataLoaded, isLoggedIn } = this.state
+    const { dataLoaded, isLoggedIn, keyLength } = this.state
     return (
       <Router>
         {dataLoaded &&
@@ -80,9 +84,10 @@ class App extends Component {
             <main className='container pt-3 pb-3 text-light'>
               <Switch>
                 <Route exact path='/' component={() => <Main isLoggedIn={isLoggedIn} />} />
-                <Route exact path='/register' component={Register} />
+                <Route exact path='/register' component={RegisterUser} />
                 <Route exact path='/login' component={() => <Login login={this.login} />} />
                 <ProtectedRoute exact path='/apps' component={Apps} />
+                <ProtectedRoute exact path='/apps/register' component={RegisterApp} keyLength={keyLength} />
                 <ProtectedRoute exact path='/thermostats' component={Thermostats} />
                 <Route path='*' component={() => '404 Page'} />
               </Switch>

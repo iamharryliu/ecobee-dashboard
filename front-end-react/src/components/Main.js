@@ -11,7 +11,7 @@ class Main extends Component {
     render() {
         const { isLoggedIn } = this.props
         return (
-            < div className='jumbotron mt-3 mb-3' >
+            <div className='jumbotron mt-3 mb-3'>
                 <div className='text-dark'>
                     <h1 className='display-4'>Ecobee Dash</h1>
                     <p className='lead'>Have control over your thermostat.</p>
@@ -30,7 +30,7 @@ class Main extends Component {
                             <Link to='/thermostats' className='btn btn-primary btn-lg'>Thermostats</Link>
                         </p>
                 }
-            </div >
+            </div>
         )
     }
 

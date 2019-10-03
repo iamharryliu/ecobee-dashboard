@@ -34,7 +34,7 @@ class Apps extends Component {
                     <div className='row'>
                         <h1 className='col-6'>Apps</h1>
                         <div className='col-6'>
-                            <Link to='blank' className='btn btn-primary btn-lg float-right'>Register App</Link>
+                            <Link to='apps/register' className='btn btn-primary btn-lg float-right'>Register App</Link>
                         </div>
                         {
                             errMessage ? <div className='col-12'>{errMessage}</div> : null

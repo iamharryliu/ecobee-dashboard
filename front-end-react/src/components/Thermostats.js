@@ -13,18 +13,30 @@ class Thermostats extends Component {
         }
     }
 
+    CancelToken = axios.CancelToken;
+    source = this.CancelToken.source();
+    abortController = new AbortController();
+
     componentDidMount() {
-        axios.get('http://localhost:5000/getUserThermostats', { withCredentials: true })
-            .then(response => {
-                this.setState({
-                    thermostats: response.data,
-                    dataLoaded: true
+        try {
+            axios.get('http://localhost:5000/getUserThermostats', { withCredentials: true, cancelToken: this.source.token })
+                .then(response => {
+                    this.setState({
+                        thermostats: response.data,
+                        dataLoaded: true
+                    })
                 })
-            })
-            .catch(error => {
-                console.log(error)
-                this.setState({ errMessage: 'Error retreiving data.' })
-            });
+                .catch(error => {
+                    console.log(error)
+                    this.setState({ errMessage: 'Error retreiving data.' })
+                });
+        }
+        catch (error) {
+            if (axios.isCancel(error)) {
+                console.log("Request canceled", error.message);
+                throw new Error("Cancelled");
+            }
+        }
     }
 
     render() {
