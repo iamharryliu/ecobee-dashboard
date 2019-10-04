@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from './user.service'
+import { AppService } from './app.service'
 
 @Component({
   selector: 'app-root',
@@ -10,15 +11,20 @@ import { UserService } from './user.service'
 export class AppComponent implements OnInit {
 
   public dataLoaded = false;
+  public apiRunning: boolean;
 
   constructor(
-    private _UserService: UserService
+    private _UserService: UserService,
+    private _AppService: AppService
   ) { }
 
   ngOnInit() {
     this._UserService.getLoginStatus().subscribe(data => {
       this._UserService.setLoginStatus(data.status);
-      this.dataLoaded = true;
+      this._AppService.checkAPI().subscribe(data => {
+        this.apiRunning = data.success
+        this.dataLoaded = true;
+      })
     })
   }
 

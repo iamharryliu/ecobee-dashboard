@@ -17,12 +17,25 @@ from flaskApp.apps.utils import (
     set_climate,
     set_temperature_hold,
     send_message,
+    check_api,
 )
 
 apps_blueprint = Blueprint("apps_blueprint", __name__)
 
 
 # Apps
+
+import requests
+
+
+@apps_blueprint.route("/checkAPI", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def _check_api():
+    if check_api():
+        success = True
+    else:
+        success = False
+    return jsonify({"success": success})
 
 
 @apps_blueprint.route("/apps/authorize/<string:api_key>", methods=["GET"])

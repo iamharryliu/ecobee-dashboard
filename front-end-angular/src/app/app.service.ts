@@ -18,6 +18,10 @@ export class AppService {
 
   // Ecobee App
 
+  checkAPI(): Observable<any> {
+    return this.http.get<any>(`${this.url}/checkAPI`, httpOptions)
+  }
+
   authorizeApp(key: string): Observable<any> {
     return this.http.get<any>(`${this.url}/apps/authorize/${key}`, httpOptions)
   }
