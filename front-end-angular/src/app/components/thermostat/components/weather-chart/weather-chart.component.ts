@@ -41,47 +41,57 @@ export class WeatherChartComponent implements OnInit, OnDestroy {
       let zoneHeatTempSeries = [];
       let outdoorHumiditySeries = [];
       let zoneHumiditySeries = [];
-      let hvacModeIndex = data.columns.split(',').indexOf('HVACmode') + 2
-      let zoneCalendarEventIndex = data.columns.split(',').indexOf('zoneCalendarEvent') + 2
-      let zoneOccupancyIndex = data.columns.split(',').indexOf('zoneOccupancy') + 2
-      let outdoorTempIndex = data.columns.split(',').indexOf('outdoorTemp') + 2
-      let zoneAveTempIndex = data.columns.split(',').indexOf('zoneAveTemp') + 2
-      let zoneHeatTempIndex = data.columns.split(',').indexOf('zoneHeatTemp') + 2
-      let zoneCoolTempIndex = data.columns.split(',').indexOf('zoneCoolTemp') + 2
-      let outdoorHumidityIndex = data.columns.split(',').indexOf('outdoorHumidity') + 2
-      let zoneHumidityIndex = data.columns.split(',').indexOf('zoneHumidity') + 2
+
+      let columns = data.columns.split(',')
+
+      let hvacModeIndex = columns.indexOf('HVACmode') + 2
+      // let zoneCalendarEventIndex = columns.indexOf('zoneCalendarEvent') + 2
+      // let zoneOccupancyIndex = columns.indexOf('zoneOccupancy') + 2
+      let outdoorTempIndex = columns.indexOf('outdoorTemp') + 2
+      let zoneAveTempIndex = columns.indexOf('zoneAveTemp') + 2
+      let zoneHeatTempIndex = columns.indexOf('zoneHeatTemp') + 2
+      // let zoneCoolTempIndex = columns.indexOf('zoneCoolTemp') + 2
+      let outdoorHumidityIndex = columns.indexOf('outdoorHumidity') + 2
+      let zoneHumidityIndex = columns.indexOf('zoneHumidity') + 2
 
       let rowList = data.reportList[0].rowList
+
       for (let i = 0; i < rowList.length; i++) {
-        rowList[i] = rowList[i].split(',')
-        let datetime = rowList[i][0] + ' ' + rowList[i][1] + ' GMT'
+
+        let rowData = rowList[i].split(',')
+
+        let datetime = rowData[0] + ' ' + rowData[1] + ' GMT'
         let time = Date.parse(datetime)
-        if (rowList[i][hvacModeIndex]) {
-          let outdoorTemp = rowList[i][outdoorTempIndex]
-          let zoneAveTemp = rowList[i][zoneAveTempIndex]
-          let zoneHeatTemp = rowList[i][zoneHeatTempIndex]
-          let outdoorHumidity = rowList[i][outdoorHumidityIndex]
-          let zoneHumidity = rowList[i][zoneHumidityIndex]
+
+        if (rowData[hvacModeIndex]) {
+
+          let outdoorTemp = rowData[outdoorTempIndex]
+          let zoneAveTemp = rowData[zoneAveTempIndex]
+          let zoneHeatTemp = rowData[zoneHeatTempIndex]
+          let outdoorHumidity = rowData[outdoorHumidityIndex]
+          let zoneHumidity = rowData[zoneHumidityIndex]
+
           outdoorTemp = (outdoorTemp - 32) * 5 / 9
           zoneAveTemp = (zoneAveTemp - 32) * 5 / 9
           zoneHeatTemp = (zoneHeatTemp - 32) * 5 / 9
           outdoorHumidity = parseInt(outdoorHumidity)
           zoneHumidity = parseInt(zoneHumidity)
-          rowList[i].splice(outdoorTempIndex, 1, outdoorTemp)
-          rowList[i].splice(zoneAveTempIndex, 1, zoneAveTemp)
-          rowList[i].splice(zoneHeatTempIndex, 1, zoneHeatTemp)
-          rowList[i].splice(outdoorHumidityIndex, 1, outdoorHumidity)
-          rowList[i].splice(zoneHumidityIndex, 1, zoneHumidity)
-          rowList[i].splice(0, 2, time)
-          // if (rowList[i][0] % (30 * 60 * 1000) == 0) {
-          //   outdoorTempSeries.push([rowList[i][0], rowList[i][outdoorTempIndex - 1]])
-          //   outdoorHumiditySeries.push([rowList[i][0], rowList[i][outdoorHumidityIndex - 1]])
+
+          rowData.splice(outdoorTempIndex, 1, outdoorTemp)
+          rowData.splice(zoneAveTempIndex, 1, zoneAveTemp)
+          rowData.splice(zoneHeatTempIndex, 1, zoneHeatTemp)
+          rowData.splice(outdoorHumidityIndex, 1, outdoorHumidity)
+          rowData.splice(zoneHumidityIndex, 1, zoneHumidity)
+          rowData.splice(0, 2, time)
+          // if (rowData[0] % (30 * 60 * 1000) == 0) {
+          //   outdoorTempSeries.push([rowData[0], rowData[outdoorTempIndex - 1]])
+          //   outdoorHumiditySeries.push([rowData[0], rowData[outdoorHumidityIndex - 1]])
           // }
-          outdoorTempSeries.push([rowList[i][0], rowList[i][outdoorTempIndex - 1]])
-          outdoorHumiditySeries.push([rowList[i][0], rowList[i][outdoorHumidityIndex - 1]])
-          zoneAveTempSeries.push([rowList[i][0], rowList[i][zoneAveTempIndex - 1]])
-          zoneHeatTempSeries.push([rowList[i][0], rowList[i][zoneHeatTempIndex - 1]])
-          zoneHumiditySeries.push([rowList[i][0], rowList[i][zoneHumidityIndex - 1]])
+          outdoorTempSeries.push([rowData[0], rowData[outdoorTempIndex - 1]])
+          outdoorHumiditySeries.push([rowData[0], rowData[outdoorHumidityIndex - 1]])
+          zoneAveTempSeries.push([rowData[0], rowData[zoneAveTempIndex - 1]])
+          zoneHeatTempSeries.push([rowData[0], rowData[zoneHeatTempIndex - 1]])
+          zoneHumiditySeries.push([rowData[0], rowData[zoneHumidityIndex - 1]])
         }
       }
       let sensorList = data.sensorList[0]
@@ -111,6 +121,7 @@ export class WeatherChartComponent implements OnInit, OnDestroy {
           }
         }
       }
+
       for (let i = 0; i < sensors.length; i++) {
         let sensor = sensors[i]
         if (sensor.sensorType == 'temperature') {
@@ -132,6 +143,7 @@ export class WeatherChartComponent implements OnInit, OnDestroy {
           })
         }
       }
+
       this.series.push({
         name: 'Outdoor Temp',
         type: 'spline',
@@ -139,6 +151,7 @@ export class WeatherChartComponent implements OnInit, OnDestroy {
         data: outdoorTempSeries,
         visible: false
       })
+
       this.series.push({
         name: 'Outdoor Humidity',
         type: 'spline',
@@ -146,6 +159,7 @@ export class WeatherChartComponent implements OnInit, OnDestroy {
         data: outdoorHumiditySeries,
         visible: false
       })
+
       this.series.push({
         name: 'Zone Ave Temp',
         type: 'spline',
@@ -153,6 +167,7 @@ export class WeatherChartComponent implements OnInit, OnDestroy {
         data: zoneAveTempSeries,
         visible: false
       })
+
       this.series.push({
         name: 'Zone Heat Temp',
         type: 'spline',
@@ -167,8 +182,10 @@ export class WeatherChartComponent implements OnInit, OnDestroy {
         data: zoneHumiditySeries,
         visible: false
       })
+
       this.setOptions()
       Highstock.stockChart('container', this.options);
+
     })
   }
 
