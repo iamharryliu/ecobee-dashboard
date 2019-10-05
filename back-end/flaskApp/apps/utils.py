@@ -3,6 +3,10 @@ from flask_login import current_user
 from flaskApp import db
 from flaskApp.config import ecobeeAppLogger
 from flaskApp.models import App
+
+import sys
+
+sys.path.append("..")
 from ecobeeApp import ecobeeApp
 
 import json
@@ -173,3 +177,7 @@ def send_message():
     message = data["message"]
     app = getAppByKey(key)
     return app.send_message(identifier=identifier, message=message)
+
+
+def check_api():
+    return ecobeeApp.test()

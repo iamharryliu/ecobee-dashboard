@@ -1,6 +1,3 @@
-[submodule "back-end-flask/ecobeeApp"]
-	path = back-end/ecobeeApp
-	url = https://github.com/itzliu/ecobeeApp.git
 [submodule "ecobeeApp"]
 	path = ecobeeApp
 	url = https://github.com/itzliu/ecobeeApp.git
