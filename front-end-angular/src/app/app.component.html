@@ -1,19 +1,20 @@
-<div *ngIf='dataLoaded && apiRunning;else other_content'>
-  <app-navbar></app-navbar>
-  <main class='container pt-3 pb-3 text-light'>
-    <router-outlet></router-outlet>
-  </main>
+<div *ngIf='dataLoaded'>
+  <div *ngIf='apiRunning;else other_content'>
+    <app-navbar></app-navbar>
+    <main class='container pt-3 pb-3 text-light'>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+  <ng-template #other_content>
+    <main class='container pt-3 pb-3'>
+      <div class="jumbotron">
+        <h1 class="display-4">Uh oh, we have a problem.</h1>
+        <p class="lead">
+          The Ecobee API seems to be down and this app cannot run without it.<br />
+          <a href='https://downdetector.ca/status/ecobee/' target='_blank'>Click here</a> to check on Ecobee server
+          status.
+        </p>
+      </div>
+    </main>
+  </ng-template>
 </div>
-
-<ng-template #other_content>
-  <main class='container pt-3 pb-3'>
-    <div class="jumbotron">
-      <h1 class="display-4">Uh oh, we have a problem.</h1>
-      <p class="lead">
-        The Ecobee API seems to be down and this app cannot run without it.<br />
-        <a href='https://downdetector.ca/status/ecobee/' target='_blank'>Click here</a> to check on Ecobee server
-        status.
-      </p>
-    </div>
-  </main>
-</ng-template>
