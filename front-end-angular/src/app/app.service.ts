@@ -23,11 +23,11 @@ export class AppService {
   }
 
   authorizeApp(key: string): Observable<any> {
-    return this.http.get<any>(`${this.url}/apps/authorize/${key}`, httpOptions)
+    return this.http.get<any>(`${this.url}/authorize/${key}`, httpOptions)
   }
 
   createApp(form: any): Observable<any> {
-    return this.http.post<any>(`${this.url}/apps/create`, form, httpOptions)
+    return this.http.post<any>(`${this.url}/create`, form, httpOptions)
   }
 
   updateAppCredentials(key: string, authorization_code: string): Observable<any> {
@@ -35,15 +35,15 @@ export class AppService {
       'api_key': key,
       'authorization_code': authorization_code
     }
-    return this.http.post<any>(`${this.url}/apps/updateAppCredentials`, form, httpOptions)
+    return this.http.post<any>(`${this.url}/updateCredentials`, form, httpOptions)
   }
 
   getApps(): Observable<any> {
-    return this.http.get<any>(`${this.url}/apps`, httpOptions)
+    return this.http.get<any>(`${this.url}/get`, httpOptions)
   }
 
   deleteApp(key: string): Observable<any> {
-    return this.http.delete<any>(`${this.url}/apps/delete/${key}`)
+    return this.http.delete<any>(`${this.url}/delete/${key}`)
   }
 
   // Thermostat
