@@ -15,7 +15,7 @@ import json
 # Apps
 
 
-def get_app_auth(api_key):
+def get_auth(api_key):
     return ecobeeApp.requestPinAndAuthorizationCode(api_key)
 
 
