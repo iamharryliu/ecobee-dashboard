@@ -15,7 +15,7 @@ def _register_user(request):
 
 
 @csrf_exempt
-def _get_login_status(request):
+def _login_status(request):
     status = get_login_status(request)
     return JsonResponse({"success": True, "status": status})
 
@@ -30,4 +30,3 @@ def _login_user(request):
 def _logout_user(request):
     logout_user(request)
     return JsonResponse({"success": True})
-
