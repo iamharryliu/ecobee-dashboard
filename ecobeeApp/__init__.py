@@ -87,19 +87,14 @@ class ecobeeApp:
         }
         try:
             request = requests.get(authorizeURL, params=params)
-            print("request came")
-            print(request)
         except:
-            print("except")
             return None
         else:
             if request.status_code == requests.codes.ok:
                 pin = request.json()["ecobeePin"]
                 authorization_code = request.json()["code"]
-                print(pin, authorization_code)
                 return pin, authorization_code
             else:
-                print("else none")
                 return None
 
     @staticmethod
