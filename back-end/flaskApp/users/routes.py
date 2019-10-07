@@ -19,7 +19,7 @@ def _register():
 
 @users_blueprint.route("/loginStatus", methods=["GET"])
 @cross_origin(supports_credentials=True)
-def _get_login_status():
+def _login_status():
     status = get_login_status()
     return jsonify({"success": True, "status": status})
 
