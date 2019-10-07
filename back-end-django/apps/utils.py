@@ -15,6 +15,8 @@ import json
 
 # Apps
 
+def check_api():
+    return ecobeeApp.test()
 
 def authorize(api_key):
     return ecobeeApp.requestPinAndAuthorizationCode(api_key)
@@ -27,7 +29,7 @@ def create_app(request):
     authorization_code = data["authorizationCode"]
     access_token, refresh_token = ecobeeApp.requestTokens(api_key, authorization_code)
     app = App(
-        owner=self.request.user,
+        owner=request.user,
         name=app_name,
         api_key=api_key,
         authorization_code=authorization_code,
