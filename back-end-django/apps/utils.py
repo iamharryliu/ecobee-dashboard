@@ -7,7 +7,7 @@ from .models import App
 
 import sys
 
-sys.path.append("..")
+sys.path.append("../")
 from ecobeeApp import ecobeeApp
 
 import json
@@ -15,8 +15,10 @@ import json
 
 # Apps
 
+
 def check_api():
     return ecobeeApp.test()
+
 
 def authorize(api_key):
     return ecobeeApp.requestPinAndAuthorizationCode(api_key)
@@ -28,6 +30,7 @@ def create_app(request):
     api_key = data["key"]
     authorization_code = data["authorizationCode"]
     access_token, refresh_token = ecobeeApp.requestTokens(api_key, authorization_code)
+    # access_token, refresh_token = "access_token", "refresh_token"
     app = App(
         owner=request.user,
         name=app_name,
@@ -39,16 +42,17 @@ def create_app(request):
     app.save()
 
 
-# def update_app_credentials():
-#     data = request.get_json()
-#     api_key = data["api_key"]
-#     authorization_code = data["authorization_code"]
-#     access_token, refresh_token = ecobeeApp.requestTokens(api_key, authorization_code)
-#     app = App.query.get(api_key)
-#     app.authorization_code = authorization_code
-#     app.access_token = access_token
-#     app.refresh_token = refresh_token
-#     db.session.commit()
+def update_app(request):
+    data = json.loads(request.body)
+    key = data["api_key"]
+    authorization_code = data["authorization_code"]
+    access_token, refresh_token = ecobeeApp.requestTokens(key, authorization_code)
+    # access_token, refresh_token = "access_token_new", "refresh_token_new"
+    app = App.objects.get(api_key=key)
+    app.authorization_code = authorization_code
+    app.access_token = access_token
+    app.refresh_token = refresh_token
+    app.save()
 
 
 # def get_user_configs():
