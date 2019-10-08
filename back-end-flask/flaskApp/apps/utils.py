@@ -55,7 +55,7 @@ def delete_app(key):
     db.session.commit()
 
 
-def get_user_configs():
+def get_apps():
     apps = App.query.filter_by(owner=current_user)
     return [{"name": app.name, "key": app.api_key} for app in apps]
 

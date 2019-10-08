@@ -6,7 +6,7 @@ from flaskApp.apps.utils import (
     create_app,
     update_app,
     delete_app,
-    get_user_configs,
+    get_apps,
     getAppByKey,
     get_user_thermostats,
     get_app_thermostats,
@@ -102,8 +102,8 @@ def _delete_app(api_key):
 @apps_blueprint.route("/get", methods=["GET"])
 @cross_origin(supports_credentials=True)
 @login_required
-def _get_user_configs():
-    apps = get_user_configs()
+def _get_apps():
+    apps = get_apps()
     return jsonify(apps)
 
 
