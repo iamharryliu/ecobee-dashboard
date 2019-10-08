@@ -49,6 +49,12 @@ def update_app():
     db.session.commit()
 
 
+def delete_app(key):
+    app = App.query.get(key)
+    db.session.delete(app)
+    db.session.commit()
+
+
 def get_user_configs():
     apps = App.query.filter_by(owner=current_user)
     return [{"name": app.name, "key": app.api_key} for app in apps]
@@ -59,12 +65,6 @@ def getAppByKey(key):
     if appConfig:
         app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
         return app
-
-
-def delete_app(key):
-    app = App.query.get(key)
-    db.session.delete(app)
-    db.session.commit()
 
 
 # Thermostats
