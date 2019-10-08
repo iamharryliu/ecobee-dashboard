@@ -1,0 +1,24 @@
+{
+        "folders": [
+                {
+                        "path": "./back-end-flask",
+                },
+                {
+                        "path": "./back-end-django",
+                },
+                {
+                        "path": "./ecobeeApp",
+                },
+                {
+                        "path": "./front-end-angular",
+                },
+                {
+                        "path": "./front-end-react",
+                },
+                {
+                        "name": "root",
+                        "path": "."
+                }
+        ],
+        "settings": {}
+}
