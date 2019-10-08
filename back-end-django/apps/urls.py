@@ -7,5 +7,5 @@ urlpatterns = [
     path("create", views._create),
     path("update", views._update),
     path("delete/<str:key>", views._delete),
-    # path("get", views._apps),
+    path("", views._get_apps),
 ]
