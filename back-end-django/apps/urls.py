@@ -6,6 +6,6 @@ urlpatterns = [
     path("authorize/<str:key>", views._authorize),
     path("create", views._create),
     path("update", views._update),
-    # path("delete", views._delete),
+    path("delete/<str:key>", views._delete),
     # path("get", views._apps),
 ]

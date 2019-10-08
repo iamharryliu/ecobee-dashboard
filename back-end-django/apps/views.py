@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .utils import check_api, authorize, create_app, update_app
+from .utils import check_api, authorize, create_app, update_app, delete_app
 
 
 @csrf_exempt
@@ -31,8 +31,7 @@ def _authorize(request, key):
 def _create(request):
     try:
         create_app(request)
-    except Exception as e:
-        print(e)
+    except:
         print("Unsuccessfully created app.")
         success = False
     else:
@@ -54,10 +53,17 @@ def _update(request):
     return JsonResponse({"success": success})
 
 
-# @csrf_exempt
-# def _delete(request):
-#     success = True
-#     return JsonResponse({"success": success})
+@csrf_exempt
+def _delete(request, key):
+    try:
+        delete_app(key)
+    except:
+        print("Unsuccessfully deleted app.")
+        success = False
+    else:
+        print("Successfully deleted app.")
+        success = True
+    return JsonResponse({"success": success})
 
 
 # @csrf_exempt
