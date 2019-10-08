@@ -60,9 +60,9 @@ def delete_app(key):
     app.delete()
 
 
-# def get_user_configs():
-#     apps = App.query.filter_by(owner=current_user)
-#     return [{"name": app.name, "key": app.api_key} for app in apps]
+def get_apps(request):
+    apps = App.objects.filter(owner=request.user)
+    return [{"name": app.name, "key": app.api_key} for app in apps]
 
 
 # def getAppByKey(key):
