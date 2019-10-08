@@ -37,7 +37,7 @@ def create_app():
     db.session.commit()
 
 
-def update_app_credentials():
+def update_app():
     data = request.get_json()
     api_key = data["api_key"]
     authorization_code = data["authorization_code"]

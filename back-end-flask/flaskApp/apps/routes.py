@@ -4,7 +4,7 @@ from flask_cors import cross_origin
 from flaskApp.apps.utils import (
     get_auth,
     create_app,
-    update_app_credentials,
+    update_app,
     delete_app,
     get_user_configs,
     getAppByKey,
@@ -62,10 +62,10 @@ def _create_app():
     try:
         create_app()
     except:
-        print("Successfully created app.")
+        print("Unsuccessfully created app.")
         success = False
     else:
-        print("Unsuccessfully created app.")
+        print("Successfully created app.")
         success = True
     return jsonify({"success": success})
 
@@ -73,9 +73,9 @@ def _create_app():
 @apps_blueprint.route("/updateCredentials", methods=["POST"])
 @cross_origin(supports_credentials=True)
 @login_required
-def _update_app_credentials():
+def _update():
     try:
-        update_app_credentials()
+        update_app()
     except:
         print("Unsuccessfully updated app.")
         success = False
