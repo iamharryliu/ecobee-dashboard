@@ -15,4 +15,9 @@ urlpatterns = [
         "thermostats/<str:key>/<str:identifier>/runtimeReport",
         views._get_runtime_report,
     ),
+    path("setHvacMode", views._set_hvac_mode),
+    path("resume", views._resume),
+    path("setClimate", views._set_climate),
+    path("setTemperature", views._set_temperature_hold),
+    path("sendMessage", views.send_message),
 ]
