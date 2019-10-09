@@ -11,6 +11,11 @@ from .utils import (
     get_app_thermostats,
     get_thermostat,
     get_runtime_report,
+    set_hvac_mode,
+    resume,
+    set_climate,
+    set_temperature_hold,
+    send_message,
 )
 
 
@@ -115,31 +120,26 @@ def _get_runtime_report(request, key, identifier):
 # # Thermostat Actions
 
 
-# @apps_blueprint.route("/setHvacMode", methods=["POST"])
-# @cross_origin(supports_credentials=True)
-# def _set_hvac_mode():
-#     return jsonify({"success": set_hvac_mode()})
+@csrf_exempt
+def _set_hvac_mode(request):
+    return JsonResponse({"success": set_hvac_mode(request)})
 
 
-# @apps_blueprint.route("/resume", methods=["POST"])
-# @cross_origin(supports_credentials=True)
-# def _resume():
-#     return jsonify({"success": resume()})
+@csrf_exempt
+def _resume(request):
+    return JsonResponse({"success": resume(request)})
 
 
-# @apps_blueprint.route("/setClimate", methods=["POST"])
-# @cross_origin(supports_credentials=True)
-# def _set_climate():
-#     return jsonify({"success": set_climate()})
+@csrf_exempt
+def _set_climate(request):
+    return JsonResponse({"success": set_climate(request)})
 
 
-# @apps_blueprint.route("/setTemperature", methods=["POST"])
-# @cross_origin(supports_credentials=True)
-# def _set_temperature_hold():
-#     return jsonify({"success": set_temperature_hold()})
+@csrf_exempt
+def _set_temperature_hold(request):
+    return JsonResponse({"success": set_temperature_hold(request)})
 
 
-# @apps_blueprint.route("/sendMessage", methods=["POST"])
-# @cross_origin(supports_credentials=True)
-# def _send_message():
-#     return jsonify({"success": send_message()})
+@csrf_exempt
+def _send_message(request):
+    return JsonResponse({"success": send_message(request)})
