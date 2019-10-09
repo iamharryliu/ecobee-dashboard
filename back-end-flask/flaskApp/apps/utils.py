@@ -81,6 +81,7 @@ def get_user_thermostats():
     except:
         print("Unsuccessful app request.")
     else:
+        print("Successful app request.")
         for app in apps:
             data = app.requestData()
             if data:
