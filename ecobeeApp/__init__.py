@@ -355,6 +355,6 @@ class ecobeeApp:
                 data = response.json()
                 return data
             if self.refreshTokens():
-                return self.getRuntimeReport()
+                return self.getRuntimeReport(identifier)
             else:
                 return None
