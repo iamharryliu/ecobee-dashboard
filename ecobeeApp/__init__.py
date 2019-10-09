@@ -45,9 +45,11 @@ class ecobeeApp:
         name=None,
         logger=logger,
         db=None,
+        dbType=None
     ):
 
         self.db = db
+        self.dbType = dbType
         self.logger = logger
 
         if config:
@@ -178,6 +180,12 @@ class ecobeeApp:
         self.refresh_token = response.json()["refresh_token"]
         if self.db:
             self.writeTokensToDB()
+        if self.dbType == 'Django':
+            self.logger.info(f"{self.api_key}: Writing tokens to db.")
+            self.config.access_token = self.access_token
+            self.config.refresh_token = self.refresh_token
+            self.config.save()
+
 
     def writeTokensToDB(self):
         """ Write tokens to db. """
