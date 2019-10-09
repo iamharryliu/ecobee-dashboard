@@ -1,8 +1,3 @@
-# from flask import request, jsonify
-# from flask_login import current_user
-# from flaskApp import db
-# from flaskApp.config import ecobeeAppLogger
-# from flaskApp.models import App
 from .models import App
 
 import sys
@@ -65,74 +60,74 @@ def get_apps(request):
     return [{"name": app.name, "key": app.api_key} for app in apps]
 
 
-# def getAppByKey(key):
-#     appConfig = App.query.get(key)
-#     if appConfig:
-#         app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
-#         return app
+def getAppByKey(key):
+    appConfig = App.object.get(api_key=key)
+    if appConfig:
+        app = ecobeeApp(config=appConfig, dbType="Django")
+        return app
 
 
 # # Thermostats
 
 
-# def get_user_thermostats():
-#     thermostats = []
-#     try:
-#         configs = App.query.filter_by(owner=current_user)
-#         apps = [
-#             ecobeeApp(config=config, db=db, logger=ecobeeAppLogger)
-#             for config in configs
-#         ]
-#     except:
-#         print("Unsuccessful app request.")
-#     else:
-#         for app in apps:
-#             data = app.requestData()
-#             if data:
-#                 thermostatList = data["thermostatList"]
-#                 for thermostat in thermostatList:
-#                     thermostats.append({"api_key": app.api_key, "data": thermostat})
-#             else:
-#                 print(f"{app.api_key} is not working.")
-#     return thermostats
+def get_user_thermostats(request):
+    thermostats = []
+    try:
+        configs = App.objects.filter(owner=request.user)
+        apps = [ecobeeApp(config=config, dbType="Django") for config in configs]
+        print(apps)
+    except:
+        print("Unsuccessful request.")
+    else:
+        print("Successful request.")
+        for app in apps:
+            data = app.requestData()
+            if data:
+                thermostatList = data["thermostatList"]
+                for thermostat in thermostatList:
+                    thermostats.append({"api_key": app.api_key, "data": thermostat})
+            else:
+                print(f"{app.api_key} is not working.")
+    return thermostats
 
 
-# def get_app_thermostats(key):
-#     thermostats = []
-#     try:
-#         config = App.query.get(key)
-#         app = ecobeeApp(config=config, db=db, logger=ecobeeAppLogger)
-#         data = app.requestData()
-#     except:
-#         print("Unsuccessful app request.")
-#     else:
-#         if data:
-#             thermostatList = data["thermostatList"]
-#             for thermostat in thermostatList:
-#                 thermostats.append({"api_key": app.api_key, "data": thermostat})
-#         else:
-#             print(f"{app.api_key} is not working.")
-#     return thermostats
+def get_app_thermostats(key):
+    thermostats = []
+    try:
+        config = App.objects.get(api_key=key)
+        app = ecobeeApp(config=config, dbType="Django")
+        data = app.requestData()
+    except:
+        print("Unsuccessful request.")
+    else:
+        print("Successful request.")
+        if data:
+            thermostatList = data["thermostatList"]
+            for thermostat in thermostatList:
+                thermostats.append({"api_key": app.api_key, "data": thermostat})
+        else:
+            print(f"{app.api_key} is not working.")
+    return thermostats
 
 
-# def get_thermostat(identifier):
-#     thermostats = get_user_thermostats()
-#     thermostat = next(
-#         (
-#             thermostat
-#             for thermostat in thermostats
-#             if thermostat["data"]["identifier"] == identifier
-#         ),
-#         None,
-#     )
-#     return thermostat
+def get_thermostat(request, identifier):
+    thermostats = get_user_thermostats(request)
+    thermostat = next(
+        (
+            thermostat
+            for thermostat in thermostats
+            if thermostat["data"]["identifier"] == identifier
+        ),
+        None,
+    )
+    return thermostat
 
 
-# def get_runtime_report(key, identifier):
-#     appConfig = App.query.get(key)
-#     app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
-#     data = app.getRuntimeReport(identifier)
-#     return jsonify(data)
+def get_runtime_report(key, identifier):
+    appConfig = App.objects.get(api_key=key)
+    app = ecobeeApp(config=appConfig, dbType="Django")
+    data = app.getRuntimeReport(identifier)
+    return data
 
 
 # # Thermostat Actions
