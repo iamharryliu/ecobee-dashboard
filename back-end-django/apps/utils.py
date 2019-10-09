@@ -25,7 +25,6 @@ def create_app(request):
     api_key = data["key"]
     authorization_code = data["authorizationCode"]
     access_token, refresh_token = ecobeeApp.requestTokens(api_key, authorization_code)
-    # access_token, refresh_token = "access_token", "refresh_token"
     app = App(
         owner=request.user,
         name=app_name,
@@ -42,7 +41,6 @@ def update_app(request):
     key = data["api_key"]
     authorization_code = data["authorization_code"]
     access_token, refresh_token = ecobeeApp.requestTokens(key, authorization_code)
-    # access_token, refresh_token = "access_token_new", "refresh_token_new"
     app = App.objects.get(api_key=key)
     app.authorization_code = authorization_code
     app.access_token = access_token
@@ -61,7 +59,7 @@ def get_apps(request):
 
 
 def getAppByKey(key):
-    appConfig = App.object.get(api_key=key)
+    appConfig = App.objects.get(api_key=key)
     if appConfig:
         app = ecobeeApp(config=appConfig, dbType="Django")
         return app
@@ -130,54 +128,49 @@ def get_runtime_report(key, identifier):
     return data
 
 
-# # Thermostat Actions
+# Thermostat Actions
 
 
-# def set_hvac_mode():
-#     data = json.loads(request.data.decode())
-#     key = data["key"]
-#     identifier = data["identifier"]
-#     mode = data["mode"]
-#     app = getAppByKey(key)
-#     return app.set_hvac_mode(identifier=identifier, hvac_mode=mode)
+def set_hvac_mode(request):
+    data = json.loads(request.body)
+    key = data["key"]
+    identifier = data["identifier"]
+    mode = data["mode"]
+    app = getAppByKey(key)
+    return app.set_hvac_mode(identifier=identifier, hvac_mode=mode)
 
 
-# def resume():
-#     data = json.loads(request.data.decode())
-#     key = data["key"]
-#     identifier = data["identifier"]
-#     app = getAppByKey(key)
-#     return app.resume(identifier=identifier)
+def resume(request):
+    data = json.loads(request.body)
+    key = data["key"]
+    identifier = data["identifier"]
+    app = getAppByKey(key)
+    return app.resume(identifier=identifier)
+
+def set_climate(request):
+    data = json.loads(request.body)
+    key = data["key"]
+    identifier = data["identifier"]
+    climate = data["climate"]
+    app = getAppByKey(key)
+    return app.set_climate_hold(identifier=identifier, climate=climate)
 
 
-# def set_climate():
-#     data = json.loads(request.data.decode())
-#     key = data["key"]
-#     identifier = data["identifier"]
-#     climate = data["climate"]
-#     app = getAppByKey(key)
-#     return app.set_climate_hold(identifier=identifier, climate=climate)
+def set_temperature_hold(request):
+    data = json.loads(request.body)
+    key = data["key"]
+    identifier = data["identifier"]
+    temperature = data["temperature"]
+    app = getAppByKey(key)
+    return app.set_temperature_hold(
+        identifier=identifier, temperature=float(temperature)
+    )
 
 
-# def set_temperature_hold():
-#     data = json.loads(request.data.decode())
-#     key = data["key"]
-#     identifier = data["identifier"]
-#     temperature = data["temperature"]
-#     app = getAppByKey(key)
-#     return app.set_temperature_hold(
-#         identifier=identifier, temperature=float(temperature)
-#     )
-
-
-# def send_message():
-#     data = json.loads(request.data.decode())
-#     key = data["key"]
-#     identifier = data["identifier"]
-#     message = data["message"]
-#     app = getAppByKey(key)
-#     return app.send_message(identifier=identifier, message=message)
-
-
-# def check_api():
-#     return ecobeeApp.test()
+def send_message(request):
+    data = json.loads(request.body)
+    key = data["key"]
+    identifier = data["identifier"]
+    message = data["message"]
+    app = getAppByKey(key)
+    return app.send_message(identifier=identifier, message=message)
