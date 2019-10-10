@@ -1,0 +1,3 @@
+[submodule "ecobeeApp"]
+	path = ecobeeApp
+	url = git@github.com:iamharryliu/ecobeeApp.git
