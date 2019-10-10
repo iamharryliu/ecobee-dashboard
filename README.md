@@ -1,41 +1,42 @@
 # Ecobee Dashboard
 Dashboard to view and interact with your Ecobee thermostats.
 
-## Built With
-* Angular - front-end framework
-* Bootstrap - front-end templating
-* Flask - back-end framework
-* SQL - database
-* [Ecobee App](https://github.com/iamharryliu/ecobeeApp)
-
 ## Screenshots
 ![Screenshot](images/demo.png)
 
-### Requirements
-* Python3.6+ and pip3
-* Angular
+### 
 
-### Installation
+### Installing
 Steps to get a development environment running:
 
-Setup your SQL configuration for storing API credentials inside the ecobee-dashboard/back-end/ecobee/config.py file.
-
-Open a Terminal for the back-end:
-
+Clone project and make logs folder for API logging.
 ```
-cd ~
 git clone https://github.com/iamharryliu/ecobee-dashboard.git
 mkdir ~/logs
-cd ecobee-dashboard/back-end-flask
+```
+
+Start back-end server.
+```
+# Change directory to preferred back-end (Flask/Django).
+cd ~/ecobee-dashboard/back-end-flask #or back-end-django
+
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+# If you decided to use the Flask back-end.
+python manage.py db init
+python manage.py db u
+
+# If you decided to use the Django back-end.
+python manage.py migrate
+python manage.py makemigrations
+
 python manage.py runserver
 ```
 
-Open another Terminal for the front-end:
-
+Start front-end server.
 ```
-cd ecobee-dashboard/front-end-angular
-ng serve
+cd ~/ecobee-dashboard/front-end-angular #or front-end-react
+npm start
 ```
