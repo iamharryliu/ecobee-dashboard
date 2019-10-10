@@ -13,7 +13,7 @@ export class AppService {
 
   constructor(private http: HttpClient) { }
 
-  public backEndURL = 'http://localhost:5000';
+  public backEndURL = 'http://localhost:8000';
   public url = `${this.backEndURL}/apps`
 
   // Ecobee App
