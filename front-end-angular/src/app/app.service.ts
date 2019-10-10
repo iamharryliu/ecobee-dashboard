@@ -39,7 +39,7 @@ export class AppService {
   }
 
   getApps(): Observable<any> {
-    return this.http.get<any>(`${this.url}/get`, httpOptions)
+    return this.http.get<any>(`${this.url}`, httpOptions)
   }
 
   deleteApp(key: string): Observable<any> {
