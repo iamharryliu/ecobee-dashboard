@@ -134,7 +134,7 @@ def get_runtime_report(key, identifier):
 
 
 def set_hvac_mode():
-    data = json.loads(request.data.decode())
+    data = json.loads(request.get_json())
     key = data["key"]
     identifier = data["identifier"]
     mode = data["mode"]
@@ -143,7 +143,7 @@ def set_hvac_mode():
 
 
 def resume():
-    data = json.loads(request.data.decode())
+    data = json.loads(request.get_json())
     key = data["key"]
     identifier = data["identifier"]
     app = getAppByKey(key)
@@ -151,7 +151,7 @@ def resume():
 
 
 def set_climate():
-    data = json.loads(request.data.decode())
+    data = json.loads(request.get_json())
     key = data["key"]
     identifier = data["identifier"]
     climate = data["climate"]
@@ -160,7 +160,7 @@ def set_climate():
 
 
 def set_temperature_hold():
-    data = json.loads(request.data.decode())
+    data = json.loads(request.get_json())
     key = data["key"]
     identifier = data["identifier"]
     temperature = data["temperature"]
@@ -171,7 +171,7 @@ def set_temperature_hold():
 
 
 def send_message():
-    data = json.loads(request.data.decode())
+    data = json.loads(request.get_json())
     key = data["key"]
     identifier = data["identifier"]
     message = data["message"]
