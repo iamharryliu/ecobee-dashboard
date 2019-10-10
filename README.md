@@ -24,13 +24,13 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# If you decided to use the Flask back-end.
+# If using Flask back-end.
 python manage.py db init
-python manage.py db u
+python manage.py db migrate
+python manage.py db upgrade
 
-# If you decided to use the Django back-end.
-python manage.py migrate
-python manage.py makemigrations
+# If using Django back-end.
+python manage.py migrate --run-syncdb
 
 python manage.py runserver
 ```
@@ -38,5 +38,9 @@ python manage.py runserver
 Start front-end server.
 ```
 cd ~/ecobee-dashboard/front-end-angular #or front-end-react
+
+# If using Angular front-end.
+npm install --save-dev @angular-devkit/build-angular
+
 npm start
 ```
