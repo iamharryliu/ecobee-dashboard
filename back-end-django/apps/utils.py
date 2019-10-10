@@ -73,7 +73,6 @@ def get_user_thermostats(request):
     try:
         configs = App.objects.filter(owner=request.user)
         apps = [ecobeeApp(config=config, dbType="Django") for config in configs]
-        print(apps)
     except:
         print("Unsuccessful request.")
     else:
