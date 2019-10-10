@@ -1,7 +1,6 @@
 from flask import request, jsonify
 from flask_login import current_user
 from flaskApp import db
-from flaskApp.config import ecobeeAppLogger
 from flaskApp.models import App
 
 import sys
@@ -63,7 +62,7 @@ def get_apps():
 def getAppByKey(key):
     appConfig = App.query.get(key)
     if appConfig:
-        app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
+        app = ecobeeApp(config=appConfig, db=db)
         return app
 
 
@@ -75,7 +74,7 @@ def get_user_thermostats():
     try:
         configs = App.query.filter_by(owner=current_user)
         apps = [
-            ecobeeApp(config=config, db=db, logger=ecobeeAppLogger)
+            ecobeeApp(config=config, db=db)
             for config in configs
         ]
     except:
@@ -97,7 +96,7 @@ def get_app_thermostats(key):
     thermostats = []
     try:
         config = App.query.get(key)
-        app = ecobeeApp(config=config, db=db, logger=ecobeeAppLogger)
+        app = ecobeeApp(config=config, db=db)
         data = app.requestData()
     except:
         print("Unsuccessful app request.")
@@ -126,7 +125,7 @@ def get_thermostat(identifier):
 
 def get_runtime_report(key, identifier):
     appConfig = App.query.get(key)
-    app = ecobeeApp(config=appConfig, db=db, logger=ecobeeAppLogger)
+    app = ecobeeApp(config=appConfig, db=db)
     data = app.getRuntimeReport(identifier)
     return jsonify(data)
 
