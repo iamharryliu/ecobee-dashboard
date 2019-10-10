@@ -6,7 +6,7 @@ from flaskApp import create_app, db
 app = create_app()
 migrate = Migrate(app, db, compare_type=True)
 manager = Manager(app)
-manager.add_command("runserver", Server())
+manager.add_command("runserver", Server(port=8000))
 manager.add_command("db", MigrateCommand)
 from flaskApp.models import *
 
