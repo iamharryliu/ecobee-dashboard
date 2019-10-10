@@ -99,7 +99,7 @@ def _delete_app(api_key):
     return jsonify({"success": success})
 
 
-@apps_blueprint.route("/get", methods=["GET"])
+@apps_blueprint.route("", methods=["GET"])
 @cross_origin(supports_credentials=True)
 @login_required
 def _get_apps():
