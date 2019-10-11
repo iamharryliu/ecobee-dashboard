@@ -35,7 +35,7 @@
         <label for="confirmPassword">Confirm Password</label>
         <input type="password" id='confirmPassword' class="form-control" placeholder="Confirm Password"
             formControlName='confirmPassword'
-            [class.is-invalid]="registerForm.errors?.misMatch || confirmPassword.invalid && confirmPassword.touched">
+            [class.is-invalid]="(registerForm.errors?.misMatch || confirmPassword.invalid) && confirmPassword.touched">
         <div *ngIf="(confirmPassword.invalid || registerForm.errors?.misMatch) && confirmPassword.touched">
             <small class="text-danger" *ngIf="confirmPassword.errors?.required">Password confirmation is
                 required.</small>
