@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
     this._UserService.loginUser(data).subscribe(data => {
       if (data.success) {
         this._UserService.setLoginStatus(true)
-        this._Router.navigate(['apps'])
+        this._Router.navigate(['thermostats'])
       } else {
         window.alert('Could not login.')
       }
