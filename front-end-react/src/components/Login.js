@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 class Login extends Component {
     constructor(props) {
         super(props)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        this.loginUser = this.loginUser.bind(this)
         this.state = {
             email: '',
             password: '',
@@ -24,17 +24,17 @@ class Login extends Component {
         this.setState({ remember: event.target.checked });
     }
 
-    handleSubmit = event => {
+    loginUser = event => {
         event.preventDefault()
         this.props.login(this.state, () =>
-            this.props.history.push('/thermostats'))
+            this.props.history.push('/'))
     }
 
     render() {
         return (
             <React.Fragment>
                 <h1>Login</h1>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.loginUser}>
                     <div className="form-group">
                         <label htmlFor="email">Email address</label>
                         <input type="email" id="email" className="form-control" placeholder="Enter email" autoComplete="off" value={this.state.username} onChange={this.changeEmailEventHandler} />

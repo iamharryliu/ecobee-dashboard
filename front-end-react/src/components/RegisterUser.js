@@ -19,9 +19,9 @@ class RegisterUser extends Component {
     changePasswordEventHandler = event => {
         this.setState({ password: event.target.value })
     }
-    handleSubmit = event => {
+    register = event => {
         event.preventDefault()
-        axios.post('http://localhost:5000/registerUser', this.state, { withCredentials: true })
+        axios.post('http://localhost:8000/users/register', this.state, { withCredentials: true })
             .then(response => {
                 if (response.data.success) {
                     console.log('User successfully registered.')
@@ -37,7 +37,7 @@ class RegisterUser extends Component {
         return (
             <React.Fragment>
                 <h1>Register User</h1>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.register}>
                     <div className="form-group">
                         <label htmlFor="username">Username</label>
                         <input type="text" id="username" className="form-control" placeholder="Enter username" autoComplete="off" value={this.state.username} onChange={this.changeUsernameEventHandler} />
