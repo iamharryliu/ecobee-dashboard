@@ -24,11 +24,11 @@ export class AppsComponent implements OnInit {
 
   ngOnInit() {
     if (this._UserService.loginStatus) {
-      this.fetchApps();
+      this.getApps();
     }
   }
 
-  fetchApps() {
+  getApps() {
     this._AppService.getApps()
       .subscribe(data => {
         this.apps = data;
@@ -44,7 +44,7 @@ export class AppsComponent implements OnInit {
     this._AppService.deleteApp(key)
       .subscribe(r => {
         console.log(r)
-        this.fetchApps()
+        this.getApps()
       });
   }
 
@@ -62,7 +62,7 @@ export class AppsComponent implements OnInit {
       this._AppService.updateAppCredentials(this.key, this.authorizationCode).subscribe(response => {
         if (response.success) {
           console.log('Reauthorized app!')
-          this.fetchApps();
+          this.getApps();
         }
         else {
           alert('Failed to reauthorize, try again.')
