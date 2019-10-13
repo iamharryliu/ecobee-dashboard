@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import $ from 'jquery';
 
 class RegisterApp extends Component {
 
@@ -12,7 +13,9 @@ class RegisterApp extends Component {
         this.state = {
             key: '',
             name: '',
-            // authorizationCode: '',
+            pin: '',
+            authorizationCode: '',
+
         }
     }
 
@@ -22,7 +25,6 @@ class RegisterApp extends Component {
 
     changeNameEventHandler = event => {
         this.setState({ name: event.target.value })
-        console.log(this.state.name)
     }
 
     authorizeApp = event => {
@@ -33,8 +35,9 @@ class RegisterApp extends Component {
                     console.log('Successfully authorized app.')
                     this.setState({
                         pin: response.data.data.pin,
-                        authorizationCode: response.data.data.authorizationCode
+                        authorizationCode: response.data.data.authorization_code
                     })
+                    $('#exampleModal').modal('toggle')
                 }
             })
             .catch(error => {
@@ -44,16 +47,18 @@ class RegisterApp extends Component {
 
     registerApp = event => {
         event.preventDefault()
-        // axios.post('http://localhost:8000/RegisterApp', this.state, { withCredentials: true })
-        //     .then(response => {
-        //         if (response.data.success) {
-        //             console.log('User successfully registered.')
-        //             this.props.history.push('/login')
-        //         }
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //     })
+        console.log(this.state)
+        axios.post('http://localhost:8000/apps/create', this.state, { withCredentials: true })
+            .then(response => {
+                if (response.data.success) {
+                    console.log('App successfully registered.')
+                    $('#exampleModal').modal('toggle')
+                    this.props.history.push('/apps')
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     render() {
@@ -80,7 +85,7 @@ class RegisterApp extends Component {
                             <input type="hidden" name="authorizationCode" />
                         </div>
                     </div >
-                    <button type='submit' className="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">Authorize App</button >
+                    <button type='submit' className="btn btn-primary mb-2">Authorize App</button >
                 </form >
 
                 <div className="modal fade text-dark" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -106,7 +111,7 @@ class RegisterApp extends Component {
                                     App
                                     for your home thermostat you may put 'Home' as the name or even your address.
                 </p>
-                                <form id='registerForm'>
+                                <form id='registerForm' onSubmit={this.registerApp}>
                                     <div className="form-group">
                                         <label htmlFor="name" className="col-form-label">App Name:</label>
                                         <input type="text" id="name" className="form-control" placeholder="Enter App Name" autoComplete="off" value={this.state.name} onChange={this.changeNameEventHandler} />
@@ -116,8 +121,6 @@ class RegisterApp extends Component {
                             nameminlength characters
                                 long.</small>
                                         </div> */}
-                                        <input type="hidden" />
-                                        <input type="hidden" />
                                     </div>
                                 </form>
                             </div>
