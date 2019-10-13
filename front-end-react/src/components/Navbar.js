@@ -26,9 +26,6 @@ class Navbar extends Component {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav mr-auto">
-                            <li className="nav-item">
-                                <Link to='/' className="nav-link">Home</Link>
-                            </li>
                             {isLoggedIn &&
                                 <div className="navbar-nav">
                                     <li className="nav-item">
