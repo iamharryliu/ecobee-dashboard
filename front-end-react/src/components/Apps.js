@@ -13,12 +13,30 @@ class Apps extends Component {
     }
 
     componentDidMount() {
+        this.getApps()
+    }
+
+    getApps() {
+
         axios.get('http://localhost:8000/apps', { withCredentials: true })
             .then(response => {
                 this.setState({
                     dataLoaded: true,
                     apps: response.data
                 })
+            })
+            .catch(error => {
+                console.log(error)
+                this.setState({ errMessage: 'Error retreiving data.' })
+            });
+
+    }
+
+    delete(key) {
+        axios.get(`http://localhost:8000/apps/delete/${key}`, { withCredentials: true })
+            .then(response => {
+                console.log(response)
+                this.getApps()
             })
             .catch(error => {
                 console.log(error)
@@ -49,8 +67,7 @@ class Apps extends Component {
                                                 <div className='float-right'>
                                                     <Link to='thermostats' className='btn btn-info'>View</Link>
                                                     <Link to='blank' className='btn btn-info'>Reauthorize</Link>
-                                                    <Link to='blank' className='btn btn-info'>Update App Credentials</Link>
-                                                    <button className='btn btn-danger'>Delete</button>
+                                                    <button onClick={() => this.delete(app.key)} className='btn btn-danger'>Delete</button>
                                                 </div>
                                             </div>
                                         </div>
