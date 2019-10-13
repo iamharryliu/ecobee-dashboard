@@ -13,7 +13,7 @@ class Apps extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:5000/apps', { withCredentials: true })
+        axios.get('http://localhost:8000/apps', { withCredentials: true })
             .then(response => {
                 this.setState({
                     dataLoaded: true,

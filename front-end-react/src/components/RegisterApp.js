@@ -27,7 +27,7 @@ class RegisterApp extends Component {
 
     authorizeApp = event => {
         event.preventDefault()
-        axios.get(`http://localhost:5000/apps/authorize/${this.state.key}`, { withCredentials: true })
+        axios.get(`http://localhost:8000/apps/authorize/${this.state.key}`, { withCredentials: true })
             .then(response => {
                 if (response.data.success) {
                     console.log('Successfully authorized app.')
@@ -44,7 +44,7 @@ class RegisterApp extends Component {
 
     registerApp = event => {
         event.preventDefault()
-        // axios.post('http://localhost:5000/RegisterApp', this.state, { withCredentials: true })
+        // axios.post('http://localhost:8000/RegisterApp', this.state, { withCredentials: true })
         //     .then(response => {
         //         if (response.data.success) {
         //             console.log('User successfully registered.')

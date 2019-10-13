@@ -29,7 +29,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    auth.checkLoginStatus().then(response => {
+    auth.loginStatus().then(response => {
       this.setState({
         isLoggedIn: response,
         dataLoaded: true
@@ -44,7 +44,7 @@ class App extends Component {
   // }
 
   login(data, cb) {
-    axios.post('http://localhost:5000/loginUser', data, { withCredentials: true })
+    axios.post('http://localhost:8000/users/login', data, { withCredentials: true })
       .then(response => {
         if (response.data.success) {
           console.log('You have successfully logged in.')
@@ -61,7 +61,7 @@ class App extends Component {
   }
 
   logout(cb) {
-    axios.post('http://localhost:5000/logoutUser', null, { withCredentials: true })
+    axios.post('http://localhost:8000/users/logout', null, { withCredentials: true })
       .then(response => {
         if (response.data.success) {
           console.log("You have successfully logged out.")

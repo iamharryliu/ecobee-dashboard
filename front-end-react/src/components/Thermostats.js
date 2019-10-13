@@ -19,7 +19,7 @@ class Thermostats extends Component {
 
     componentDidMount() {
         try {
-            axios.get('http://localhost:5000/getUserThermostats', { withCredentials: true, cancelToken: this.source.token })
+            axios.get('http://localhost:8000/getUserThermostats', { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
                     this.setState({
                         thermostats: response.data,

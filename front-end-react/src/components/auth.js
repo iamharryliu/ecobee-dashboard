@@ -6,8 +6,8 @@ class Auth {
         this.authenticated = false;
     }
 
-    checkLoginStatus() {
-        return axios.get('http://localhost:5000/getLoggedInStatus', { withCredentials: true })
+    loginStatus() {
+        return axios.get('http://localhost:8000/users/loginStatus', { withCredentials: true })
             .then(response => {
                 this.authenticated = true
                 return response.data.success
