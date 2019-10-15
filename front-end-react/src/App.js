@@ -90,7 +90,7 @@ class App extends Component {
                 <ProtectedRoute exact path='/apps' component={Apps} />
                 <ProtectedRoute exact path='/apps/register' component={RegisterApp} keyLength={keyLength} />
                 <ProtectedRoute exact path='/thermostats' component={Thermostats} />
-                <ProtectedRoute exact path='/thermostat/:identifier' component={Thermostat} />
+                <ProtectedRoute exact path='/thermostats/:key/:identifier' component={Thermostat} />
                 <Route path='*' component={() => '404 Page'} />
               </Switch>
             </main>

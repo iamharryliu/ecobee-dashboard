@@ -57,7 +57,7 @@ class Thermostats extends Component {
                                             <div className='card-body'>
                                                 <h2 className='d-inline'>{thermostat.data.name}</h2>
                                                 <div className='float-right'>
-                                                    <Link to={'/thermostat/' + thermostat.data.identifier} className='btn btn-info'>View</Link>
+                                                    <Link to={`/thermostats/${thermostat.api_key}/${thermostat.data.identifier}`} className='btn btn-info'>View</Link>
                                                 </div>
                                             </div>
                                         </div>
