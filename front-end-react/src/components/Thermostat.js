@@ -11,6 +11,7 @@ class Thermostat extends Component {
             thermostat: null,
             errMessage: ''
         }
+        this.setTemperature = this.setTemperature.bind(this);
     }
 
     CancelToken = axios.CancelToken;
@@ -23,9 +24,9 @@ class Thermostat extends Component {
         this.updateThermostat()
     }
 
-    componentDidUpdate() {
-        this.updateThermostat()
-    }
+    // componentDidUpdate() {
+    //     this.updateThermostat()
+    // }
 
     updateThermostat() {
         try {
@@ -145,7 +146,7 @@ class Thermostat extends Component {
         return this.ecobeeTempToDegrees(temperature)
     }
 
-    setTemperature = (event) => {
+    setTemperature(event) {
         let key = this.state.thermostat.api_key
         let identifier = this.state.thermostat.data.identifier
         let temperature = event.target.value
@@ -170,6 +171,7 @@ class Thermostat extends Component {
                 throw new Error("Cancelled");
             }
         }
+        this.updateThermostat()
     }
 
 }
