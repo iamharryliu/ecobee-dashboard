@@ -20,7 +20,6 @@ class Thermostat extends Component {
     temperatureOptions = [18.0, 18.5, 19.0, 19.5, 20.0, 20.5, 21.0, 21.5, 22.0, 22.5, 23.0, 23.5, 24.0];
 
     componentDidMount() {
-        console.log(this.props.match.params.identifier)
         try {
             axios.get(`http://localhost:8000/apps/thermostat/${this.props.match.params.identifier}`, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
@@ -50,10 +49,9 @@ class Thermostat extends Component {
         const { dataLoaded, thermostat, errMessage } = this.state
         return (
             <React.Fragment>
-
                 {dataLoaded &&
-                    <div class='row'>
-                        <div class='col-lg-6'>
+                    <div className='row'>
+                        <div className='col-lg-6'>
                             <div className='card bg-dark'>
                                 <div className='card-header'>
                                     <h1 className='text-center'>{thermostat.data.name}</h1>
@@ -68,18 +66,23 @@ class Thermostat extends Component {
                                     <div className="input-group">
                                         <div className="input-group-prepend">
                                             <label className="input-group-text" htmlFor="temperature">
-                                                {this.currentClimateRef()}
+                                                {this.capitalize(this.currentClimateRef())}
                                             </label>
                                         </div>
-                                        <select className='custom-select' style={{ textAlignLast: 'center' }}>
+                                        <select onChange={this.setTemperature} className='custom-select' style={{ textAlignLast: 'center' }}>
                                             {
-                                                this.temperatureOptions.map(option => <option>{option}</option>)
+                                                this.temperatureOptions.map((option, index) => <option key={index} value={option} selected={this.currentClimateRefTemp() === option}>{option}</option>)
                                             }
                                         </select>
-                                        <div class='input-group-append'>
-                                            <span class="input-group-text" id="basic-addon2">
+                                        <div className='input-group-append'>
+                                            <span className="input-group-text" id="basic-addon2">
                                                 <div>
-                                                    C until  {thermostat.data.events[0].endDate} {thermostat.data.events[0].endTime}
+                                                    {thermostat.data.events.length ? (
+
+                                                        "C until" + thermostat.data.events[0].endDate + thermostat.data.events[0].endTime) :
+
+                                                        'C until next transition.'
+                                                    }
                                                 </div>
                                             </span>
                                         </div>
@@ -90,9 +93,7 @@ class Thermostat extends Component {
                         </div>
                     </div>
                 }
-
             </React.Fragment >
-
         );
     }
 
@@ -121,9 +122,54 @@ class Thermostat extends Component {
         else {
             currentClimateRef = this.state.thermostat.data.program.currentClimateRef
         }
-        return this.capitalize(currentClimateRef)
+        return currentClimateRef
+    }
+
+    currentClimateRefTemp() {
+        let temperature;
+        let climate;
+        if (this.state.thermostat.data.events.length) {
+            temperature = this.state.thermostat.data.events[0].heatHoldTemp
+        }
+        else {
+            for (climate of this.state.thermostat.data.program.climates) {
+                console.log(this.currentClimateRef(), climate.climateRef)
+                if (this.currentClimateRef() === climate.climateRef) {
+                    temperature = climate.heatTemp
+                }
+            }
+        }
+        return this.ecobeeTempToDegrees(temperature)
+    }
+
+    setTemperature = (event) => {
+        let key = this.state.thermostat.api_key
+        let identifier = this.state.thermostat.data.identifier
+        let temperature = event.target.value
+        let data = {
+            key: key,
+            identifier: identifier,
+            temperature: temperature
+        }
+        try {
+            axios.post(`http://localhost:8000/apps/setTemperature`, data, { withCredentials: true, cancelToken: this.source.token })
+                .then(response => {
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.setState({ errMessage: 'Error retreiving data.' })
+                });
+        }
+        catch (error) {
+            if (axios.isCancel(error)) {
+                console.log("Request canceled", error.message);
+                throw new Error("Cancelled");
+            }
+        }
     }
 
 }
+
 
 export default withRouter(Thermostat);
