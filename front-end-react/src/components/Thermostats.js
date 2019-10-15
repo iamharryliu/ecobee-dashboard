@@ -19,7 +19,7 @@ class Thermostats extends Component {
 
     componentDidMount() {
         try {
-            axios.get('http://localhost:8000/getUserThermostats', { withCredentials: true, cancelToken: this.source.token })
+            axios.get('http://localhost:8000/apps/getUserThermostats', { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
                     this.setState({
                         thermostats: response.data,
@@ -57,7 +57,7 @@ class Thermostats extends Component {
                                             <div className='card-body'>
                                                 <h2 className='d-inline'>{thermostat.data.name}</h2>
                                                 <div className='float-right'>
-                                                    <Link to='/' className='btn btn-info'>View</Link>
+                                                    <Link to={'/thermostat/' + thermostat.data.identifier} className='btn btn-info'>View</Link>
                                                 </div>
                                             </div>
                                         </div>
