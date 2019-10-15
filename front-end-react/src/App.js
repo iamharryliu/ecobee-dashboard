@@ -6,11 +6,12 @@ import { ProtectedRoute } from './components/protected.route'
 
 import Main from './components/Main';
 import Navbar from './components/Navbar';
-import RegisterUser from './components/RegisterUser'
-import Login from './components/Login'
+import RegisterUser from './components/RegisterUser';
+import Login from './components/Login';
 import Apps from './components/Apps';
-import RegisterApp from './components/RegisterApp'
+import RegisterApp from './components/RegisterApp';
 import Thermostats from './components/Thermostats';
+import Thermostat from './components/Thermostat';
 
 
 import auth from './components/auth'
@@ -89,6 +90,7 @@ class App extends Component {
                 <ProtectedRoute exact path='/apps' component={Apps} />
                 <ProtectedRoute exact path='/apps/register' component={RegisterApp} keyLength={keyLength} />
                 <ProtectedRoute exact path='/thermostats' component={Thermostats} />
+                <ProtectedRoute exact path='/thermostat/:identifier' component={Thermostat} />
                 <Route path='*' component={() => '404 Page'} />
               </Switch>
             </main>
