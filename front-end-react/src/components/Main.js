@@ -26,8 +26,8 @@ class Main extends Component {
                         </p>
                         :
                         <p className='lead text-light'>
+                            <Link to='/thermostats' className='btn btn-primary btn-lg'>View Thermostats</Link>
                             <Link to='/apps' className='btn btn-primary btn-lg'>View Apps</Link>
-                            <Link to='/thermostats' className='btn btn-primary btn-lg'>Thermostats</Link>
                         </p>
                 }
             </div>
