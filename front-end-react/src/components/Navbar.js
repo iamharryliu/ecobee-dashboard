@@ -28,9 +28,9 @@ class Navbar extends Component {
                         <ul className="navbar-nav mr-auto">
                             {isLoggedIn &&
                                 <div className="navbar-nav">
-                                    {/* <li className="nav-item">
-                                    <Link to='/thermostats' className="nav-link">Thermostats</Link>
-                                </li> */}
+                                    <li className="nav-item">
+                                        <Link to='/thermostats' className="nav-link">Thermostats</Link>
+                                    </li>
                                     <li className="nav-item">
                                         <Link to='/apps' className="nav-link">Apps</Link>
                                     </li>
