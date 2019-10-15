@@ -20,6 +20,14 @@ class Thermostat extends Component {
     temperatureOptions = [18.0, 18.5, 19.0, 19.5, 20.0, 20.5, 21.0, 21.5, 22.0, 22.5, 23.0, 23.5, 24.0];
 
     componentDidMount() {
+        this.updateThermostat()
+    }
+
+    componentDidUpdate() {
+        this.updateThermostat()
+    }
+
+    updateThermostat() {
         try {
             axios.get(`http://localhost:8000/apps/thermostat/${this.props.match.params.identifier}`, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
@@ -28,9 +36,6 @@ class Thermostat extends Component {
                         remoteSensors: response.data.thermostat.data.remoteSensors,
                         dataLoaded: true
                     })
-                    // this.thermostat = data.thermostat;
-                    // this.remoteSensors = this.thermostat.data.remoteSensors;
-                    // this.reserializeThermostatData();
                 })
                 .catch(error => {
                     console.log(error)
@@ -43,6 +48,7 @@ class Thermostat extends Component {
                 throw new Error("Cancelled");
             }
         }
+
     }
 
     render() {
@@ -69,18 +75,16 @@ class Thermostat extends Component {
                                                 {this.capitalize(this.currentClimateRef())}
                                             </label>
                                         </div>
-                                        <select onChange={this.setTemperature} className='custom-select' style={{ textAlignLast: 'center' }}>
+                                        <select defaultValue={this.currentClimateRefTemp()} onChange={this.setTemperature} className='custom-select' style={{ textAlignLast: 'center' }}>
                                             {
-                                                this.temperatureOptions.map((option, index) => <option key={index} value={option} selected={this.currentClimateRefTemp() === option}>{option}</option>)
+                                                this.temperatureOptions.map((option, index) => <option key={index} value={option}>{option}</option>)
                                             }
                                         </select>
                                         <div className='input-group-append'>
                                             <span className="input-group-text" id="basic-addon2">
                                                 <div>
                                                     {thermostat.data.events.length ? (
-
-                                                        "C until" + thermostat.data.events[0].endDate + thermostat.data.events[0].endTime) :
-
+                                                        `C until ${thermostat.data.events[0].endDate} ${thermostat.data.events[0].endTime}`) :
                                                         'C until next transition.'
                                                     }
                                                 </div>
@@ -133,7 +137,6 @@ class Thermostat extends Component {
         }
         else {
             for (climate of this.state.thermostat.data.program.climates) {
-                console.log(this.currentClimateRef(), climate.climateRef)
                 if (this.currentClimateRef() === climate.climateRef) {
                     temperature = climate.heatTemp
                 }
