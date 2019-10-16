@@ -18,7 +18,7 @@ class Navbar extends Component {
             <nav className="navbar navbar-expand-md navbar-dark fixed-top" >
                 <div className='container'>
                     <Link to='/' className="navbar-brand">
-                        <img src='favicon.ico' width="50" height="50" className="d-inline-block align-top" alt="" />
+                        <img src='/favicon.ico' width="50" height="50" className="d-inline-block align-top" alt="" />
                     </Link>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
