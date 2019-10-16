@@ -1,11 +1,12 @@
 <div class='card bg-dark'>
     <div class='card-header'>
-        <h1 class='text-center'>{{ thermostat.name }}</h1>
+        <h1 class='text-center'>{{ thermostat.data.name }}</h1>
     </div>
     <div class='card-body'>
         <img class="img-fluid mx-auto d-block" src='favicon.ico' style='height: 40px'>
         <h1 class='card-title text-center'>
-            {{ thermostat.actualTemperature | number: '1.1-1'}} C</h1>
+            {{ thermostat.actualTemperature | number: '1.1-1'}} C
+        </h1>
         <h5 class='text-center'>
             HVAC Mode: {{ thermostat.data.settings.hvacMode | titlecase }}
         </h5>
