@@ -38,12 +38,6 @@ class App extends Component {
     })
   }
 
-  // componentDidUpdate(prevState) {
-  //   if (this.state.isLoggedIn !== prevState.isLoggedIn) {
-  //     console.log('log')
-  //   }
-  // }
-
   login(data, cb) {
     axios.post('http://localhost:8000/users/login', data, { withCredentials: true })
       .then(response => {
