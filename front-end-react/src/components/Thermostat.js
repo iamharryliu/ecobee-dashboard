@@ -9,7 +9,8 @@ class Thermostat extends Component {
         this.state = {
             dataLoaded: false,
             thermostat: null,
-            errMessage: ''
+            errMessage: '',
+            message: '',
         }
         this.setTemperature = this.setTemperature.bind(this);
     }
@@ -17,6 +18,11 @@ class Thermostat extends Component {
     CancelToken = axios.CancelToken;
     source = this.CancelToken.source();
     abortController = new AbortController();
+
+
+    changeMessageHandler = event => {
+        this.setState({ message: event.target.value })
+    }
 
     temperatureOptions = [18.0, 18.5, 19.0, 19.5, 20.0, 20.5, 21.0, 21.5, 22.0, 22.5, 23.0, 23.5, 24.0];
 
@@ -143,9 +149,9 @@ class Thermostat extends Component {
                         <div className='col-lg-12'>
                             <div className="form-group">
                                 <h3><label htmlFor="message">Thermostat Messaging</label></h3>
-                                <textarea className="form-control" rows="6"></textarea>
+                                <textarea value={this.state.message} onChange={this.changeMessageHandler} className="form-control" rows="6"></textarea>
                             </div>
-                            <button type='submit' className='btn btn-outline-light btn-block mb-3'>Send Message</button>
+                            <button onClick={this.sendMessage.bind(this)} type='submit' className='btn btn-outline-light btn-block mb-3'>Send Message</button>
                         </div>
                     </div >
                 }
@@ -305,6 +311,33 @@ class Thermostat extends Component {
         }
     }
 
+    sendMessage() {
+        let key = this.state.thermostat.api_key
+        let identifier = this.state.thermostat.data.identifier
+        let data = {
+            key: key,
+            identifier: identifier,
+            message: this.state.message
+        }
+        try {
+            axios.post(`http://localhost:8000/apps/sendMessage`, data, { withCredentials: true, cancelToken: this.source.token })
+                .then(response => {
+                    console.log(response.data)
+                    this.setState({ message: '' })
+                    this.updateThermostat()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.setState({ errMessage: 'Error retreiving data.' })
+                });
+        }
+        catch (error) {
+            if (axios.isCancel(error)) {
+                console.log("Request canceled", error.message);
+                throw new Error("Cancelled");
+            }
+        }
+    }
 
     getTemperature(sensor) {
         let capabilities = sensor.capability
