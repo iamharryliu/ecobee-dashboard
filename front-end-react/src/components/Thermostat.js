@@ -25,6 +25,7 @@ class Thermostat extends Component {
     }
 
     updateThermostat() {
+        console.log('Thermostat data updated.')
         try {
             axios.get(`http://localhost:8000/apps/thermostat/${this.props.match.params.identifier}`, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
@@ -99,9 +100,9 @@ class Thermostat extends Component {
                                 </div>
                                 <div className='card-body'>
                                     <div className='btn-group w-100 mb-3'>
-                                        <button value='heat' className={`btn btn-outline-light ${this.isHeatOn() && "active"}`} style={{ width: '50%' }}>
+                                        <button onClick={this.setHvacMode.bind(this, 'heat')} className={`btn btn-outline-light ${this.isHeatOn() && "active"}`} style={{ width: '50%' }}>
                                             Heat</button>
-                                        <button value='off' className={`btn btn-outline-light ${!this.isHeatOn() && "active"}`} style={{ width: '50%' }}>
+                                        <button onClick={this.setHvacMode.bind(this, 'off')} value='off' className={`btn btn-outline-light ${!this.isHeatOn() && "active"}`} style={{ width: '50%' }}>
                                             Off</button>
                                     </div>
                                     <div className='btn-group w-100 mb-3'>
@@ -110,11 +111,11 @@ class Thermostat extends Component {
                                         </button>
                                         {
                                             this.state.thermostat.data.program.climates.map((climate, index) =>
-                                                <button key={index} className={`btn btn-outline-light ${this.currentClimateRef() === climate.climateRef && 'active'}`} style={{ width: '25%' }}>{this.capitalize(climate.climateRef)}</button>
+                                                <button onClick={this.setClimate.bind(this, climate.climateRef)} key={index} className={`btn btn-outline-light ${this.currentClimateRef() === climate.climateRef && 'active'}`} style={{ width: '25%' }}>{this.capitalize(climate.climateRef)}</button>
                                             )
                                         }
                                     </div>
-                                    <button type='submit' className='btn btn-outline-light btn-block'> Resume Program</button>
+                                    <button onClick={this.resume.bind(this)} type='submit' className='btn btn-outline-light btn-block'> Resume Program</button>
                                 </div>
                             </div>
                         </div>
@@ -209,6 +210,7 @@ class Thermostat extends Component {
             axios.post(`http://localhost:8000/apps/setTemperature`, data, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
                     console.log(response.data)
+                    this.updateThermostat()
                 })
                 .catch(error => {
                     console.log(error)
@@ -221,8 +223,88 @@ class Thermostat extends Component {
                 throw new Error("Cancelled");
             }
         }
-        this.updateThermostat()
     }
+
+    setHvacMode(mode) {
+        let key = this.state.thermostat.api_key
+        let identifier = this.state.thermostat.data.identifier
+        let data = {
+            key: key,
+            identifier: identifier,
+            mode: mode
+        }
+        try {
+            axios.post(`http://localhost:8000/apps/setHvacMode`, data, { withCredentials: true, cancelToken: this.source.token })
+                .then(response => {
+                    console.log(response.data)
+                    this.updateThermostat()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.setState({ errMessage: 'Error retreiving data.' })
+                });
+        }
+        catch (error) {
+            if (axios.isCancel(error)) {
+                console.log("Request canceled", error.message);
+                throw new Error("Cancelled");
+            }
+        }
+    }
+
+    setClimate(climate) {
+        let key = this.state.thermostat.api_key
+        let identifier = this.state.thermostat.data.identifier
+        let data = {
+            key: key,
+            identifier: identifier,
+            climate: climate
+        }
+        try {
+            axios.post(`http://localhost:8000/apps/setClimate`, data, { withCredentials: true, cancelToken: this.source.token })
+                .then(response => {
+                    console.log(response.data)
+                    this.updateThermostat()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.setState({ errMessage: 'Error retreiving data.' })
+                });
+        }
+        catch (error) {
+            if (axios.isCancel(error)) {
+                console.log("Request canceled", error.message);
+                throw new Error("Cancelled");
+            }
+        }
+    }
+
+    resume() {
+        let key = this.state.thermostat.api_key
+        let identifier = this.state.thermostat.data.identifier
+        let data = {
+            key: key,
+            identifier: identifier
+        }
+        try {
+            axios.post(`http://localhost:8000/apps/resume`, data, { withCredentials: true, cancelToken: this.source.token })
+                .then(response => {
+                    console.log(response.data)
+                    this.updateThermostat()
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.setState({ errMessage: 'Error retreiving data.' })
+                });
+        }
+        catch (error) {
+            if (axios.isCancel(error)) {
+                console.log("Request canceled", error.message);
+                throw new Error("Cancelled");
+            }
+        }
+    }
+
 
     getTemperature(sensor) {
         let capabilities = sensor.capability
