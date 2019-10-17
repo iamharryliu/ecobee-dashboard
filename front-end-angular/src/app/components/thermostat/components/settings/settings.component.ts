@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+import { AppService } from '../../../../app.service'
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -14,7 +16,9 @@ export class SettingsComponent implements OnInit {
   @Output() public setClimate: EventEmitter<string> = new EventEmitter();
   @Output() public resume: EventEmitter<void> = new EventEmitter();
 
-  constructor() { }
+  constructor(
+    private _AppService: AppService,
+  ) { }
 
   ngOnInit() { }
 
@@ -27,7 +31,7 @@ export class SettingsComponent implements OnInit {
   }
 
   isClimateActive(climate: any) {
-    return this.thermostat.currentClimateRef == climate.climateRef
+    return this._AppService.getThermostatClimateRef(this.thermostat) == climate.climateRef
   }
 
   // Actions
