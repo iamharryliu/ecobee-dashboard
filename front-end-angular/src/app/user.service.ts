@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const httpOptions = {
-  withCredentials: true,
-};
+const httpOptions = { withCredentials: true };
 
 @Injectable()
 export class UserService {
