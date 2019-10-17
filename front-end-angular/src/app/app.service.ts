@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 
 import { Thermostat } from '../../app';
 
-const httpOptions = {
-  withCredentials: true,
-};
+const httpOptions = { withCredentials: true };
 
 @Injectable()
 export class AppService {
