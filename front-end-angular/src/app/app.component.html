@@ -1,11 +1,11 @@
 <div *ngIf='dataLoaded'>
-  <div *ngIf='apiRunning;else other_content'>
+  <div *ngIf='ecobeeServerStatus;else error_block'>
     <app-navbar></app-navbar>
     <main class='container pt-3 pb-3 text-light'>
       <router-outlet></router-outlet>
     </main>
   </div>
-  <ng-template #other_content>
+  <ng-template #error_block>
     <main class='container pt-3 pb-3'>
       <div class="jumbotron">
         <h1 class="display-4">Uh oh, we have a problem.</h1>
