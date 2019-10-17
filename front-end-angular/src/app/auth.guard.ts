@@ -18,15 +18,10 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     if (this._UserService.loginStatus) {
       return true
     }
-    return this._UserService.getLoginStatus().pipe(map(data => {
-      if (data.success) {
-        return true
-      }
-      else {
-        this._Router.navigate((['']))
-        return false
-      }
-    }))
+    else {
+      this._Router.navigate((['']))
+      return false
+    }
   }
   canActivateChild(
     next: ActivatedRouteSnapshot,
