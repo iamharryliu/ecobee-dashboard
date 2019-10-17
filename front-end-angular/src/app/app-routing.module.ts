@@ -18,17 +18,21 @@ import { WeatherChartComponent } from './components/thermostat/components/weathe
 import { OccupancyChartComponent } from './components/thermostat/components/occupancy-chart/occupancy-chart.component';
 import { MessageComponent } from './components/thermostat/components/message/message.component';
 
-import { AuthGuard } from './auth.guard'
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-  { path: '', component: MainComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: MainComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterUserComponent },
   { path: 'apps', component: AppsComponent, canActivate: [AuthGuard] },
   { path: 'apps/register', component: RegisterAppComponent, canActivate: [AuthGuard] },
   { path: 'thermostats', component: ThermostatsComponent, canActivate: [AuthGuard] },
   { path: 'thermostats/:key', component: ThermostatsComponent, canActivate: [AuthGuard] },
-  { path: 'thermostats/:key/:identifier', component: ThermostatComponent, canActivate: [AuthGuard] }
+  { path: 'thermostats/:key/:identifier', component: ThermostatComponent, canActivate: [AuthGuard] },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
@@ -51,4 +55,5 @@ export const RoutingComponents = [
   WeatherChartComponent,
   OccupancyChartComponent,
   MessageComponent,
+  PageNotFoundComponent,
 ]
