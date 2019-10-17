@@ -17,11 +17,11 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (this._UserService.loginStatus) { return true }
     return this._UserService.getLoginStatus().pipe(map(data => {
-      if (data.success) {
+      if (data.status) {
         return true
       }
       else {
-        this._Router.navigate((['']))
+        this._Router.navigate((['/login']))
         return false
       }
     }))
