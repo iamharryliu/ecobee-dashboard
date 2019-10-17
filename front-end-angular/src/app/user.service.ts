@@ -15,12 +15,13 @@ export class UserService {
   public backEndURL = 'http://localhost:8000';
   public url = `${this.backEndURL}/users`
 
-  setLoginStatus(status: boolean) {
-    this.loginStatus = status
-  }
 
   getLoginStatus(): Observable<any> {
     return this.http.get<any>(`${this.url}/loginStatus`, httpOptions)
+  }
+
+  setLoginStatus(status: boolean) {
+    this.loginStatus = status
   }
 
   registerUser(data: any): Observable<any> {
