@@ -40,7 +40,6 @@ def _check_api():
 
 @apps_blueprint.route("/authorize/<string:api_key>", methods=["GET"])
 @cross_origin(supports_credentials=True)
-# @login_required
 def _get_auth(api_key):
     try:
         pin, authorization_code = get_auth(api_key)
@@ -52,7 +51,7 @@ def _get_auth(api_key):
         print("Successfully authorized app.")
         success = True
         data = {"pin": pin, "authorization_code": authorization_code}
-    return {"success": success, "data": data}
+    return jsonify({"success": success, "data": data})
 
 
 @apps_blueprint.route("/create", methods=["POST"])
