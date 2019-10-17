@@ -13,7 +13,7 @@ export class ThermostatComponent implements OnInit {
   public thermostat: any;
   public thermostatSensor: any;
   public remoteSensors: any;
-  public allDataFetched = false;
+  public dataAvailable = false;
 
   constructor(
     private _AppService: AppService,
@@ -24,63 +24,30 @@ export class ThermostatComponent implements OnInit {
     let key = (this._Route.snapshot.paramMap.get('key'));
     let identifier = (this._Route.snapshot.paramMap.get('identifier'));
     this.thermostat = { key: key, data: { identifier: identifier } }
-    this.updateThermostat()
+    this.getThermostatData(identifier)
   }
 
-  updateThermostat() {
-    this._AppService.getThermostat(this.thermostat)
+  getThermostatData(identifier: string) {
+    this._AppService.getThermostat(identifier)
       .subscribe(data => {
         this.thermostat = data.thermostat;
         this.remoteSensors = this.thermostat.data.remoteSensors;
         this.reserializeThermostatData();
-        this.allDataFetched = true;
+        this.dataAvailable = true;
+      });
+  }
+
+  updateThermostat() {
+    this._AppService.getThermostat(this.thermostat.data.identifier)
+      .subscribe(data => {
+        this.thermostat = data.thermostat;
+        this.remoteSensors = this.thermostat.data.remoteSensors;
+        this.reserializeThermostatData();
       });
   }
 
   reserializeThermostatData() {
     this.reserializeSensors()
-    this.reserializeActualTemperature()
-    this.reserializeClimateData()
-  }
-
-  reserializeActualTemperature() {
-    this.thermostat.actualTemperature = this.ecobeeTempToDegrees(this.thermostat.data.runtime.actualTemperature)
-  }
-
-  reserializeClimateData() {
-    this.thermostat.currentClimateRef = this.currentClimateRef
-    this.thermostat.currentClimateRefTemp = this.currentClimateRefTemp
-  }
-
-  get currentClimateRef() {
-    var currentClimateRef: string;
-    if (this.thermostat.data.events.length) {
-      if (this.thermostat.data.events[0].holdClimateRef == '') {
-        currentClimateRef = 'hold'
-      }
-      else {
-        currentClimateRef = this.thermostat.data.events[0].holdClimateRef
-      }
-    }
-    else {
-      currentClimateRef = this.thermostat.data.program.currentClimateRef
-    }
-    return currentClimateRef
-  }
-
-  get currentClimateRefTemp() {
-    var temperature: number
-    if (this.thermostat.data.events.length) {
-      temperature = this.thermostat.data.events[0].heatHoldTemp
-    }
-    else {
-      for (let climate of this.thermostat.data.program.climates) {
-        if (this.currentClimateRef == climate.climateRef) {
-          temperature = climate.heatTemp
-        }
-      }
-    }
-    return this.ecobeeTempToDegrees(temperature)
   }
 
   reserializeSensors() {
@@ -93,7 +60,7 @@ export class ThermostatComponent implements OnInit {
       for (let j = 0; j < capabilities.length; j++) {
         let capability = capabilities[j]
         if (capability.type == 'temperature') {
-          remoteSensor.temperature = this.ecobeeTempToDegrees(capability.value)
+          remoteSensor.temperature = this._AppService.ecobeeTempToDegrees(capability.value)
         }
         if (capability.type == 'humidity') {
           remoteSensor.humidity = capability.value
@@ -110,7 +77,7 @@ export class ThermostatComponent implements OnInit {
 
   setTemperature(temperature: string) {
     this._AppService.setTemperature(this.thermostat, parseFloat(temperature)).subscribe(response => {
-      console.log(response);
+      console.log('Successfully set temperature.');
       this.updateThermostat()
     });
   }
@@ -118,31 +85,23 @@ export class ThermostatComponent implements OnInit {
   setHvacMode(mode: string) {
     this.thermostat.hvacMode = mode
     this._AppService.setHvacMode(this.thermostat, mode).subscribe(response => {
-      console.log(response);
+      console.log('Successfully set HVAC mode.');
       this.updateThermostat()
     })
   }
 
   setClimate(climate: string) {
     this._AppService.setClimate(this.thermostat, climate).subscribe(response => {
-      console.log(response);
+      console.log('Successfully set climate.');
       this.updateThermostat();
     });
   }
 
   resume() {
     this._AppService.resume(this.thermostat).subscribe(response => {
-      console.log(response);
+      console.log('Successfully resumed thermostat program.');
       this.updateThermostat()
     });
-  }
-
-  // Utility
-
-  ecobeeTempToDegrees(temperature: number) {
-    temperature = (temperature / 10 - 32) * 5 / 9
-    temperature = Math.round(temperature * 10) / 10
-    return temperature
   }
 
 }

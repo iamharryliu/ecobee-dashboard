@@ -1,4 +1,4 @@
-<div *ngIf=allDataFetched>
+<div *ngIf=dataAvailable>
     <div class='row'>
         <div class='col-lg-6 mb-4'>
             <app-temperature (setTemperature)='setTemperature($event)' [thermostat]=thermostat></app-temperature>
