@@ -1,14 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+// Main Components
 import { MainComponent } from './components/main/main.component';
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
+// User Components
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { LoginComponent } from './components/login/login.component';
 
+// App Components
 import { AppsComponent } from './components/apps/apps.component';
 import { RegisterAppComponent } from './components/register-app/register-app.component';
+
+// Thermostat Components
 import { ThermostatsComponent } from './components/thermostats/thermostats.component';
 import { ThermostatComponent } from './components/thermostat/thermostat.component';
 import { TemperatureComponent } from './components/thermostat/components/temperature/temperature.component';
@@ -18,7 +24,6 @@ import { WeatherChartComponent } from './components/thermostat/components/weathe
 import { OccupancyChartComponent } from './components/thermostat/components/occupancy-chart/occupancy-chart.component';
 import { MessageComponent } from './components/thermostat/components/message/message.component';
 
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { AuthGuard } from './auth.guard';
 
@@ -39,7 +44,9 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }
+
 export const RoutingComponents = [
   MainComponent,
   NavbarComponent,
