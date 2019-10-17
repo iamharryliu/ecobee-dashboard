@@ -56,8 +56,7 @@ export class AppService {
     return this.http.get<Thermostat[]>(`${this.url}/getAppThermostats/${key}`, httpOptions)
   }
 
-  getThermostat(thermostat: Thermostat): Observable<any> {
-    let identifier = thermostat.data.identifier;
+  getThermostat(identifier: string): Observable<any> {
     return this.http.get<Thermostat>(`${this.url}/thermostat/${identifier}`, httpOptions);
   }
 
@@ -116,6 +115,45 @@ export class AppService {
     }
     let url = `${this.url}/sendMessage`
     return this.http.post(url, data)
+  }
+
+  ecobeeTempToDegrees(temperature: number) {
+    temperature = (temperature / 10 - 32) * 5 / 9
+    temperature = Math.round(temperature * 10) / 10
+    return temperature
+  }
+
+
+  getThermostatClimateRef(thermostat: Thermostat) {
+    let currentClimateRef: string;
+    if (thermostat.data.events.length) {
+      if (thermostat.data.events[0].holdClimateRef == '') {
+        currentClimateRef = 'hold'
+      }
+      else {
+        currentClimateRef = thermostat.data.events[0].holdClimateRef
+      }
+    }
+    else {
+      currentClimateRef = thermostat.data.program.currentClimateRef
+    }
+    return currentClimateRef
+  }
+
+
+  getThermostatClimateRefTemp(thermostat: Thermostat) {
+    var temperature: number
+    if (thermostat.data.events.length) {
+      temperature = thermostat.data.events[0].heatHoldTemp
+    }
+    else {
+      for (let climate of thermostat.data.program.climates) {
+        if (this.getThermostatClimateRef(thermostat) == climate.climateRef) {
+          temperature = climate.heatTemp
+        }
+      }
+    }
+    return this.ecobeeTempToDegrees(temperature)
   }
 
 }
