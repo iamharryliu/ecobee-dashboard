@@ -11,7 +11,7 @@ import { AppService } from './app.service'
 export class AppComponent implements OnInit {
 
   public dataLoaded = false;
-  public apiRunning: boolean;
+  public ecobeeServerStatus: boolean;
 
   constructor(
     private _UserService: UserService,
@@ -21,8 +21,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this._UserService.getLoginStatus().subscribe(data => {
       this._UserService.setLoginStatus(data.status);
-      this._AppService.checkAPI().subscribe(data => {
-        this.apiRunning = data.success
+      this._AppService.getEcobeeServerStatus().subscribe(data => {
+        this.ecobeeServerStatus = data.success
         this.dataLoaded = true;
       })
     })

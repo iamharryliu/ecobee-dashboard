@@ -18,7 +18,7 @@ export class AppService {
 
   // Ecobee App
 
-  checkAPI(): Observable<any> {
+  getEcobeeServerStatus(): Observable<any> {
     return this.http.get<any>(`${this.url}/checkAPI`, httpOptions)
   }
 
