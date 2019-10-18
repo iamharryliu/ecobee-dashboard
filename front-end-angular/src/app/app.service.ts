@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Thermostat } from '../../app';
+import { App } from 'app';
 
 const httpOptions = { withCredentials: true };
 
@@ -46,19 +46,19 @@ export class AppService {
 
   // Thermostat
 
-  getUserThermostats(): Observable<Thermostat[]> {
-    return this.http.get<Thermostat[]>(`${this.url}/getUserThermostats`, httpOptions);
+  getUserThermostats(): Observable<App[]> {
+    return this.http.get<App[]>(`${this.url}/getUserThermostats`, httpOptions);
   }
 
-  getAppThermostats(key: string): Observable<Thermostat[]> {
-    return this.http.get<Thermostat[]>(`${this.url}/getAppThermostats/${key}`, httpOptions)
+  getAppThermostats(key: string): Observable<App[]> {
+    return this.http.get<App[]>(`${this.url}/getAppThermostats/${key}`, httpOptions)
   }
 
   getThermostat(identifier: string): Observable<any> {
-    return this.http.get<Thermostat>(`${this.url}/thermostat/${identifier}`, httpOptions);
+    return this.http.get<App>(`${this.url}/thermostat/${identifier}`, httpOptions);
   }
 
-  getThermostatRuntimeReport(thermostat: Thermostat): Observable<any> {
+  getThermostatRuntimeReport(thermostat: App): Observable<any> {
     let key = thermostat.api_key;
     let identifier = thermostat.data.identifier;
     return this.http.get<any>(`${this.url}/thermostats/${key}/${identifier}/runtimeReport`, httpOptions);
@@ -66,7 +66,7 @@ export class AppService {
 
   // Thermostat Actions
 
-  setHvacMode(thermostat: Thermostat, mode: string): Observable<any> {
+  setHvacMode(thermostat: App, mode: string): Observable<any> {
     let data = {
       key: thermostat.api_key,
       identifier: thermostat.data.identifier,
@@ -76,7 +76,7 @@ export class AppService {
     return this.http.post(url, data)
   }
 
-  resume(thermostat: Thermostat): Observable<any> {
+  resume(thermostat: App): Observable<any> {
     let data = {
       key: thermostat.api_key,
       identifier: thermostat.data.identifier
@@ -85,7 +85,7 @@ export class AppService {
     return this.http.post<any>(url, data)
   }
 
-  setClimate(thermostat: Thermostat, climate: string): Observable<any> {
+  setClimate(thermostat: App, climate: string): Observable<any> {
     let data = {
       key: thermostat.api_key,
       identifier: thermostat.data.identifier,
@@ -95,7 +95,7 @@ export class AppService {
     return this.http.post(url, data)
   }
 
-  setTemperature(thermostat: Thermostat, temperature: number): Observable<any> {
+  setTemperature(thermostat: App, temperature: number): Observable<any> {
     let data = {
       key: thermostat.api_key,
       identifier: thermostat.data.identifier,
@@ -105,7 +105,7 @@ export class AppService {
     return this.http.post(url, data);
   }
 
-  sendMessage(thermostat: Thermostat, message: string): Observable<any> {
+  sendMessage(thermostat: App, message: string): Observable<any> {
     let data = {
       key: thermostat.api_key,
       identifier: thermostat.data.identifier,
@@ -122,7 +122,7 @@ export class AppService {
   }
 
 
-  getThermostatClimateRef(thermostat: Thermostat) {
+  getCurrentClimateRef(thermostat: App) {
     let currentClimateRef: string;
     if (thermostat.data.events.length) {
       if (thermostat.data.events[0].holdClimateRef == '') {
@@ -139,14 +139,14 @@ export class AppService {
   }
 
 
-  getThermostatClimateRefTemp(thermostat: Thermostat) {
-    var temperature: number
+  getCurrentClimateRefTemp(thermostat: App) {
+    let temperature: number
     if (thermostat.data.events.length) {
       temperature = thermostat.data.events[0].heatHoldTemp
     }
     else {
       for (let climate of thermostat.data.program.climates) {
-        if (this.getThermostatClimateRef(thermostat) == climate.climateRef) {
+        if (this.getCurrentClimateRef(thermostat) == climate.climateRef) {
           temperature = climate.heatTemp
         }
       }

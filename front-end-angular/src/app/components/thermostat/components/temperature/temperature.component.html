@@ -16,8 +16,8 @@
                     {{ climateRef | titlecase }}
                 </label>
             </div>
-            <select class="custom-select" [(ngModel)]="climateRefTemp" id="temperature" name='temperature'
-                form='set_temperature_hold' style='text-align-last: center' (change)="onChange(selectField.value)"
+            <select class="custom-select" [(ngModel)]="currentClimateRefTemp" id="temperature" name='temperature'
+                form='set_temperature_hold' style='text-align-last: center' (change)="setTemperature(selectField.value)"
                 #selectField>
                 <option *ngFor='let temperature of temperatureOptions' [value]='temperature'>
                     {{temperature | number: '1.1-1'}}

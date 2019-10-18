@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { AppService } from '../../app.service'
+import { App } from 'app';
 
 @Component({
   selector: 'app-thermostat',
@@ -10,10 +11,10 @@ import { AppService } from '../../app.service'
 })
 export class ThermostatComponent implements OnInit {
 
+  public dataAvailable = false;
   public thermostat: any;
   public thermostatSensor: any;
   public remoteSensors: any;
-  public dataAvailable = false;
 
   constructor(
     private _AppService: AppService,
@@ -21,18 +22,14 @@ export class ThermostatComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let key = (this._Route.snapshot.paramMap.get('key'));
     let identifier = (this._Route.snapshot.paramMap.get('identifier'));
-    this.thermostat = { key: key, data: { identifier: identifier } }
-    this.getThermostatData(identifier)
+    this.loadData(identifier)
   }
 
-  getThermostatData(identifier: string) {
+  loadData(identifier: string = '') {
     this._AppService.getThermostat(identifier)
       .subscribe(data => {
-        this.thermostat = data.thermostat;
-        this.remoteSensors = this.thermostat.data.remoteSensors;
-        this.reserializeThermostatData();
+        this.setData(data.thermostat)
         this.dataAvailable = true;
       });
   }
@@ -40,14 +37,18 @@ export class ThermostatComponent implements OnInit {
   updateThermostat() {
     this._AppService.getThermostat(this.thermostat.data.identifier)
       .subscribe(data => {
-        this.thermostat = data.thermostat;
-        this.remoteSensors = this.thermostat.data.remoteSensors;
-        this.reserializeThermostatData();
+        this.setData(data.thermostat)
       });
   }
 
-  reserializeThermostatData() {
+  setData(thermostat: App) {
+    this.thermostat = thermostat;
+    this.remoteSensors = thermostat.data.remoteSensors;
     this.reserializeSensors()
+  }
+
+  get currentClimateRefTemp() {
+    return this._AppService.getCurrentClimateRefTemp(this.thermostat)
   }
 
   reserializeSensors() {
@@ -71,37 +72,6 @@ export class ThermostatComponent implements OnInit {
       }
     }
     this.remoteSensors.sort((b: string, a: string) => (a > b ? 1 : -1));
-  }
-
-  // Thermostat Actions
-
-  setTemperature(temperature: string) {
-    this._AppService.setTemperature(this.thermostat, parseFloat(temperature)).subscribe(response => {
-      console.log('Successfully set temperature.');
-      this.updateThermostat()
-    });
-  }
-
-  setHvacMode(mode: string) {
-    this.thermostat.hvacMode = mode
-    this._AppService.setHvacMode(this.thermostat, mode).subscribe(response => {
-      console.log('Successfully set HVAC mode.');
-      this.updateThermostat()
-    })
-  }
-
-  setClimate(climate: string) {
-    this._AppService.setClimate(this.thermostat, climate).subscribe(response => {
-      console.log('Successfully set climate.');
-      this.updateThermostat();
-    });
-  }
-
-  resume() {
-    this._AppService.resume(this.thermostat).subscribe(response => {
-      console.log('Successfully resumed thermostat program.');
-      this.updateThermostat()
-    });
   }
 
 }

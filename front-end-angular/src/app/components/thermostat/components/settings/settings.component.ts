@@ -12,40 +12,38 @@ import { AppService } from '../../../../app.service'
 export class SettingsComponent implements OnInit {
 
   @Input() public thermostat: any;
-  @Output() public setHvacMode: EventEmitter<string> = new EventEmitter();
-  @Output() public setClimate: EventEmitter<string> = new EventEmitter();
-  @Output() public resume: EventEmitter<void> = new EventEmitter();
+  @Output() public updateThermostat: EventEmitter<void> = new EventEmitter();
 
-  constructor(
-    private _AppService: AppService,
-  ) { }
+  constructor(private _AppService: AppService) { }
 
   ngOnInit() { }
 
-  get isHeatOn() {
-    return this.thermostat.data.settings.hvacMode == 'heat'
-  }
+  get isHeatOn() { return this.thermostat.data.settings.hvacMode == 'heat' }
+  get isOnClimateHold() { return this.thermostat.data.events.length }
+  isClimateActive(climate: any) { return this._AppService.getCurrentClimateRef(this.thermostat) == climate.climateRef }
 
-  get isOnClimateHold() {
-    return this.thermostat.data.events.length
-  }
-
-  isClimateActive(climate: any) {
-    return this._AppService.getThermostatClimateRef(this.thermostat) == climate.climateRef
-  }
-
-  // Actions
+  // Thermostat actions.
 
   onSelectHvacMode(mode: string) {
-    this.setHvacMode.emit(mode);
+    this.thermostat.hvacMode = mode
+    this._AppService.setHvacMode(this.thermostat, mode).subscribe(_ => {
+      console.log('Successfully set HVAC mode.');
+      this.updateThermostat.emit()
+    })
   }
 
   onSelectClimate(climate: any) {
-    this.setClimate.emit(climate.climateRef);
+    this._AppService.setClimate(this.thermostat, climate).subscribe(_ => {
+      console.log('Successfully set climate.');
+      this.updateThermostat.emit();
+    });
   }
 
   onResume() {
-    this.resume.emit();
+    this._AppService.resume(this.thermostat).subscribe(_ => {
+      console.log('Successfully resumed thermostat program.');
+      this.updateThermostat.emit()
+    });
   }
 
 }

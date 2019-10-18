@@ -24,7 +24,8 @@
                 </ng-template>
             </button>
             <button *ngFor='let climate of thermostat.data.program.climates' class="btn btn-outline-light"
-                style="width: 25%;" [class.active]='isClimateActive(climate)' (click)="onSelectClimate(climate)">
+                style="width: 25%;" [class.active]='isClimateActive(climate)'
+                (click)="onSelectClimate(climate.climateRef)">
                 {{ climate.climateRef | titlecase }}
             </button>
         </div>

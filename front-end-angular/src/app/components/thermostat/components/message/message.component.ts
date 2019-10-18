@@ -17,8 +17,8 @@ export class MessageComponent implements OnInit {
   ngOnInit() { }
 
   sendMessage() {
-    this._AppService.sendMessage(this.thermostat, this.message).subscribe(resp => {
-      console.log(resp);
+    this._AppService.sendMessage(this.thermostat, this.message).subscribe(_ => {
+      console.log('Successfully sent message');
       this.message = '';
     })
   }
