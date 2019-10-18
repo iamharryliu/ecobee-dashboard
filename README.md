@@ -10,7 +10,7 @@ Steps to get a development environment running on Mac/Linux:
 Clone project and set up log folder.
 ```
 cd ~
-git clone https://github.com/iamharryliu/ecobee-dashboard.git
+git clone https://github.com/iamharryliu/ecobee-dashboard.git --recursive
 mkdir ~/logs
 ```
 
