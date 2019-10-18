@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppService } from '../../app.service';
-import { Thermostat } from '../../../../app'
+import { App } from 'app'
 
 @Component({
   selector: 'app-thermostats',
@@ -46,7 +46,7 @@ export class ThermostatsComponent implements OnInit {
       });
   }
 
-  setData(data: Thermostat[]) {
+  setData(data: App[]) {
     this.thermostats = data;
     this.all_data_fetched = true;
   }
