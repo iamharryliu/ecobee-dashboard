@@ -14,7 +14,7 @@ export class ThermostatComponent implements OnInit {
   public dataAvailable = false;
   public thermostat: any;
   public thermostatSensor: any;
-  public remoteSensors: any;
+  public sensors: any;
 
   constructor(
     private _AppService: AppService,
@@ -43,8 +43,8 @@ export class ThermostatComponent implements OnInit {
 
   setData(thermostat: App) {
     this.thermostat = thermostat;
-    this.remoteSensors = thermostat.data.remoteSensors;
-    this.remoteSensors.sort(function (a: RemoteSensor, b: RemoteSensor) {
+    this.sensors = thermostat.data.remoteSensors;
+    this.sensors.sort(function (a: RemoteSensor, b: RemoteSensor) {
       if (a.id < b.id) {
         return -1;
       }
