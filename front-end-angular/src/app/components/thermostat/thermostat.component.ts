@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { AppService } from '../../app.service'
-import { App, RemoteSensor } from 'app';
+import { RemoteSensor } from 'app';
 
 @Component({
   selector: 'app-thermostat',
@@ -29,7 +29,7 @@ export class ThermostatComponent implements OnInit {
   loadData(identifier: string = '') {
     this._AppService.getThermostat(identifier)
       .subscribe(data => {
-        this.setData(data.thermostat)
+        this.thermostat = data.thermostat;
         this.dataAvailable = true;
       });
   }
@@ -37,13 +37,8 @@ export class ThermostatComponent implements OnInit {
   updateThermostat() {
     this._AppService.getThermostat(this.thermostat.data.identifier)
       .subscribe(data => {
-        this.setData(data.thermostat)
+        this.thermostat = data.thermostat;
       });
-  }
-
-  setData(thermostat: App) {
-    this.thermostat = thermostat;
-    this.sensors = thermostat.data.remoteSensors;
   }
 
   sortSensors(a: RemoteSensor, b: RemoteSensor) {
