@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
 import { AppService } from '../../../../app.service'
+import { ThermostatService } from 'src/app/thermostat.service';
 
 @Component({
   selector: 'app-settings',
@@ -8,19 +8,21 @@ import { AppService } from '../../../../app.service'
   styleUrls: ['./settings.component.css']
 })
 
-
 export class SettingsComponent implements OnInit {
 
   @Input() public thermostat: any;
   @Output() public updateThermostat: EventEmitter<void> = new EventEmitter();
 
-  constructor(private _AppService: AppService) { }
+  constructor(
+    private _AppService: AppService,
+    private _ThermostatService: ThermostatService
+  ) { }
 
   ngOnInit() { }
 
   get isHeatOn() { return this.thermostat.data.settings.hvacMode == 'heat' }
   get isOnClimateHold() { return this.thermostat.data.events.length }
-  isClimateActive(climate: any) { return this._AppService.getCurrentClimateRef(this.thermostat) == climate.climateRef }
+  isClimateActive(climate: any) { return this._ThermostatService.getCurrentClimateRef(this.thermostat) == climate.climateRef }
 
   // Thermostat actions.
 

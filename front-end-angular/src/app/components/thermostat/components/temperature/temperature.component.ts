@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { AppService } from 'src/app/app.service'
+import { ThermostatService } from 'src/app/thermostat.service';
 
-import { AppService } from '../../../../app.service'
 @Component({
   selector: 'app-temperature',
   templateUrl: './temperature.component.html',
@@ -14,12 +15,15 @@ export class TemperatureComponent implements OnInit {
 
   public temperatureOptions = [18.0, 18.5, 19.0, 19.5, 20.0, 20.5, 21.0, 21.5, 22.0, 22.5, 23.0, 23.5, 24.0];
 
-  constructor(private _AppService: AppService) { }
+  constructor(
+    private _AppService: AppService,
+    private _ThermostatService: ThermostatService
+  ) { }
 
   ngOnInit() { }
 
-  get actualTemperature() { return this._AppService.ecobeeTempToDegrees(this.thermostat.data.runtime.actualTemperature) }
-  get climateRef() { return this._AppService.getCurrentClimateRef(this.thermostat) }
+  get actualTemperature() { return this._ThermostatService.ecobeeTempToDegrees(this.thermostat.data.runtime.actualTemperature) }
+  get climateRef() { return this._ThermostatService.getCurrentClimateRef(this.thermostat) }
 
   // Thermostat actions.
 
