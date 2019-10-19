@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import { AppService } from '../../../../app.service'
 import { RemoteSensor } from 'app'
 
 @Component({
@@ -11,7 +12,9 @@ export class SensorComponent implements OnInit {
 
   @Input() public sensor: RemoteSensor;
 
-  constructor() { }
+  constructor(
+    private _AppService: AppService,
+  ) { }
 
   ngOnInit() {
   }
@@ -21,7 +24,7 @@ export class SensorComponent implements OnInit {
     for (let i = 0; i < capabilities.length; i++) {
       let capability = capabilities[i]
       if (capability.type === 'temperature') {
-        return this.ecobeeTempToDegrees(Number(capability.value))
+        return this._AppService.ecobeeTempToDegrees(Number(capability.value))
       }
     }
     return false
@@ -30,10 +33,7 @@ export class SensorComponent implements OnInit {
   getOccupancy(sensor: RemoteSensor) {
     let capabilities = sensor.capability
     for (let i = 0; i < capabilities.length; i++) {
-      let capability = capabilities[i]
-      if (capability.type === 'occupancy') {
-        return capability.value == 'true'
-      }
+      return capabilities[i].type === 'occupancy' && capabilities[i].value == 'true'
     }
   }
 
@@ -47,12 +47,5 @@ export class SensorComponent implements OnInit {
     }
     return false
   }
-
-  ecobeeTempToDegrees(temperature: number) {
-    temperature = (temperature / 10 - 32) * 5 / 9
-    temperature = Math.round(temperature * 10) / 10
-    return temperature
-  }
-
 
 }
