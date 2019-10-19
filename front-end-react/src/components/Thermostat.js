@@ -48,7 +48,7 @@ class Thermostat extends Component {
         }
         catch (error) {
             if (axios.isCancel(error)) {
-                console.log("Request canceled", error.message);
+                console.log("Request cancelled.", error.message);
                 throw new Error("Cancelled");
             }
         }
@@ -215,7 +215,7 @@ class Thermostat extends Component {
         try {
             axios.post(`http://localhost:8000/apps/setTemperature`, data, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
-                    console.log(response.data)
+                    console.log('Successfully set temperature.')
                     this.updateThermostat()
                 })
                 .catch(error => {
@@ -225,7 +225,7 @@ class Thermostat extends Component {
         }
         catch (error) {
             if (axios.isCancel(error)) {
-                console.log("Request canceled", error.message);
+                console.log("Request cancelled.", error.message);
                 throw new Error("Cancelled");
             }
         }
@@ -242,7 +242,7 @@ class Thermostat extends Component {
         try {
             axios.post(`http://localhost:8000/apps/setHvacMode`, data, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
-                    console.log(response.data)
+                    console.log('Successfully set HVAC mode.')
                     this.updateThermostat()
                 })
                 .catch(error => {
@@ -252,7 +252,7 @@ class Thermostat extends Component {
         }
         catch (error) {
             if (axios.isCancel(error)) {
-                console.log("Request canceled", error.message);
+                console.log("Request cancelled.", error.message);
                 throw new Error("Cancelled");
             }
         }
@@ -269,7 +269,7 @@ class Thermostat extends Component {
         try {
             axios.post(`http://localhost:8000/apps/setClimate`, data, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
-                    console.log(response.data)
+                    console.log('Successfully set climate.')
                     this.updateThermostat()
                 })
                 .catch(error => {
@@ -279,7 +279,7 @@ class Thermostat extends Component {
         }
         catch (error) {
             if (axios.isCancel(error)) {
-                console.log("Request canceled", error.message);
+                console.log("Request cancelled.", error.message);
                 throw new Error("Cancelled");
             }
         }
@@ -295,7 +295,7 @@ class Thermostat extends Component {
         try {
             axios.post(`http://localhost:8000/apps/resume`, data, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
-                    console.log(response.data)
+                    console.log('Successfully resumed thermostat program.')
                     this.updateThermostat()
                 })
                 .catch(error => {
@@ -305,7 +305,7 @@ class Thermostat extends Component {
         }
         catch (error) {
             if (axios.isCancel(error)) {
-                console.log("Request canceled", error.message);
+                console.log("Request cancelled.", error.message);
                 throw new Error("Cancelled");
             }
         }
@@ -322,7 +322,7 @@ class Thermostat extends Component {
         try {
             axios.post(`http://localhost:8000/apps/sendMessage`, data, { withCredentials: true, cancelToken: this.source.token })
                 .then(response => {
-                    console.log(response.data)
+                    console.log('Successfully sent message.')
                     this.setState({ message: '' })
                     this.updateThermostat()
                 })
@@ -333,7 +333,7 @@ class Thermostat extends Component {
         }
         catch (error) {
             if (axios.isCancel(error)) {
-                console.log("Request canceled", error.message);
+                console.log("Request cancelled.", error.message);
                 throw new Error("Cancelled");
             }
         }
