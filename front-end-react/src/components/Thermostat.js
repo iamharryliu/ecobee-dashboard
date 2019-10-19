@@ -133,7 +133,7 @@ class Thermostat extends Component {
                                         <div className="card-body">
                                             <div className="card-text">{this.getTemperature(sensor) ? (
                                                 <React.Fragment>
-                                                    Type: {sensor.type === 'ecobee3_remote_sensor' ? "remote sensor" : "thermostat"}<br />
+                                                    Type: {sensor.type === 'ecobee3_remote_sensor' ? "remote" : "thermostat"}<br />
                                                     Temperature: <span className="badge badge-success">{this.getTemperature(sensor)}</span><br />
 
                                                     Occupancy: <span className={"badge " + (this.getSensorOccupancy(sensor) ? 'badge-success' : 'badge-danger')}>Status</span>
