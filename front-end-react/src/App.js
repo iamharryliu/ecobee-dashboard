@@ -14,7 +14,7 @@ import Thermostats from './components/Thermostats';
 import Thermostat from './components/Thermostat';
 
 
-import auth from './components/auth'
+import Auth from './components/Auth'
 
 class App extends Component {
 
@@ -30,7 +30,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    auth.loginStatus().then(response => {
+    Auth.loginStatus().then(response => {
       this.setState({
         isLoggedIn: response,
         dataLoaded: true
@@ -44,6 +44,7 @@ class App extends Component {
         if (response.data.success) {
           console.log('You have successfully logged in.')
           this.setState({ isLoggedIn: true })
+          Auth.setStatus(true)
           cb()
         }
         else {
@@ -61,6 +62,7 @@ class App extends Component {
         if (response.data.success) {
           console.log("You have successfully logged out.")
           this.setState({ isLoggedIn: false })
+          Auth.setStatus(false)
           cb()
         }
       })
