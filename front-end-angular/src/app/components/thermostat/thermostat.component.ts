@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { AppService } from '../../app.service'
-import { App } from 'app';
+import { App, RemoteSensor } from 'app';
 
 @Component({
   selector: 'app-thermostat',
@@ -44,7 +44,18 @@ export class ThermostatComponent implements OnInit {
   setData(thermostat: App) {
     this.thermostat = thermostat;
     this.remoteSensors = thermostat.data.remoteSensors;
+    this.remoteSensors.sort(function (a: RemoteSensor, b: RemoteSensor) {
+      if (a.id < b.id) {
+        return -1;
+      }
+      if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
+    });
   }
+
+
 
   get currentClimateRefTemp() {
     return this._AppService.getCurrentClimateRefTemp(this.thermostat)
