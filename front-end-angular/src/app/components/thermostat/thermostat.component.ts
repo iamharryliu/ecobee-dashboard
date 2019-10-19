@@ -44,18 +44,17 @@ export class ThermostatComponent implements OnInit {
   setData(thermostat: App) {
     this.thermostat = thermostat;
     this.sensors = thermostat.data.remoteSensors;
-    this.sensors.sort(function (a: RemoteSensor, b: RemoteSensor) {
-      if (a.id < b.id) {
-        return -1;
-      }
-      if (a.id > b.id) {
-        return 1;
-      }
-      return 0;
-    });
   }
 
-
+  sortSensors(a: RemoteSensor, b: RemoteSensor) {
+    if (a.id < b.id) {
+      return -1;
+    }
+    if (a.id > b.id) {
+      return 1;
+    }
+    return 0;
+  }
 
   get currentClimateRefTemp() {
     return this._AppService.getCurrentClimateRefTemp(this.thermostat)
