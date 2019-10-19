@@ -9,9 +9,13 @@ class Auth {
     loginStatus() {
         return axios.get('http://localhost:8000/users/loginStatus', { withCredentials: true })
             .then(response => {
-                this.authenticated = true
-                return response.data.success
+                this.authenticated = response.data.status
+                return response.data.status
             })
+    }
+
+    setStatus(status){
+        this.authenticated = status
     }
 
     isAuthenticated() {
