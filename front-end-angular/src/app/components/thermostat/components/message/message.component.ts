@@ -18,7 +18,7 @@ export class MessageComponent implements OnInit {
 
   sendMessage() {
     this._AppService.sendMessage(this.thermostat, this.message).subscribe(_ => {
-      console.log('Successfully sent message');
+      console.log('Successfully sent message.');
       this.message = '';
     })
   }
