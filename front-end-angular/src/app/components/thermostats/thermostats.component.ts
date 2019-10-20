@@ -13,7 +13,7 @@ export class ThermostatsComponent implements OnInit {
 
   public all_data_fetched = false;
   public thermostats = [];
-  public key: string;
+  public key = null;
 
   constructor(
     private _Route: ActivatedRoute,
@@ -27,7 +27,6 @@ export class ThermostatsComponent implements OnInit {
       this.getAppThermostats(key)
     }
     else {
-      this.key = ''
       this.getUserThermostats()
     }
   }
