@@ -49,7 +49,7 @@ def update_app():
 
 
 def delete_app(key):
-    app = App.query.get(key)
+    app = App.query.filter_by(api_key=key).first()
     db.session.delete(app)
     db.session.commit()
 
@@ -60,7 +60,7 @@ def get_apps():
 
 
 def getAppByKey(key):
-    appConfig = App.query.get(key)
+    appConfig = App.query.filter_by(api_key=key).first()
     if appConfig:
         app = ecobeeApp(config=appConfig, db=db)
         return app
@@ -73,10 +73,7 @@ def get_user_thermostats():
     thermostats = []
     try:
         configs = App.query.filter_by(owner=current_user)
-        apps = [
-            ecobeeApp(config=config, db=db)
-            for config in configs
-        ]
+        apps = [ecobeeApp(config=config, db=db) for config in configs]
     except:
         print("Unsuccessful app request.")
     else:
@@ -95,7 +92,7 @@ def get_user_thermostats():
 def get_app_thermostats(key):
     thermostats = []
     try:
-        config = App.query.get(key)
+        config = App.query.filter_by(api_key=key).first()
         app = ecobeeApp(config=config, db=db)
         data = app.requestData()
     except:
@@ -124,7 +121,7 @@ def get_thermostat(identifier):
 
 
 def get_runtime_report(key, identifier):
-    appConfig = App.query.get(key)
+    appConfig = App.query.filter_by(api_key=key).first()
     app = ecobeeApp(config=appConfig, db=db)
     data = app.getRuntimeReport(identifier)
     return jsonify(data)

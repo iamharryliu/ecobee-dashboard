@@ -16,9 +16,10 @@ class User(db.Model, UserMixin):
 
 
 class App(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     name = db.Column(db.String(20), unique=True, nullable=False)
-    api_key = db.Column(db.String(32), primary_key=True, unique=True, nullable=False)
+    api_key = db.Column(db.String(32), unique=True, nullable=False)
     authorization_code = db.Column(db.String(32), nullable=False)
     access_token = db.Column(db.String(32), nullable=False)
     refresh_token = db.Column(db.String(32), nullable=False)
