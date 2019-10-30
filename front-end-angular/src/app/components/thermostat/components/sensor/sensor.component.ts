@@ -21,11 +21,15 @@ export class SensorComponent implements OnInit {
     return this._ThermostatService.ecobeeTempToDegrees(Number(capability.value))
   }
 
+  isTemperature = (capability: Capability) => capability.type === 'temperature'
+
   getOccupancy(sensor: RemoteSensor) {
     let capabilities = sensor.capability
     let capability = capabilities.find((capability) => this.isOccupancy(capability))
     return capability.value == 'true'
   }
+
+  isOccupancy = (capability: Capability) => capability.type === 'occupancy'
 
   getHumidity(sensor: RemoteSensor) {
     let capabilities = sensor.capability
@@ -33,8 +37,6 @@ export class SensorComponent implements OnInit {
     return capability.value
   }
 
-  isTemperature = (capability: Capability) => capability.type === 'temperature'
-  isOccupancy = (capability: Capability) => capability.type === 'occupancy'
   isHumidity = (capability: Capability) => capability.type === 'humidity'
 
 }

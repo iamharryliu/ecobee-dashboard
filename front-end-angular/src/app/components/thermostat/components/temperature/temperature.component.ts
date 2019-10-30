@@ -20,6 +20,8 @@ export class TemperatureComponent implements OnInit {
 
   ngOnInit() { }
 
+
+  get temperatureOptions() { return this._ThermostatService.temperatureOptions }
   get actualTemperature() { return this._ThermostatService.ecobeeTempToDegrees(this.thermostat.data.runtime.actualTemperature) }
   get climateRef() { return this._ThermostatService.getCurrentClimateRef(this.thermostat) }
 
@@ -31,10 +33,6 @@ export class TemperatureComponent implements OnInit {
       this.updateThermostat.emit()
     });
 
-  }
-
-  get temperatureOptions() {
-    return this._ThermostatService.temperatureOptions
   }
 
 
