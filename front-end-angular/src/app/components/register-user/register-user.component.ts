@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms'
 import { AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../../user.service';
+import { UserService } from 'src/app/user.service';
 
 function PasswordValidator(control: AbstractControl): { [key: string]: boolean } | null {
   const password = control.get('password')

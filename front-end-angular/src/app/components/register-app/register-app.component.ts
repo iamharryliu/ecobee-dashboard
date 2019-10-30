@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms'
-import { AppService } from '../../app.service'
+import { AppService } from 'src/app/app.service'
 import { Router } from '@angular/router';
 
 declare var $: any;

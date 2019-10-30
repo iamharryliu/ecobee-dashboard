@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import * as Highstock from 'highcharts/highstock';
-import { AppService } from '../../../../app.service'
+import { AppService } from 'src/app/app.service'
 import { Subscription } from 'rxjs';
 
 declare var require: any;

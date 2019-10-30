@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { AppService } from '../../../../app.service'
+import { AppService } from 'src/app/app.service'
 import { ThermostatService } from 'src/app/thermostat.service';
 
 @Component({
