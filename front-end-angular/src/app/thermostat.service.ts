@@ -8,51 +8,36 @@ export class ThermostatService {
 
   constructor() { }
 
+  public temperatureOptions = [18.0, 18.5, 19.0, 19.5, 20.0, 20.5, 21.0, 21.5, 22.0, 22.5, 23.0, 23.5, 24.0];
+
   ecobeeTempToDegrees(temperature: number) {
-    temperature = (temperature / 10 - 32) * 5 / 9
-    temperature = Math.round(temperature * 10) / 10
-    return temperature
+    let temperatureAsFarenheit = temperature / 10
+    let temperatureAsDegrees = this.farenheitToDegrees(temperatureAsFarenheit)
+    temperatureAsDegrees = Math.round(temperatureAsDegrees * 10) / 10
+    return temperatureAsDegrees
   }
 
+  farenheitToDegrees = (temperature: number) => (temperature - 32) * 5 / 9
+
   getCurrentClimateRef(thermostat: App) {
-    let currentClimateRef: string;
-    if (thermostat.data.events.length) {
-      if (thermostat.data.events[0].holdClimateRef == '') {
-        currentClimateRef = 'hold'
-      }
-      else {
-        currentClimateRef = thermostat.data.events[0].holdClimateRef
-      }
-    }
-    else {
-      currentClimateRef = thermostat.data.program.currentClimateRef
-    }
-    return currentClimateRef
+    return thermostat.data.events.length ? this.getEventClimateRef(thermostat) : thermostat.data.program.currentClimateRef
+  }
+
+  getEventClimateRef(thermostat: App) {
+    return thermostat.data.events[0].holdClimateRef == '' ? 'hold' : thermostat.data.events[0].holdClimateRef
   }
 
   getCurrentClimateRefTemp(thermostat: App) {
-    let temperature: number
-    if (thermostat.data.events.length) {
-      temperature = thermostat.data.events[0].heatHoldTemp
-    }
-    else {
-      for (let climate of thermostat.data.program.climates) {
-        if (this.getCurrentClimateRef(thermostat) == climate.climateRef) {
-          temperature = climate.heatTemp
-        }
-      }
-    }
+    let temperature = thermostat.data.events.length ? thermostat.data.events[0].heatHoldTemp : this.getClimateRefTemp(thermostat)
     return this.ecobeeTempToDegrees(temperature)
   }
 
-  sortSensors(a: RemoteSensor, b: RemoteSensor) {
-    if (a.id < b.id) {
-      return -1;
+  getClimateRefTemp(thermostat: App) {
+    for (let climate of thermostat.data.program.climates) {
+      if (this.getCurrentClimateRef(thermostat) == climate.climateRef) return climate.heatTemp
     }
-    if (a.id > b.id) {
-      return 1;
-    }
-    return 0;
   }
+
+  sortSensors = (a: RemoteSensor, b: RemoteSensor) => a.id.localeCompare(b.id);
 
 }

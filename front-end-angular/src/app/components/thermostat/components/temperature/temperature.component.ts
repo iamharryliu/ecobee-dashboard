@@ -13,8 +13,6 @@ export class TemperatureComponent implements OnInit {
   @Input() public currentClimateRefTemp: number;
   @Output() public updateThermostat: EventEmitter<string> = new EventEmitter();
 
-  public temperatureOptions = [18.0, 18.5, 19.0, 19.5, 20.0, 20.5, 21.0, 21.5, 22.0, 22.5, 23.0, 23.5, 24.0];
-
   constructor(
     private _AppService: AppService,
     private _ThermostatService: ThermostatService
@@ -32,6 +30,12 @@ export class TemperatureComponent implements OnInit {
       console.log('Successfully set temperature.');
       this.updateThermostat.emit()
     });
+
   }
+
+  get temperatureOptions() {
+    return this._ThermostatService.temperatureOptions
+  }
+
 
 }
